@@ -7,41 +7,41 @@ stateMachineTick(State* state, InformationToPassToState info)
     switch(state) {
         case GLV_OFF:
             *state = glv_off();
-            break
+            break;
         case GLV_ON:
             *state = glv_on();
-            break
+            break;
         case PRECHARGE_ENGAGED:
             *state = precharge_engaged();
-            break
+            break;
         case PRECHARGING:
             *state = precharging();
-            break
+            break;
         case PRECHARGE_COMPLETE:
             *state = precharge_complete();
-            break
+            break;
         case DRIVE_STANDBY:
             *state = drive_standby();
-            break
+            break;
         case DRIVE_ACTIVE_IDLE:
             *state = drive_active_idle();
-            break
+            break;
         case DRIVE_ACTIVE_POWER:
             *state = drive_active_power();
-            break
+            break;
         case DRIVE_ACTIVE_REGEN:
             *state = drive_active_regen();
-            break
+            break;
         case TS_DISCHARGE_OFF:
             *state = ts_discharge_off();
-            break
+            break;
         case REFLASH_TUNE:
             *state = reflash_tune();
-            break
+            break;
         case ERROR:
         default:
             error();
-        break
+        break;
     }
 }
 
