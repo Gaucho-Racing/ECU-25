@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 enum State {
     ECU_FLASH,
     GLV_ON,
@@ -10,3 +12,5 @@ enum State {
     DRIVE_REGEN,
     ERROR
 };
+
+void stateMachineTick(State state);
