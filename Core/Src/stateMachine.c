@@ -1,5 +1,7 @@
 #include "stateMachine.h"
 
+/* WHY DO THE FILES NOT LINK AHH MY CMAKE IS BAD */
+
 stateMachineTick(State* state, InformationToPassToState info)
 {
     switch(state) {
