@@ -26,61 +26,61 @@ struct InformationToPassToState {
 /*
 Starting point, general low voltage off
 */
-State glv_off();
+State* glv_off();
 
 /*
 General low voltage on
 */
-State glv_on();
+State* glv_on();
 
 /*
 Precharge engaged
 */
-State precharge_engaged();
+State* precharge_engaged();
 
 /*
 Precharging
 */
-State precharging();
+State* precharging();
 
 /*
 Precharge complete
 */
-State precharge_complete();
+State* precharge_complete();
 
 /*
 Ready to go, drive standby
 */
-State drive_standby();
+State* drive_standby();
 
 /*
 Drive active sub state, idle
 */
-State drive_active_idle();
+State* drive_active_idle();
 
 /*
 Drive active sub state, power
 */
-State drive_active_power();
+State* drive_active_power();
 
 /*
 Drive active sub state, regen
 */
-State drive_active_regen();
+State* drive_active_regen();
 
 /*
 Shutting down, ts discharge off
 */
-State ts_discharge_off();
+State* ts_discharge_off();
 
 /*
 Set new stuff, reflash tune
 */
-State reflash_tune();
+State* reflash_tune();
 
 /*
 Error state, error
 */
-State error();
+State* error();
 
-void stateMachineTick(State state, InformationToPassToState info);
+void stateMachineTick(State* state, InformationToPassToState info);
