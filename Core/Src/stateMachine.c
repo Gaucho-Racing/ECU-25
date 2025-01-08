@@ -1,6 +1,6 @@
 #include "stateMachine.h"
 
-stateMachineTick(State state, InformationToPassToState info);
+stateMachineTick(State state, InformationToPassToState info)
 {
     switch(state) {
         case ECU_FLASH:
