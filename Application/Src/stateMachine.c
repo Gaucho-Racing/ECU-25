@@ -1,104 +1,109 @@
 #include "stateMachine.h"
 
-stateMachineTick(State* state, InformationToPassToState info)
+void stateMachineTick(State* state, InformationToPassToState info)
 {
-    switch(state) {
+
+    // Honestly I would just pass in the state as a pointer and modify it in each function so you don't need to return it
+    // Also if there's any persistent data that needs to be passed between states then you can just change the function to return that info, 
+    // and forcing the function to return the state can be annoying to deal with (although you can also just achieve this with another pointer)
+    // If there's a good reason why we have to return State then just revert my commit - Bailey
+    switch(*state) {
         case GLV_OFF:
-            *state = glv_off();
+            glv_off(state);
             break;
         case GLV_ON:
-            *state = glv_on();
+            glv_on(state);
             break;
         case PRECHARGE_ENGAGED:
-            *state = precharge_engaged();
+            precharge_engaged(state);
             break;
         case PRECHARGING:
-            *state = precharging();
+            precharging(state);
             break;
         case PRECHARGE_COMPLETE:
-            *state = precharge_complete();
+            precharge_complete(state);
             break;
         case DRIVE_STANDBY:
-            *state = drive_standby();
+            drive_standby(state);
             break;
         case DRIVE_ACTIVE_IDLE:
-            *state = drive_active_idle();
+            drive_active_idle(state);
             break;
         case DRIVE_ACTIVE_POWER:
-            *state = drive_active_power();
+            drive_active_power(state);
             break;
         case DRIVE_ACTIVE_REGEN:
-            *state = drive_active_regen();
+            drive_active_regen(state);
             break;
         case TS_DISCHARGE_OFF:
-            *state = ts_discharge_off();
+            ts_discharge_off(state);
             break;
         case REFLASH_TUNE:
-            *state = reflash_tune();
+            reflash_tune(state);
             break;
         case ERROR:
         default:
-            error();
+            error(state);
         break;
     }
 }
 
-State glv_off()
+void glv_off(State* state)
 {
 
 }
 
-State glv_on()
+void glv_on(State* state)
 {
 
 }
 
-State precharge_engaged()
+void precharge_engaged(State* state)
 {
 
 }
 
-State precharging()
+void precharging(State* state)
 {
 
 }
 
-State precharge_complete()
+void precharge_complete(State* state)
 {
 
 }
 
-State drive_standby()
+void drive_standby(State* state)
 {
 
 }
 
-State drive_active_idle()
+void drive_active_idle(State* state)
 {
 
 }
 
-State drive_active_power()
+void drive_active_power(State* state)
 {
 
 }
 
-State drive_active_regen()
+void drive_active_regen(State* state)
 {
 
 }
 
-State ts_discharge_off()
+void ts_discharge_off(State* state)
 {
 
 }
 
-State reflash_tune()
+void reflash_tune(State* state)
 {
     
 }
 
-State error()
+void error(State* state)
 {
 
 }

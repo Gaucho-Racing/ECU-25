@@ -26,61 +26,61 @@ typedef struct {
 /*
 Starting point, general low voltage off
 */
-State* glv_off();
+void glv_off(State* state);
 
 /*
 General low voltage on
 */
-State* glv_on();
+void glv_on(State* state);
 
 /*
 Precharge engaged
 */
-State* precharge_engaged();
+void precharge_engaged(State* state);
 
 /*
 Precharging
 */
-State* precharging();
+void precharging(State* state);
 
 /*
 Precharge complete
 */
-State* precharge_complete();
+void precharge_complete(State* state);
 
 /*
 Ready to go, drive standby
 */
-State* drive_standby();
+void drive_standby(State* state);
 
 /*
 Drive active sub state, idle
 */
-State* drive_active_idle();
+void drive_active_idle(State* state);
 
 /*
 Drive active sub state, power
 */
-State* drive_active_power();
+void drive_active_power(State* state);
 
 /*
 Drive active sub state, regen
 */
-State* drive_active_regen();
+void drive_active_regen(State* state);
 
 /*
 Shutting down, ts discharge off
 */
-State* ts_discharge_off();
+void ts_discharge_off(State* state);
 
 /*
 Set new stuff, reflash tune
 */
-State* reflash_tune();
+void reflash_tune(State* state);
 
 /*
 Error state, error
 */
-State* error();
+void error(State* state);
 
 void stateMachineTick(State* state, InformationToPassToState info);
