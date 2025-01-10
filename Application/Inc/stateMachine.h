@@ -1,7 +1,6 @@
 #include <stdint.h>
 
 typedef enum {
-    GLV_OFF,
     GLV_ON,
     PRECHARGE_ENGAGED,
     PRECHARGING,
@@ -23,11 +22,6 @@ typedef struct {
     VehicleParameters vehicleParameters;
     int replaceMeWithUsefulThings;
 } InformationToPassToState;
-
-/*
-Starting point, general low voltage off
-*/
-void glv_off(State* state, InformationToPassToState info);
 
 /*
 General low voltage on

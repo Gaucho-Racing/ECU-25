@@ -3,9 +3,6 @@
 void stateMachineTick(State* state, InformationToPassToState info)
 {
     switch(*state) {
-        case GLV_OFF:
-            glv_off(state, info);
-            break;
         case GLV_ON:
             glv_on(state, info);
             break;
