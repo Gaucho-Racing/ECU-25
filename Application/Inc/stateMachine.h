@@ -20,67 +20,68 @@ typedef struct {
 } VehicleParameters;
 
 typedef struct {
+    VehicleParameters vehicleParameters;
     int replaceMeWithUsefulThings;
 } InformationToPassToState;
 
 /*
 Starting point, general low voltage off
 */
-void glv_off(State* state);
+void glv_off(State* state, InformationToPassToState info);
 
 /*
 General low voltage on
 */
-void glv_on(State* state);
+void glv_on(State* state, InformationToPassToState info);
 
 /*
 Precharge engaged
 */
-void precharge_engaged(State* state);
+void precharge_engaged(State* state, InformationToPassToState info);
 
 /*
 Precharging
 */
-void precharging(State* state);
+void precharging(State* state, InformationToPassToState info);
 
 /*
 Precharge complete
 */
-void precharge_complete(State* state);
+void precharge_complete(State* state, InformationToPassToState info);
 
 /*
 Ready to go, drive standby
 */
-void drive_standby(State* state);
+void drive_standby(State* state, InformationToPassToState info);
 
 /*
 Drive active sub state, idle
 */
-void drive_active_idle(State* state);
+void drive_active_idle(State* state, InformationToPassToState info);
 
 /*
 Drive active sub state, power
 */
-void drive_active_power(State* state);
+void drive_active_power(State* state, InformationToPassToState info);
 
 /*
 Drive active sub state, regen
 */
-void drive_active_regen(State* state);
+void drive_active_regen(State* state, InformationToPassToState info);
 
 /*
 Shutting down, ts discharge off
 */
-void ts_discharge_off(State* state);
+void ts_discharge_off(State* state, InformationToPassToState info);
 
 /*
 Set new stuff, reflash tune
 */
-void reflash_tune(State* state);
+void reflash_tune(State* state, InformationToPassToState info);
 
 /*
 Error state, error
 */
-void error(State* state);
+void error(State* state, InformationToPassToState info);
 
 void stateMachineTick(State* state, InformationToPassToState info);
