@@ -9,7 +9,7 @@ typedef enum {
     DRIVE_ACTIVE_REGEN,
     TS_DISCHARGE_OFF,
     REFLASH_TUNE,
-    ERROR
+    ERRORSTATE
 } State;
 
 typedef struct {

@@ -35,7 +35,7 @@ void stateMachineTick(State* state, InformationToPassToState info)
         case REFLASH_TUNE:
             reflash_tune(state, info);
             break;
-        case ERROR:
+        case ERRORSTATE:
         default:
             error(state, info);
         break;
@@ -82,7 +82,7 @@ void precharging(State* state, InformationToPassToState info)
 {
     if (rateLimitOk(info)) {
         // DO AND SEND THINGS
-
+ 
         // ONLY INCLUDE BELOW LINE IF MESSAGE SENT
         info.lastMessageTick = HAL_GetTick();
     } else {

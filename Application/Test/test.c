@@ -15,7 +15,19 @@ int main() {
     SystemClock_Config();
     MX_GPIO_Init();
 
-    
+    led.Pin = GPIO_PIN_ALL;
+    led.Mode = GPIO_MODE_OUTPUT_PP;
+    led.Pull = GPIO_NOPULL;
+    led.Speed = GPIO_SPEED_FREQ_LOW;
+    HAL_GPIO_Init(GPIOC, &led);
+    count = 1;
+    while (1) {
+        ledControl();
+    }
 
     return 0;
+}
+
+void ledControl() {
+    
 }
