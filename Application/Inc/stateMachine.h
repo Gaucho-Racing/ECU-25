@@ -81,7 +81,7 @@ void error(State* state, InformationToPassToState info);
 /*
 CALL ME! Pass in the state and the info and it will automatically tick
 */
-void stateMachineTick(State* state, InformationToPassToState info);
+void stateMachineTick(State* state);
 
 /*
 Will return true only when enough time has passed
