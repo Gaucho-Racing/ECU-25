@@ -2,11 +2,6 @@
 
 void stateMachineTick(State* state, InformationToPassToState info)
 {
-
-    // Honestly I would just pass in the state as a pointer and modify it in each function so you don't need to return it
-    // Also if there's any persistent data that needs to be passed between states then you can just change the function to return that info, 
-    // and forcing the function to return the state can be annoying to deal with (although you can also just achieve this with another pointer)
-    // If there's a good reason why we have to return State then just revert my commit - Bailey
     switch(*state) {
         case GLV_OFF:
             glv_off(state);
