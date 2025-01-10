@@ -1,3 +1,5 @@
+#include <stdbool.h>
+#include "stm32g4xx_hal.h"
 #include "stateMachine.h"
 
 void stateMachineTick(State* state, InformationToPassToState info)
@@ -98,4 +100,9 @@ void reflash_tune(State* state, InformationToPassToState info)
 void error(State* state, InformationToPassToState info)
 {
 
+}
+
+_Bool rateLimit(InformationToPassToState info)
+{
+    return HAL_GetTick() - info.millisecondsSinceLastMessage > 1000 / info.communicationFrequency;
 }

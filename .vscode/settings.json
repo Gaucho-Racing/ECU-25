@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "statemachine.h": "c"
+        "statemachine.h": "c",
+        "stm32g4xx_hal.h": "c",
+        "stdbool.h": "c"
     }
 }

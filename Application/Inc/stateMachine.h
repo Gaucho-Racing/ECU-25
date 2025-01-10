@@ -18,6 +18,8 @@ typedef struct {
 
 typedef struct {
     VehicleParameters vehicleParameters;
+    unsigned long long millisecondsSinceLastMessage;
+    unsigned long long communicationFrequency;
     int replaceMeWithUsefulThings;
 } InformationToPassToState;
 
@@ -77,3 +79,9 @@ Error state, error
 void error(State* state, InformationToPassToState info);
 
 void stateMachineTick(State* state, InformationToPassToState info);
+
+/*
+Will return true only when enough time has passed
+ie: if (rateLimit(info)) { ... }
+*/
+_Bool rateLimit(InformationToPassToState info);
