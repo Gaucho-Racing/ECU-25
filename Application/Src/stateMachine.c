@@ -63,8 +63,8 @@ void glv_on(State* state, InformationToPassToState info)
         // Nothing, cannot overload CANFD
     }
 
-    // If acu voltage is > 60 then:
-    //*state = TS_DISCHARGE_OFF;
+    /// if (/*TS ACTIVE button pressed*/)
+    //     *state = precharge_engaged;
 }
 
 void precharge_engaged(State* state, InformationToPassToState info)
@@ -77,6 +77,11 @@ void precharge_engaged(State* state, InformationToPassToState info)
     } else {
         // Nothing, cannot overload CANFD
     }
+
+    // if (/*ACU precharge confirmation recieved*/)
+    //     *state = PRECHARGING;
+    // if (/*TS ACTIVE button disabled*/)
+    //     *state = GLV_ON;
 }
 
 void precharging(State* state, InformationToPassToState info)
@@ -89,6 +94,11 @@ void precharging(State* state, InformationToPassToState info)
     } else {
         // Nothing, cannot overload CANFD
     }
+
+    // if (/*ACU precharge success confirmation*/)
+    //     *state = PRECHARGE_COMPLETE;
+    // if (/*TS ACTIVE button disabled*/ || /*ACU precharge cancellation*/)
+    //     *state = TS_DISCHARGE_OFF;
 }
 
 void precharge_complete(State* state, InformationToPassToState info)
@@ -101,6 +111,11 @@ void precharge_complete(State* state, InformationToPassToState info)
     } else {
         // Nothing, cannot overload CANFD
     }
+
+    // if (/*BRAKE on*/ && /*ReadyToDrive ON*/)
+    //     *state = DRIVE_STANDBY;
+    // if (/*TS ACTIVE button disabled*/ || /*ACU shutdown*/ || /*Critical error*/)
+    //     *state = TS_DISCHARGE_OFF;
 }
 
 void drive_standby(State* state, InformationToPassToState info)
@@ -113,6 +128,13 @@ void drive_standby(State* state, InformationToPassToState info)
     } else {
         // Nothing, cannot overload CANFD
     }
+
+    // if (/*Valid torque request*/)
+    //     *state = DRIVE_ACTIVE_IDLE; // not sure if it's idle and not some other state
+    // if (/*ReadyToDrive OFF*/)
+    //     *state = PRECHARGE_COMPLETE;
+    // if (/*TS ACTIVE button disabled*/ || /*ACU shutdown*/ || /*Critical error*/)
+    //     *state = TS_DISCHARGE_OFF;
 }
 
 void drive_active_idle(State* state, InformationToPassToState info)
@@ -125,6 +147,15 @@ void drive_active_idle(State* state, InformationToPassToState info)
     } else {
         // Nothing, cannot overload CANFD
     }
+
+    // LOTS OF https://github.com/Gaucho-Racing/VDM-24/blob/9ee4839ee6e5ce32a51602fe23723db5d23b1eaf/src/main.cpp#L1214
+
+    // if (/*No violation*/ && /*Throttle is none*/ && /*Speed > X mph*/ && /*Not regenerating power*/)
+    //    *state = DRIVE_ACTIVE_REGEN;
+    // if (/*Violation*/)   // SEND WARNING TO DASH
+    //    *state = DRIVE_STANDBY;
+    // if (/*TS ACTIVE button disabled*/ || /*ACU shutdown*/ || /*Critical error*/)
+    //     *state = TS_DISCHARGE_OFF;
 }
 
 void drive_active_power(State* state, InformationToPassToState info)
@@ -137,6 +168,12 @@ void drive_active_power(State* state, InformationToPassToState info)
     } else {
         // Nothing, cannot overload CANFD
     }
+
+    // LOTS OF https://github.com/Gaucho-Racing/VDM-24/blob/9ee4839ee6e5ce32a51602fe23723db5d23b1eaf/src/main.cpp#L1214
+
+    if (/**/)
+    // if (/*TS ACTIVE button disabled*/ || /*ACU shutdown*/ || /*Critical error*/)
+    //     *state = TS_DISCHARGE_OFF;
 }
 
 void drive_active_regen(State* state, InformationToPassToState info)
@@ -149,6 +186,11 @@ void drive_active_regen(State* state, InformationToPassToState info)
     } else {
         // Nothing, cannot overload CANFD
     }
+
+    // LOTS OF https://github.com/Gaucho-Racing/VDM-24/blob/9ee4839ee6e5ce32a51602fe23723db5d23b1eaf/src/main.cpp#L1214
+
+    // if (/*TS ACTIVE button disabled*/ || /*ACU shutdown*/ || /*Critical error*/)
+    //     *state = TS_DISCHARGE_OFF;
 }
 
 void ts_discharge_off(State* state, InformationToPassToState info)
