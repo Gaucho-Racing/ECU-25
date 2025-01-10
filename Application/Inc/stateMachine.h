@@ -78,6 +78,9 @@ Error state, error
 */
 void error(State* state, InformationToPassToState info);
 
+/*
+CALL ME! Pass in the state and the info and it will automatically tick
+*/
 void stateMachineTick(State* state, InformationToPassToState info);
 
 /*

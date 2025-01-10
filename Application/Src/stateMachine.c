@@ -47,11 +47,15 @@ void glv_on(State* state, InformationToPassToState info)
     if (rateLimitOk(info)) {
         // DO AND SEND THINGS
 
+        // 
+
         // ONLY INCLUDE BELOW LINE IF MESSAGE SENT
         info.lastMessageTick = HAL_GetTick();
     } else {
         // Nothing, cannot overload CANFD
     }
+
+    // If 
 }
 
 void precharge_engaged(State* state, InformationToPassToState info)
