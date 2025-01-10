@@ -42,18 +42,6 @@ void stateMachineTick(State* state, InformationToPassToState info)
     }
 }
 
-void glv_off(State* state, InformationToPassToState info)
-{
-    if (rateLimitOk(info)) {
-        // DO AND SEND THINGS
-
-        // ONLY INCLUDE BELOW LINE IF MESSAGE SENT
-        info.lastMessageTick = HAL_GetTick();
-    } else {
-        // Nothing, cannot overload CANFD
-    }
-}
-
 void glv_on(State* state, InformationToPassToState info)
 {
     if (rateLimitOk(info)) {
