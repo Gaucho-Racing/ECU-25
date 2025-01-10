@@ -2,8 +2,6 @@
 #include "stm32g4xx_hal.h"
 #include "stateMachine.h"
 
-
-
 void stateMachineTick(State* state)
 {
     InformationToPassToState info = readInformation();
