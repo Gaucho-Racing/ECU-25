@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "stateMachine.h"
 #include "adc.h"
 #include "crc.h"
 #include "fdcan.h"
@@ -48,6 +49,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+State* state = GLV_ON;
+InformationToPassToState info;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -106,6 +109,9 @@ int main(void)
     HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5); // LED?
     HAL_Delay(200);
     /* USER CODE BEGIN 3 */
+
+    stateMachineTick(state, info);
+
   }
   /* USER CODE END 3 */
 }
