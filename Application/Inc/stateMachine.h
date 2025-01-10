@@ -25,6 +25,10 @@ typedef struct {
 
 /*
 General low voltage on
+
+When the grounded low voltage system is turned on, the microcontroller has power, 
+but the motor controller is not enabled. This is the second state that the car will enter
+after the ECU Flash is complete. Here it waits for the TS ACTIVE button to be pressed.
 */
 void glv_on(State* state, InformationToPassToState info);
 

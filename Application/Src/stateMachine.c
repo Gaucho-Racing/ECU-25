@@ -51,8 +51,11 @@ void glv_on(State* state, InformationToPassToState info)
 {
     if (rateLimitOk(info)) {
         // DO AND SEND THINGS
-
-        // 
+        
+        // When the grounded low voltage system is turned on
+        // the microcontroller has power, but the motor controller is not enabled.
+        // This is the second state that the car will enter after the ECU Flash is complete.
+        // Here it waits for the TS ACTIVE button to be pressed.
 
         // ONLY INCLUDE BELOW LINE IF MESSAGE SENT
         info.lastMessageTick = HAL_GetTick();
@@ -60,7 +63,8 @@ void glv_on(State* state, InformationToPassToState info)
         // Nothing, cannot overload CANFD
     }
 
-    // If 
+    // If acu voltage is > 60 then:
+    //*state = TS_DISCHARGE_OFF;
 }
 
 void precharge_engaged(State* state, InformationToPassToState info)
@@ -190,5 +194,5 @@ _Bool rateLimitOk(InformationToPassToState info)
 
 InformationToPassToState readInformation()
 {
-    
+    // ???
 }
