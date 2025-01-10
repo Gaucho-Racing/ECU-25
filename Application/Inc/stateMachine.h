@@ -20,6 +20,7 @@ typedef struct {
 } VehicleParameters;
 
 typedef struct {
+    VehicleParameters vehicleParameters;
     int replaceMeWithUsefulThings;
 } InformationToPassToState;
 
