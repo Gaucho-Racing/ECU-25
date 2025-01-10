@@ -221,10 +221,10 @@ void ts_discharge_off(State* state, InformationToPassToState info)
         // Nothing, cannot overload CANFD
     }
 
-    if (/*Main power off*/ && /*Errors resolved*/)
-        *state = GLV_ON;
-    if (/*Main power off*/ && !/*Errors resolved*/)
-        *state = ERROR;
+    // if (/*Main power off*/ && /*Errors resolved*/)
+    //     *state = GLV_ON;
+    // if (/*Main power off*/ && !/*Errors resolved*/)
+    //     *state = ERROR;
 }
 
 void reflash_tune(State* state, InformationToPassToState info)
