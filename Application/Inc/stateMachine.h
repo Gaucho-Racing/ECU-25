@@ -88,3 +88,8 @@ Will return true only when enough time has passed
 ie: if (rateLimitOk(info)) { ... }
 */
 _Bool rateLimitOk(InformationToPassToState info);
+
+/*
+Reads information from CAN and encapsulates in the struct
+*/
+InformationToPassToState readInformation();

@@ -2,8 +2,13 @@
 #include "stm32g4xx_hal.h"
 #include "stateMachine.h"
 
-void stateMachineTick(State* state, InformationToPassToState info)
+
+
+void stateMachineTick(State* state)
 {
+    InformationToPassToState info = readInformation();
+    VehicleParameters vehicleParameters = info.vehicleParameters;
+
     switch(*state) {
         case GLV_ON:
             glv_on(state, info);
@@ -181,4 +186,9 @@ void error(State* state, InformationToPassToState info)
 _Bool rateLimitOk(InformationToPassToState info)
 {
     return HAL_GetTick() - info.lastMessageTick > 1000 / info.communicationFrequency;
+}
+
+InformationToPassToState readInformation()
+{
+    
 }
