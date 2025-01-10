@@ -1,5 +1,3 @@
-#include <stdint.h>
-
 typedef enum {
     GLV_ON,
     PRECHARGE_ENGAGED,
