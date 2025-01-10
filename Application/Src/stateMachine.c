@@ -44,65 +44,149 @@ void stateMachineTick(State* state, InformationToPassToState info)
 
 void glv_off(State* state, InformationToPassToState info)
 {
+    if (rateLimitOk(info)) {
+        // DO AND SEND THINGS
 
+        // ONLY INCLUDE BELOW LINE IF MESSAGE SENT
+        info.lastMessageTick = HAL_GetTick();
+    } else {
+        // Nothing, cannot overload CANFD
+    }
 }
 
 void glv_on(State* state, InformationToPassToState info)
 {
+    if (rateLimitOk(info)) {
+        // DO AND SEND THINGS
 
+        // ONLY INCLUDE BELOW LINE IF MESSAGE SENT
+        info.lastMessageTick = HAL_GetTick();
+    } else {
+        // Nothing, cannot overload CANFD
+    }
 }
 
 void precharge_engaged(State* state, InformationToPassToState info)
 {
+    if (rateLimitOk(info)) {
+        // DO AND SEND THINGS
 
+        // ONLY INCLUDE BELOW LINE IF MESSAGE SENT
+        info.lastMessageTick = HAL_GetTick();
+    } else {
+        // Nothing, cannot overload CANFD
+    }
 }
 
 void precharging(State* state, InformationToPassToState info)
 {
+    if (rateLimitOk(info)) {
+        // DO AND SEND THINGS
 
+        // ONLY INCLUDE BELOW LINE IF MESSAGE SENT
+        info.lastMessageTick = HAL_GetTick();
+    } else {
+        // Nothing, cannot overload CANFD
+    }
 }
 
 void precharge_complete(State* state, InformationToPassToState info)
 {
+    if (rateLimitOk(info)) {
+        // DO AND SEND THINGS
 
+        // ONLY INCLUDE BELOW LINE IF MESSAGE SENT
+        info.lastMessageTick = HAL_GetTick();
+    } else {
+        // Nothing, cannot overload CANFD
+    }
 }
 
 void drive_standby(State* state, InformationToPassToState info)
 {
+    if (rateLimitOk(info)) {
+        // DO AND SEND THINGS
 
+        // ONLY INCLUDE BELOW LINE IF MESSAGE SENT
+        info.lastMessageTick = HAL_GetTick();
+    } else {
+        // Nothing, cannot overload CANFD
+    }
 }
 
 void drive_active_idle(State* state, InformationToPassToState info)
 {
+    if (rateLimitOk(info)) {
+        // DO AND SEND THINGS
 
+        // ONLY INCLUDE BELOW LINE IF MESSAGE SENT
+        info.lastMessageTick = HAL_GetTick();
+    } else {
+        // Nothing, cannot overload CANFD
+    }
 }
 
 void drive_active_power(State* state, InformationToPassToState info)
 {
+    if (rateLimitOk(info)) {
+        // DO AND SEND THINGS
 
+        // ONLY INCLUDE BELOW LINE IF MESSAGE SENT
+        info.lastMessageTick = HAL_GetTick();
+    } else {
+        // Nothing, cannot overload CANFD
+    }
 }
 
 void drive_active_regen(State* state, InformationToPassToState info)
 {
+    if (rateLimitOk(info)) {
+        // DO AND SEND THINGS
 
+        // ONLY INCLUDE BELOW LINE IF MESSAGE SENT
+        info.lastMessageTick = HAL_GetTick();
+    } else {
+        // Nothing, cannot overload CANFD
+    }
 }
 
 void ts_discharge_off(State* state, InformationToPassToState info)
 {
+    if (rateLimitOk(info)) {
+        // DO AND SEND THINGS
 
+        // ONLY INCLUDE BELOW LINE IF MESSAGE SENT
+        info.lastMessageTick = HAL_GetTick();
+    } else {
+        // Nothing, cannot overload CANFD
+    }
 }
 
 void reflash_tune(State* state, InformationToPassToState info)
 {
-    
+    if (rateLimitOk(info)) {
+        // DO AND SEND THINGS
+
+        // ONLY INCLUDE BELOW LINE IF MESSAGE SENT
+        info.lastMessageTick = HAL_GetTick();
+    } else {
+        // Nothing, cannot overload CANFD
+    }    
 }
 
 void error(State* state, InformationToPassToState info)
 {
+    if (rateLimitOk(info)) {
+        // DO AND SEND THINGS
 
+        // ONLY INCLUDE BELOW LINE IF MESSAGE SENT
+        info.lastMessageTick = HAL_GetTick();
+    } else {
+        // Nothing, cannot overload CANFD
+    }
 }
 
-_Bool rateLimit(InformationToPassToState info)
+_Bool rateLimitOk(InformationToPassToState info)
 {
-    return HAL_GetTick() - info.millisecondsSinceLastMessage > 1000 / info.communicationFrequency;
+    return HAL_GetTick() - info.lastMessageTick > 1000 / info.communicationFrequency;
 }
