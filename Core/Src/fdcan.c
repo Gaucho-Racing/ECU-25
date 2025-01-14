@@ -95,12 +95,14 @@ void writeMessage(uint32_t identifier, uint8_t* data, FDCAN_data_length_code len
     TxHeader.IdType = FDCAN_STANDARD_ID;
     TxHeader.TxFrameType = FDCAN_DATA_FRAME;
     TxHeader.DataLength = len;
-    TxHeader.ErrorStateIndicator = 
-    TxHeader.BitRateSwitch = 
+    TxHeader.ErrorStateIndicator = FDCAN_ESI_ACTIVE; // honestly this might be a value you have to read from a node
+                                                     // FDCAN_ESI_ACTIVE is just a state that assumes there are minimal errors
+    TxHeader.BitRateSwitch = FDCAN_BRS_ON;
     TxHeader.FDFormat = FDCAN_FD_CAN;
-    TxHeader.TxEventFifoControl = 
-    TxHeader.MessageMarker =
+    TxHeader.TxEventFifoControl = FDCAN_NO_TX_EVENTS; // change to FDCAN_STORE_TX_EVENTS if you need to store info regarding transmitted messages
+    TxHeader.MessageMarker = 0 // also change this to a real address if you change fifo control
     HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &TxHeader, data);
+  }
   // } else if (bus == 2) {
   //   TxHeader.Identifier = 
   //   TxHeader.IdType = 
@@ -113,19 +115,15 @@ void writeMessage(uint32_t identifier, uint8_t* data, FDCAN_data_length_code len
   //   TxHeader.FilterIndex = 
   //   TxHeader.IsFileMatchingFrame =
   //   HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, );
-  }
 }
 
-void readMessage() {
+void readMessage(uint32_t identifier, uint32_t dataLength, /* DATA TYPE TO FILL */) {
   FDCAN_RxHeaderTypeDef RxHeader;
-  RxHeader.Identifier = 
-  RxHeader.IdType = FDCAN_STANDARD_ID;
-  RxHeader.RxFrameType = FDCAN_DATA_FRAME;
-  TxHeader.DataLength
+  HAL_FDCAN_GetRxMessage(&hfdcan1, RxLocation, RxHeader, pRxData);
+  
+}
 
 //HAL_FDCAN_GetRxMessage(FDCAN_HandleTypeDef *hfdcan, uint32_t RxLocation, FDCAN_RxHeaderTypeDef *pRxHeader, uint8_t *pRxData);
-  RxHeader.Identifier;
-}
 
 // typedef struct
 // {
