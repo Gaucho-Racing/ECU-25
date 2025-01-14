@@ -98,8 +98,25 @@ FDCAN_HandleTypeDef hfdcan2;
 
 void writeMessage(FDCAN_id_type id, uint8_t* data, FDCAN_data_length_code len, uint8_t bus) {
   
-  FDCAN_TxHeaderTypeDef header();
-  HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, );
+  // initialize header
+
+  // primary bus
+  if (bus == 1) {
+    FDCAN_TxHeaderTypeDef header;
+    header.Identifier = 
+    header.IdType = 
+    header.RxFrameType = 
+    header.DataLength = 
+    header.ErrorStateIndicator = 
+    header.BitRateSwitch = 
+    header.FDFormat = 
+    header.RxTimestamp = 
+    header.FilterIndex = 
+    header.IsFileMatchingFrame =
+    HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, );
+  } else if (bus == 2) {
+    
+  }
 }
 
 /* FDCAN1 init function */
