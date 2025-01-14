@@ -101,6 +101,9 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_FDCAN_Start(hfdcan1);
   HAL_FDCAN_Start(hfdcan2);
+  
+  HAL_FDCAN_EnableTxBufferRequest();
+
   /* USER CODE END 2 */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */

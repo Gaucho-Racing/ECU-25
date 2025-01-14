@@ -84,40 +84,88 @@
 
 // } FDCAN_TxHeaderTypeDef;
 
-
-void writeMessage(FDCAN_id_type id, uint8_t* data, FDCAN_data_length_code len, uint8_t bus) {
+void writeMessage(uint32_t identifier, uint8_t* data, FDCAN_data_length_code len, uint8_t bus) {
   
   // initialize header
-
+  FDCAN_TxHeaderTypeDef TxHeader;
   // primary bus
   // we're just gonna assume this is the only bus to use
   if (bus == 1) {
-    FDCAN_TxHeaderTypeDef header;
-    header.Identifier = 
-    header.IdType = FDCAN_STANDARD_ID;
-    header.TxFrameType = 
-    header.DataLength = 
-    header.ErrorStateIndicator = 
-    header.BitRateSwitch = 
-    header.FDFormat = 
-    header.TxEventFifoControl = 
-    header.MessageMarker =
+    TxHeader.Identifier = identifier;
+    TxHeader.IdType = FDCAN_STANDARD_ID;
+    TxHeader.TxFrameType = FDCAN_DATA_FRAME;
+    TxHeader.DataLength = len;
+    TxHeader.ErrorStateIndicator = 
+    TxHeader.BitRateSwitch = 
+    TxHeader.FDFormat = 
+    TxHeader.TxEventFifoControl = 
+    TxHeader.MessageMarker =
     HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, );
-  } else if (bus == 2) {
-    FDCAN_TxHeaderTypeDef header;
-    header.Identifier = 
-    header.IdType = 
-    header.RxFrameType = 
-    header.DataLength = 
-    header.ErrorStateIndicator = 
-    header.BitRateSwitch = 
-    header.FDFormat = 
-    header.RxTimestamp = 
-    header.FilterIndex = 
-    header.IsFileMatchingFrame =
-    HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, );
+  // } else if (bus == 2) {
+  //   TxHeader.Identifier = 
+  //   TxHeader.IdType = 
+  //   TxHeader.RxFrameType = 
+  //   TxHeader.DataLength = 
+  //   TxHeader.ErrorStateIndicator = 
+  //   TxHeader.BitRateSwitch = 
+  //   TxHeader.FDFormat = 
+  //   TxHeader.RxTimestamp = 
+  //   TxHeader.FilterIndex = 
+  //   TxHeader.IsFileMatchingFrame =
+  //   HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, );
   }
 }
+
+void readMessage() {
+  FDCAN_RxHeaderTypeDef RxHeader;
+  RxHeader.Identifier;
+}
+
+// typedef struct
+// {
+//   uint32_t Identifier;            /*!< Specifies the identifier.
+//                                        This parameter must be a number between:
+//                                         - 0 and 0x7FF, if IdType is FDCAN_STANDARD_ID
+//                                         - 0 and 0x1FFFFFFF, if IdType is FDCAN_EXTENDED_ID               */
+
+//   uint32_t IdType;                /*!< Specifies the identifier type of the received message.
+//                                        This parameter can be a value of @ref FDCAN_id_type               */
+
+//   uint32_t RxFrameType;           /*!< Specifies the the received message frame type.
+//                                        This parameter can be a value of @ref FDCAN_frame_type            */
+
+//   uint32_t DataLength;            /*!< Specifies the received frame length.
+//                                         This parameter can be a value of @ref FDCAN_data_length_code     */
+
+//   uint32_t ErrorStateIndicator;   /*!< Specifies the error state indicator.
+//                                        This parameter can be a value of @ref FDCAN_error_state_indicator */
+
+//   uint32_t BitRateSwitch;         /*!< Specifies whether the Rx frame is received with or without bit
+//                                        rate switching.
+//                                        This parameter can be a value of @ref FDCAN_bit_rate_switching    */
+
+//   uint32_t FDFormat;              /*!< Specifies whether the Rx frame is received in classic or FD
+//                                        format.
+//                                        This parameter can be a value of @ref FDCAN_format                */
+
+//   uint32_t RxTimestamp;           /*!< Specifies the timestamp counter value captured on start of frame
+//                                        reception.
+//                                        This parameter must be a number between 0 and 0xFFFF              */
+
+//   uint32_t FilterIndex;           /*!< Specifies the index of matching Rx acceptance filter element.
+//                                        This parameter must be a number between:
+//                                         - 0 and (SRAMCAN_FLS_NBR-1), if IdType is FDCAN_STANDARD_ID
+//                                         - 0 and (SRAMCAN_FLE_NBR-1), if IdType is FDCAN_EXTENDED_ID
+//                                        When the frame is a Non-Filter matching frame, this parameter
+//                                        is unused.                                                        */
+
+//   uint32_t IsFilterMatchingFrame; /*!< Specifies whether the accepted frame did not match any Rx filter.
+//                                        Acceptance of non-matching frames may be enabled via
+//                                        HAL_FDCAN_ConfigGlobalFilter().
+//                                        This parameter takes 0 if the frame matched an Rx filter or
+//                                        1 if it did not match any Rx filter                               */
+
+// } FDCAN_RxHeaderTypeDef;
 
 /* FDCAN1 init function */
 void MX_FDCAN1_Init(void)
