@@ -19,11 +19,10 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "fdcan.h"
-#include "stm32g4xx_hal_fdcan.h"
 
 /* USER CODE BEGIN 0 */
+#include "stm32g4xx_hal_fdcan.h"
 
-/* USER CODE END 0 */
 
 // HAL_StatusTypeDef HAL_FDCAN_Start(FDCAN_HandleTypeDef *hfdcan);
 // HAL_StatusTypeDef HAL_FDCAN_Stop(FDCAN_HandleTypeDef *hfdcan);
@@ -170,6 +169,8 @@ void readMessage(uint32_t identifier, uint32_t dataLength, /* DATA TYPE TO FILL 
 //                                        1 if it did not match any Rx filter                               */
 
 // } FDCAN_RxHeaderTypeDef;
+
+/* USER CODE END 0 */
 
 /* FDCAN1 init function */
 void MX_FDCAN1_Init(void)
