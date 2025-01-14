@@ -27,6 +27,12 @@
 FDCAN_HandleTypeDef hfdcan1;
 FDCAN_HandleTypeDef hfdcan2;
 
+void writeMessage(FDCAN_id_type id, uint8_t* data, FDCAN_data_length_code len, uint8_t bus) {
+  
+  FDCAN_TxHeaderTypeDef header = {};
+  HAL_FDCAN_AddMessageToTxFifoQ(hfdcan1, );
+}
+
 /* FDCAN1 init function */
 void MX_FDCAN1_Init(void)
 {
