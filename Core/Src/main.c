@@ -18,7 +18,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "stateMachine.h"
 #include "adc.h"
 #include "crc.h"
 #include "fdcan.h"
@@ -28,7 +27,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "stateMachine.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -49,7 +48,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-State* state = GLV_ON;
+State state = GLV_ON;
 InformationToPassToState info;
 /* USER CODE END PV */
 
@@ -110,7 +109,7 @@ int main(void)
     HAL_Delay(200);
     /* USER CODE BEGIN 3 */
 
-    stateMachineTick(state);
+    stateMachineTick(&state);
 
   }
   /* USER CODE END 3 */
