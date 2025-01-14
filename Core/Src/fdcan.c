@@ -97,10 +97,10 @@ void writeMessage(uint32_t identifier, uint8_t* data, FDCAN_data_length_code len
     TxHeader.DataLength = len;
     TxHeader.ErrorStateIndicator = 
     TxHeader.BitRateSwitch = 
-    TxHeader.FDFormat = 
+    TxHeader.FDFormat = FDCAN_FD_CAN;
     TxHeader.TxEventFifoControl = 
     TxHeader.MessageMarker =
-    HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, );
+    HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &TxHeader, data);
   // } else if (bus == 2) {
   //   TxHeader.Identifier = 
   //   TxHeader.IdType = 
@@ -118,6 +118,12 @@ void writeMessage(uint32_t identifier, uint8_t* data, FDCAN_data_length_code len
 
 void readMessage() {
   FDCAN_RxHeaderTypeDef RxHeader;
+  RxHeader.Identifier = 
+  RxHeader.IdType = FDCAN_STANDARD_ID;
+  RxHeader.RxFrameType = FDCAN_DATA_FRAME;
+  TxHeader.DataLength
+
+//HAL_FDCAN_GetRxMessage(FDCAN_HandleTypeDef *hfdcan, uint32_t RxLocation, FDCAN_RxHeaderTypeDef *pRxHeader, uint8_t *pRxData);
   RxHeader.Identifier;
 }
 
