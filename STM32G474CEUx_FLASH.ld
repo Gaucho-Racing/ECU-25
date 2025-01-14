@@ -6,7 +6,7 @@
 **
 **  Author		: STM32CubeMX
 **
-**  Abstract    : Linker script for STM32G474RETx series
+**  Abstract    : Linker script for STM32G474CEUx series
 **                512Kbytes FLASH and 128Kbytes RAM
 **
 **                Set heap size, stack size and stack location according
@@ -183,6 +183,7 @@ SECTIONS
     libgcc.a ( * )
   }
 
+  .ARM.attributes 0 : { *(.ARM.attributes) }
 }
 
 

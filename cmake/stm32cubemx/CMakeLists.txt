@@ -14,6 +14,7 @@ target_compile_definitions(stm32cubemx INTERFACE
 
 target_include_directories(stm32cubemx INTERFACE
     ../../Core/Inc
+    ../../Application/Inc
     ../../Drivers/STM32G4xx_HAL_Driver/Inc
     ../../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy
     ../../Drivers/CMSIS/Device/ST/STM32G4xx/Include
@@ -22,6 +23,11 @@ target_include_directories(stm32cubemx INTERFACE
 
 target_sources(stm32cubemx INTERFACE
     ../../Core/Src/main.c
+    ../../Core/Src/gpio.c
+    ../../Core/Src/adc.c
+    ../../Core/Src/crc.c
+    ../../Core/Src/fdcan.c
+    ../../Core/Src/spi.c
     ../../Core/Src/stm32g4xx_it.c
     ../../Core/Src/stm32g4xx_hal_msp.c
     ../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_adc.c
@@ -40,13 +46,18 @@ target_sources(stm32cubemx INTERFACE
     ../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr.c
     ../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.c
     ../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.c
+    ../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_crc.c
+    ../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_crc_ex.c
     ../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_fdcan.c
-    ../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart.c
-    ../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart_ex.c
+    ../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_spi.c
+    ../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_spi_ex.c
+    ../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim.c
+    ../../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim_ex.c
     ../../Core/Src/system_stm32g4xx.c
     ../../Core/Src/sysmem.c
     ../../Core/Src/syscalls.c
     ../../startup_stm32g474xx.s
+    ../../Application/Src/stateMachine.c
 )
 
 target_link_directories(stm32cubemx INTERFACE

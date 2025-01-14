@@ -1446,10 +1446,10 @@ __STATIC_INLINE void LL_UCPD_ClearFlag_TxMSGDISC(UCPD_TypeDef *UCPDx)
   */
 
 /**
-  * @brief  Check if FRS Event Flag is active
+  * @brief  Check if FRS interrupt
   * @rmtoll SR          FRSEVT         LL_UCPD_IsActiveFlag_FRS
   * @param  UCPDx UCPD Instance
-  * @retval State of bit (1 or 0).
+  * @retval None
   */
 __STATIC_INLINE uint32_t LL_UCPD_IsActiveFlag_FRS(UCPD_TypeDef const *const UCPDx)
 {
@@ -1460,7 +1460,7 @@ __STATIC_INLINE uint32_t LL_UCPD_IsActiveFlag_FRS(UCPD_TypeDef const *const UCPD
   * @brief  Check if type c event on CC2
   * @rmtoll SR          TYPECEVT2        LL_UCPD_IsActiveFlag_TypeCEventCC2
   * @param  UCPDx UCPD Instance
-  * @retval State of bit (1 or 0).
+  * @retval None
   */
 __STATIC_INLINE uint32_t LL_UCPD_IsActiveFlag_TypeCEventCC2(UCPD_TypeDef const *const UCPDx)
 {
@@ -1471,7 +1471,7 @@ __STATIC_INLINE uint32_t LL_UCPD_IsActiveFlag_TypeCEventCC2(UCPD_TypeDef const *
   * @brief  Check if type c event on CC1
   * @rmtoll SR          TYPECEVT1        LL_UCPD_IsActiveFlag_TypeCEventCC1
   * @param  UCPDx UCPD Instance
-  * @retval State of bit (1 or 0).
+  * @retval None
   */
 __STATIC_INLINE uint32_t LL_UCPD_IsActiveFlag_TypeCEventCC1(UCPD_TypeDef const *const UCPDx)
 {
@@ -1479,21 +1479,10 @@ __STATIC_INLINE uint32_t LL_UCPD_IsActiveFlag_TypeCEventCC1(UCPD_TypeDef const *
 }
 
 /**
-  * @brief  Check if Rx error flag is active
-  * @rmtoll SR          RXERR         LL_UCPD_IsActiveFlag_RxErr
-  * @param  UCPDx UCPD Instance
-  * @retval State of bit (1 or 0).
-  */
-__STATIC_INLINE uint32_t LL_UCPD_IsActiveFlag_RxErr(UCPD_TypeDef const *const UCPDx)
-{
-  return ((READ_BIT(UCPDx->SR, UCPD_SR_RXERR) == UCPD_SR_RXERR) ? 1UL : 0UL);
-}
-
-/**
-  * @brief  Check if Rx message end flag is active
+  * @brief  Check if Rx message end interrupt
   * @rmtoll SR          RXMSGEND         LL_UCPD_IsActiveFlag_RxMsgEnd
   * @param  UCPDx UCPD Instance
-  * @retval State of bit (1 or 0).
+  * @retval None
   */
 __STATIC_INLINE uint32_t LL_UCPD_IsActiveFlag_RxMsgEnd(UCPD_TypeDef const *const UCPDx)
 {
@@ -1501,10 +1490,10 @@ __STATIC_INLINE uint32_t LL_UCPD_IsActiveFlag_RxMsgEnd(UCPD_TypeDef const *const
 }
 
 /**
-  * @brief  Check if Rx overrun flag is active
+  * @brief  Check if Rx overrun interrupt
   * @rmtoll SR          RXOVR         LL_UCPD_IsActiveFlag_RxOvr
   * @param  UCPDx UCPD Instance
-  * @retval State of bit (1 or 0).
+  * @retval None
   */
 __STATIC_INLINE uint32_t LL_UCPD_IsActiveFlag_RxOvr(UCPD_TypeDef const *const UCPDx)
 {
@@ -1512,10 +1501,10 @@ __STATIC_INLINE uint32_t LL_UCPD_IsActiveFlag_RxOvr(UCPD_TypeDef const *const UC
 }
 
 /**
-  * @brief  Check if Rx hard reset flag is active
+  * @brief  Check if Rx hard reset interrupt
   * @rmtoll SR          RXHRSTDET         LL_UCPD_IsActiveFlag_RxHRST
   * @param  UCPDx UCPD Instance
-  * @retval State of bit (1 or 0).
+  * @retval None
   */
 __STATIC_INLINE uint32_t LL_UCPD_IsActiveFlag_RxHRST(UCPD_TypeDef const *const UCPDx)
 {
@@ -1523,7 +1512,7 @@ __STATIC_INLINE uint32_t LL_UCPD_IsActiveFlag_RxHRST(UCPD_TypeDef const *const U
 }
 
 /**
-  * @brief  Check if Rx orderset flag is active
+  * @brief  Check if Rx orderset interrupt
   * @rmtoll SR          RXORDDET         LL_UCPD_IsActiveFlag_RxOrderSet
   * @param  UCPDx UCPD Instance
   * @retval State of bit (1 or 0).
@@ -1534,7 +1523,7 @@ __STATIC_INLINE uint32_t LL_UCPD_IsActiveFlag_RxOrderSet(UCPD_TypeDef const *con
 }
 
 /**
-  * @brief  Check if Rx non empty flag is active
+  * @brief  Check if Rx non empty interrupt
   * @rmtoll SR          RXNE         LL_UCPD_IsActiveFlag_RxNE
   * @param  UCPDx UCPD Instance
   * @retval State of bit (1 or 0).
@@ -1545,7 +1534,7 @@ __STATIC_INLINE uint32_t LL_UCPD_IsActiveFlag_RxNE(UCPD_TypeDef const *const UCP
 }
 
 /**
-  * @brief  Check if TX underrun flag is active
+  * @brief  Check if TX underrun interrupt
   * @rmtoll SR          TXUND         LL_UCPD_IsActiveFlag_TxUND
   * @param  UCPDx UCPD Instance
   * @retval State of bit (1 or 0).
@@ -1556,7 +1545,7 @@ __STATIC_INLINE uint32_t LL_UCPD_IsActiveFlag_TxUND(UCPD_TypeDef const *const UC
 }
 
 /**
-  * @brief  Check if hard reset sent flag is active
+  * @brief  Check if hard reset sent interrupt
   * @rmtoll SR          HRSTSENT         LL_UCPD_IsActiveFlag_TxHRSTSENT
   * @param  UCPDx UCPD Instance
   * @retval State of bit (1 or 0).
@@ -1567,7 +1556,7 @@ __STATIC_INLINE uint32_t LL_UCPD_IsActiveFlag_TxHRSTSENT(UCPD_TypeDef const *con
 }
 
 /**
-  * @brief  Check if hard reset discard flag is active
+  * @brief  Check if hard reset discard interrupt
   * @rmtoll SR          HRSTDISC         LL_UCPD_IsActiveFlag_TxHRSTDISC
   * @param  UCPDx UCPD Instance
   * @retval State of bit (1 or 0).
@@ -1578,7 +1567,7 @@ __STATIC_INLINE uint32_t LL_UCPD_IsActiveFlag_TxHRSTDISC(UCPD_TypeDef const *con
 }
 
 /**
-  * @brief  Check if Tx message abort flag is active
+  * @brief  Check if Tx message abort interrupt
   * @rmtoll SR          TXMSGABT         LL_UCPD_IsActiveFlag_TxMSGABT
   * @param  UCPDx UCPD Instance
   * @retval State of bit (1 or 0).
@@ -1589,7 +1578,7 @@ __STATIC_INLINE uint32_t LL_UCPD_IsActiveFlag_TxMSGABT(UCPD_TypeDef const *const
 }
 
 /**
-  * @brief  Check if Tx message sent flag is active
+  * @brief  Check if Tx message sent interrupt
   * @rmtoll SR          TXMSGSENT         LL_UCPD_IsActiveFlag_TxMSGSENT
   * @param  UCPDx UCPD Instance
   * @retval State of bit (1 or 0).
@@ -1600,7 +1589,7 @@ __STATIC_INLINE uint32_t LL_UCPD_IsActiveFlag_TxMSGSENT(UCPD_TypeDef const *cons
 }
 
 /**
-  * @brief  Check if Tx message discarded flag is active
+  * @brief  Check if Tx message discarded interrupt
   * @rmtoll SR         TXMSGDISC         LL_UCPD_IsActiveFlag_TxMSGDISC
   * @param  UCPDx UCPD Instance
   * @retval State of bit (1 or 0).
@@ -1611,7 +1600,7 @@ __STATIC_INLINE uint32_t LL_UCPD_IsActiveFlag_TxMSGDISC(UCPD_TypeDef const *cons
 }
 
 /**
-  * @brief  Check if Tx data interrupt flag is active
+  * @brief  Check if Tx data receive interrupt
   * @rmtoll SR          TXIS         LL_UCPD_IsActiveFlag_TxIS
   * @param  UCPDx UCPD Instance
   * @retval State of bit (1 or 0).

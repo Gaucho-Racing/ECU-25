@@ -1,0 +1,4 @@
+clang
+-ICore/Inc
+-IApplication/Inc
+-IDrivers/STM32G4xx_HAL_Driver/Inc
