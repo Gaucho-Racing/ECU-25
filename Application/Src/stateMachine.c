@@ -4,7 +4,6 @@
 
 void stateMachineTick(State* state)
 {
-
     switch(*state) {
         case GLV_ON:
             glv_on(state);
@@ -45,12 +44,10 @@ void stateMachineTick(State* state)
 
 void glv_on(State* state) {
 
-    // DO AND SEND THINGS
-        
-        // When the grounded low voltage system is turned on
-        // the microcontroller has power, but the motor controller is not enabled.
-        // This is the second state that the car will enter after the ECU Flash is complete.
-        // Here it waits for the TS ACTIVE button to be pressed.
+    // When the grounded low voltage system is turned on
+    // the microcontroller has power, but the motor controller is not enabled.
+    // This is the second state that the car will enter after the ECU Flash is complete.
+    // Here it waits for the TS ACTIVE button to be pressed.
 
     /// if (/*TS ACTIVE button pressed*/)
     //     *state = precharge_engaged;
@@ -60,15 +57,6 @@ void glv_on(State* state) {
 
 void precharge_engaged(State* state)
 {
-    if (rateLimitOk(info)) {
-        // DO AND SEND THINGS
-
-        // ONLY INCLUDE BELOW LINE IF MESSAGE SENT
-        info->lastMessageTick = HAL_GetTick();
-    } else {
-        // Nothing, cannot overload CANFD
-    }
-
     // if (/*ACU precharge confirmation recieved*/)
     //     *state = PRECHARGING;
     // if (/*TS ACTIVE button disabled*/)
@@ -77,15 +65,6 @@ void precharge_engaged(State* state)
 
 void precharging(State* state)
 {
-    if (rateLimitOk(info)) {
-        // DO AND SEND THINGS
- 
-        // ONLY INCLUDE BELOW LINE IF MESSAGE SENT
-        info->lastMessageTick = HAL_GetTick();
-    } else {
-        // Nothing, cannot overload CANFD
-    }
-
     // if (/*ACU precharge success confirmation*/)
     //     *state = PRECHARGE_COMPLETE;
     // if (/*TS ACTIVE button disabled*/ || /*ACU precharge cancellation*/)
@@ -94,15 +73,6 @@ void precharging(State* state)
 
 void precharge_complete(State* state)
 {
-    if (rateLimitOk(info)) {
-        // DO AND SEND THINGS
-
-        // ONLY INCLUDE BELOW LINE IF MESSAGE SENT
-        info->lastMessageTick = HAL_GetTick();
-    } else {
-        // Nothing, cannot overload CANFD
-    }
-
     // if (/*BRAKE on*/ && /*ReadyToDrive ON*/)
     //     *state = DRIVE_STANDBY;
     // if (/*TS ACTIVE button disabled*/ || /*ACU shutdown*/ || /*Critical error*/)
@@ -111,15 +81,6 @@ void precharge_complete(State* state)
 
 void drive_standby(State* state)
 {
-    if (rateLimitOk(info)) {
-        // DO AND SEND THINGS
-
-        // ONLY INCLUDE BELOW LINE IF MESSAGE SENT
-        info->lastMessageTick = HAL_GetTick();
-    } else {
-        // Nothing, cannot overload CANFD
-    }
-
     // if (/*Valid torque request*/)
     //     *state = DRIVE_ACTIVE_IDLE; // not sure if it's idle and not some other state
     // if (/*ReadyToDrive OFF*/)
