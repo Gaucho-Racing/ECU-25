@@ -49,18 +49,16 @@ void glv_on(State* state) {
     // This is the second state that the car will enter after the ECU Flash is complete.
     // Here it waits for the TS ACTIVE button to be pressed.
 
-    /// if (/*TS ACTIVE button pressed*/)
-    //     *state = precharge_engaged;
-    // if (/*Parameters recieved*/)
-    //    *state = REFLASH_TUNE;
+    if (true /*TS ACTIVE from CAN*/)
+        *state = precharge_engaged;
 }
 
 void precharge_engaged(State* state)
 {
-    // if (/*ACU precharge confirmation recieved*/)
-    //     *state = PRECHARGING;
-    // if (/*TS ACTIVE button disabled*/)
-    //     *state = GLV_ON;
+    if (true /*ACU precharge confirmation recieved*/)
+        *state = PRECHARGING;
+    if (true /*TS ACTIVE button disabled*/)
+        *state = GLV_ON;
 }
 
 void precharging(State* state)
