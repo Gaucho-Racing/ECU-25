@@ -103,6 +103,9 @@ int main(void)
   
   HAL_FDCAN_EnableTxBufferRequest();
 
+  /** @attention */
+  // THIS IS WHERE WE WILL REGISTER ALL INTERRUPT CALLBACKS
+
   /* USER CODE END 2 */
 
   /* Infinite loop */

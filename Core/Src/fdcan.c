@@ -24,6 +24,13 @@
 #include "stm32g4xx_hal_fdcan.h"
 #include <stdint.h>
 
+// BUILD ALL INTERRUPT CALLBACKS HERE (HEADERS IN fdcan.h)
+
+#ifndef USE_HAL_FDCAN_REGISTER_CALLBACKS
+#define USE_HAL_FDCAN_REGISTER_CALLBACKS 1 // callbacks won't work without this
+#endif
+
+
 // HAL_StatusTypeDef HAL_FDCAN_Start(FDCAN_HandleTypeDef *hfdcan);
 // HAL_StatusTypeDef HAL_FDCAN_Stop(FDCAN_HandleTypeDef *hfdcan);
 // HAL_StatusTypeDef HAL_FDCAN_AddMessageToTxFifoQ(FDCAN_HandleTypeDef *hfdcan, const FDCAN_TxHeaderTypeDef *pTxHeader,
@@ -116,59 +123,15 @@ void writeMessage(uint32_t identifier, uint8_t* data, uint32_t len, uint8_t bus)
   //   HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, );
 }
 
-void readMessage(uint32_t identifier, uint32_t dataLength, /* DATA TYPE TO FILL */) {
-  FDCAN_RxHeaderTypeDef RxHeader;
-  HAL_FDCAN_GetRxMessage(&hfdcan1, RxLocation, RxHeader, pRxData);
-  
+void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
+{
+  uint32_t msg = hfdcan->msgRam->RxFIFO0SA;
+  // read from buffer
+
+  // update info
+
+  // change state
 }
-
-//HAL_FDCAN_GetRxMessage(FDCAN_HandleTypeDef *hfdcan, uint32_t RxLocation, FDCAN_RxHeaderTypeDef *pRxHeader, uint8_t *pRxData);
-
-// typedef struct
-// {
-//   uint32_t Identifier;            /*!< Specifies the identifier.
-//                                        This parameter must be a number between:
-//                                         - 0 and 0x7FF, if IdType is FDCAN_STANDARD_ID
-//                                         - 0 and 0x1FFFFFFF, if IdType is FDCAN_EXTENDED_ID               */
-
-//   uint32_t IdType;                /*!< Specifies the identifier type of the received message.
-//                                        This parameter can be a value of @ref FDCAN_id_type               */
-
-//   uint32_t RxFrameType;           /*!< Specifies the the received message frame type.
-//                                        This parameter can be a value of @ref FDCAN_frame_type            */
-
-//   uint32_t DataLength;            /*!< Specifies the received frame length.
-//                                         This parameter can be a value of @ref FDCAN_data_length_code     */
-
-//   uint32_t ErrorStateIndicator;   /*!< Specifies the error state indicator.
-//                                        This parameter can be a value of @ref FDCAN_error_state_indicator */
-
-//   uint32_t BitRateSwitch;         /*!< Specifies whether the Rx frame is received with or without bit
-//                                        rate switching.
-//                                        This parameter can be a value of @ref FDCAN_bit_rate_switching    */
-
-//   uint32_t FDFormat;              /*!< Specifies whether the Rx frame is received in classic or FD
-//                                        format.
-//                                        This parameter can be a value of @ref FDCAN_format                */
-
-//   uint32_t RxTimestamp;           /*!< Specifies the timestamp counter value captured on start of frame
-//                                        reception.
-//                                        This parameter must be a number between 0 and 0xFFFF              */
-
-//   uint32_t FilterIndex;           /*!< Specifies the index of matching Rx acceptance filter element.
-//                                        This parameter must be a number between:
-//                                         - 0 and (SRAMCAN_FLS_NBR-1), if IdType is FDCAN_STANDARD_ID
-//                                         - 0 and (SRAMCAN_FLE_NBR-1), if IdType is FDCAN_EXTENDED_ID
-//                                        When the frame is a Non-Filter matching frame, this parameter
-//                                        is unused.                                                        */
-
-//   uint32_t IsFilterMatchingFrame; /*!< Specifies whether the accepted frame did not match any Rx filter.
-//                                        Acceptance of non-matching frames may be enabled via
-//                                        HAL_FDCAN_ConfigGlobalFilter().
-//                                        This parameter takes 0 if the frame matched an Rx filter or
-//                                        1 if it did not match any Rx filter                               */
-
-// } FDCAN_RxHeaderTypeDef;
 
 /* USER CODE END 0 */
 
