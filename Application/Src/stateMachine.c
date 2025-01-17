@@ -63,54 +63,54 @@ void precharge_engaged(State* state)
 
 void precharging(State* state)
 {
-    // if (/*ACU precharge success confirmation*/)
-    //     *state = PRECHARGE_COMPLETE;
-    // if (/*TS ACTIVE button disabled*/ || /*ACU precharge cancellation*/)
-    //     *state = TS_DISCHARGE_OFF;
+    if (true /*ACU precharge success confirmation*/)
+        *state = PRECHARGE_COMPLETE;
+    if (false /*TS ACTIVE button disabled*/ || false /*ACU precharge cancellation*/)
+        *state = TS_DISCHARGE_OFF;
 }
 
 void precharge_complete(State* state)
 {
-    // if (/*BRAKE on*/ && /*ReadyToDrive ON*/)
-    //     *state = DRIVE_STANDBY;
-    // if (/*TS ACTIVE button disabled*/ || /*ACU shutdown*/ || /*Critical error*/)
-    //     *state = TS_DISCHARGE_OFF;
+    if (false /*BRAKE on*/ && false/*ReadyToDrive ON*/)
+        *state = DRIVE_STANDBY;
+    if (false /*TS ACTIVE button disabled*/ || false /*ACU shutdown*/ || false /*Critical error*/)
+        *state = TS_DISCHARGE_OFF;
 }
 
 void drive_standby(State* state)
 {
-    // if (/*Valid torque request*/)
-    //     *state = DRIVE_ACTIVE_IDLE; // not sure if it's idle and not some other state
-    // if (/*ReadyToDrive OFF*/)
-    //     *state = PRECHARGE_COMPLETE;
-    // if (/*TS ACTIVE button disabled*/ || /*ACU shutdown*/ || /*Critical error*/)
-    //     *state = TS_DISCHARGE_OFF;
+    if (true /*Valid torque request*/)
+        *state = DRIVE_ACTIVE_IDLE; // not sure if it's idle and not some other state
+    if (false /*ReadyToDrive OFF*/)
+        *state = PRECHARGE_COMPLETE;
+    if (false /*TS ACTIVE button disabled*/ || false/*ACU shutdown*/ || false/*Critical error*/)
+        *state = TS_DISCHARGE_OFF;
 }
 
 void drive_active_idle(State* state)
 {
     // LOTS OF https://github.com/Gaucho-Racing/VDM-24/blob/9ee4839ee6e5ce32a51602fe23723db5d23b1eaf/src/main.cpp#L1214
 
-    // if (/*Throttle is pushed*/)
-    //    *state = DRIVE_ACTIVE_POWER;
-    // if (/*No violation*/ && /*Throttle is none*/ && /*Speed > X mph*/ && /*Not regenerating power*/)
-    //    *state = DRIVE_ACTIVE_REGEN;
-    // if (/*Violation*/)   // SEND WARNING TO DASH
-    //    *state = DRIVE_STANDBY;
-    // if (/*TS ACTIVE button disabled*/ || /*ACU shutdown*/ || /*Critical error*/)
-    //     *state = TS_DISCHARGE_OFF;
+    if (true /*Throttle is pushed*/)
+       *state = DRIVE_ACTIVE_POWER;
+    if (false /*No violation*/ && false /*Throttle is none*/ && false /*Speed > X mph*/ && false /*Not regenerating power*/)
+       *state = DRIVE_ACTIVE_REGEN;
+    if (false /*Violation*/)   // SEND WARNING TO DASH
+       *state = DRIVE_STANDBY;
+    if (false /*TS ACTIVE button disabled*/ || false/*ACU shutdown*/ || false/*Critical error*/)
+        *state = TS_DISCHARGE_OFF;
 }
 
 void drive_active_power(State* state)
 {
     // LOTS OF https://github.com/Gaucho-Racing/VDM-24/blob/9ee4839ee6e5ce32a51602fe23723db5d23b1eaf/src/main.cpp#L1214
 
-    // if (/*Accelerator gradient plausibility violation*/)    // SEND WARNING TO DASH
-    //     *state = DRIVE_STANDBY;
-    // if (/*Brake over threshold*/ && /*Throttle engaged*/)
-    //     *state = DRIVE_STANDBY;
-    // if (/*TS ACTIVE button disabled*/ || /*ACU shutdown*/ || /*Critical error*/)
-    //     *state = TS_DISCHARGE_OFF;
+    if (false /*Accelerator gradient plausibility violation*/)    // SEND WARNING TO DASH
+        *state = DRIVE_STANDBY;
+    if (false /*Brake over threshold*/ && /*Throttle engaged*/)
+        *state = DRIVE_STANDBY;
+    if (false /*TS ACTIVE button disabled*/ || false /*ACU shutdown*/ || false /*Critical error*/)
+        *state = TS_DISCHARGE_OFF;
 }
 
 void drive_active_regen(State* state)
@@ -118,33 +118,33 @@ void drive_active_regen(State* state)
     // LOTS OF https://github.com/Gaucho-Racing/VDM-24/blob/9ee4839ee6e5ce32a51602fe23723db5d23b1eaf/src/main.cpp#L1214
     // Some math in https://github.com/Gaucho-Racing/VDM-24/blob/9ee4839ee6e5ce32a51602fe23723db5d23b1eaf/src/main.cpp#L1253
 
-    // if (/*Throttle engaged*/)
-    //     *state = DRIVE_ACTIVE_POWER;
-    // if (/*Settings say no regen braking*/)
-    //     *state = DRIVE_ACTIVE_IDLE;
-    // if (/*TS ACTIVE button disabled*/ || /*ACU shutdown*/ || /*Critical error*/)
-    //     *state = TS_DISCHARGE_OFF;
+    if (true /*Throttle engaged*/)
+        *state = DRIVE_ACTIVE_POWER;
+    if (false /*Settings say no regen braking*/)
+        *state = DRIVE_ACTIVE_IDLE;
+    if (false /*TS ACTIVE button disabled*/ || false /*ACU shutdown*/ || false /*Critical error*/)
+        *state = TS_DISCHARGE_OFF;
 }
 
 void ts_discharge_off(State* state)
 {
-    // if (/*Main power off*/ && /*Errors resolved*/)
-    //     *state = GLV_ON;
-    // if (/*Main power off*/ && !/*Errors resolved*/)
-    //     *state = ERROR;
+    if (true /*Main power off*/ && true /*Errors resolved*/)
+        *state = GLV_ON;
+    if (false /*Main power off*/ && !true/*Errors resolved*/)
+        *state = ERROR;
 }
 
 void reflash_tune(State* state)
 {
-    // READ SD CARD INFORMATION INTO INFO and then
-    // *state = GLV_ON;
+    READ SD CARD INFORMATION INTO INFO and then
+    *state = GLV_ON;
 
-    // if (/*Flash error*/)
-    //     *state = ERROR;
+    if (true /*Flash error*/)
+        *state = ERROR;
 }
 
 void error(State* state)
 {
-    // if (/*Errors resolved*/)
-    //     *state = GLV_ON;
+    if (true /*Errors resolved*/)
+        *state = GLV_ON;
 }
