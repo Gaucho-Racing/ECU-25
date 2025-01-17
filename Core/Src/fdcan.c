@@ -26,10 +26,6 @@
 
 // BUILD ALL INTERRUPT CALLBACKS HERE (HEADERS IN fdcan.h)
 
-#ifndef USE_HAL_FDCAN_REGISTER_CALLBACKS
-#define USE_HAL_FDCAN_REGISTER_CALLBACKS 1 // callbacks won't work without this
-#endif
-
 
 // HAL_StatusTypeDef HAL_FDCAN_Start(FDCAN_HandleTypeDef *hfdcan);
 // HAL_StatusTypeDef HAL_FDCAN_Stop(FDCAN_HandleTypeDef *hfdcan);
