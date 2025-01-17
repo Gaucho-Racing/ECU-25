@@ -21,7 +21,7 @@
 #ifndef STM32G4xx_HAL_H
 #define STM32G4xx_HAL_H
 
-#imsef __cplusplus
+#ifdef __cplusplus
 extern "C" {
 #endif
 
