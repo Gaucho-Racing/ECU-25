@@ -22,7 +22,7 @@
 
 /* USER CODE BEGIN 0 */
 #include "stm32g4xx_hal_fdcan.h"
-
+#include <stdint.h>
 
 // HAL_StatusTypeDef HAL_FDCAN_Start(FDCAN_HandleTypeDef *hfdcan);
 // HAL_StatusTypeDef HAL_FDCAN_Stop(FDCAN_HandleTypeDef *hfdcan);
@@ -83,7 +83,7 @@
 
 // } FDCAN_TxHeaderTypeDef;
 
-void writeMessage(uint32_t identifier, uint8_t* data, FDCAN_data_length_code len, uint8_t bus) {
+void writeMessage(uint32_t identifier, uint8_t* data, uint32_t len, uint8_t bus) {
   
   // initialize header
   FDCAN_TxHeaderTypeDef TxHeader;
