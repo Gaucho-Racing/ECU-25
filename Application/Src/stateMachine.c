@@ -136,7 +136,7 @@ void ts_discharge_off(State* state)
 
 void reflash_tune(State* state)
 {
-    READ SD CARD INFORMATION INTO INFO and then
+    // READ SD CARD INFORMATION INTO INFO and then
     *state = GLV_ON;
 
     if (true /*Flash error*/)
