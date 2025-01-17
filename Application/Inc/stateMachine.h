@@ -16,13 +16,6 @@ typedef struct {
     int replaceMeWithUsefulThings;
 } VehicleParameters;
 
-typedef struct {
-    VehicleParameters vehicleParameters;
-    unsigned long long lastMessageTick;
-    unsigned long long communicationFrequency;
-    int replaceMeWithUsefulThings;
-} InformationToPassToState;
-
 /*
 General low voltage on
 
@@ -86,14 +79,3 @@ void error(State* state, InformationToPassToState* info);
 CALL ME! Pass in the state and the info and it will automatically tick
 */
 void stateMachineTick(State* state);
-
-/*
-Will return true only when enough time has passed
-ie: if (rateLimitOk(info)) { ... }
-*/
-_Bool rateLimitOk(InformationToPassToState* info);
-
-/*
-Reads information from CAN and encapsulates in the struct
-*/
-InformationToPassToState* readInformation();

@@ -4,61 +4,53 @@
 
 void stateMachineTick(State* state)
 {
-    InformationToPassToState* info = readInformation();
 
     switch(*state) {
         case GLV_ON:
-            glv_on(state, info);
+            glv_on(state);
             break;
         case PRECHARGE_ENGAGED:
-            precharge_engaged(state, info);
+            precharge_engaged(state);
             break;
         case PRECHARGING:
-            precharging(state, info);
+            precharging(state);
             break;
         case PRECHARGE_COMPLETE:
-            precharge_complete(state, info);
+            precharge_complete(state);
             break;
         case DRIVE_STANDBY:
-            drive_standby(state, info);
+            drive_standby(state);
             break;
         case DRIVE_ACTIVE_IDLE:
-            drive_active_idle(state, info);
+            drive_active_idle(state);
             break;
         case DRIVE_ACTIVE_POWER:
-            drive_active_power(state, info);
+            drive_active_power(state);
             break;
         case DRIVE_ACTIVE_REGEN:
-            drive_active_regen(state, info);
+            drive_active_regen(state);
             break;
         case TS_DISCHARGE_OFF:
-            ts_discharge_off(state, info);
+            ts_discharge_off(state);
             break;
         case REFLASH_TUNE:
-            reflash_tune(state, info);
+            reflash_tune(state);
             break;
         case ERRORSTATE:
         default:
-            error(state, info);
+            error(state);
         break;
     }
 }
 
-void glv_on(State* state, InformationToPassToState* info)
-{
-    if (rateLimitOk(info)) {
-        // DO AND SEND THINGS
+void glv_on(State* state) {
+
+    // DO AND SEND THINGS
         
         // When the grounded low voltage system is turned on
         // the microcontroller has power, but the motor controller is not enabled.
         // This is the second state that the car will enter after the ECU Flash is complete.
         // Here it waits for the TS ACTIVE button to be pressed.
-
-        // ONLY INCLUDE BELOW LINE IF MESSAGE SENT
-        info->lastMessageTick = HAL_GetTick();
-    } else {
-        // Nothing, cannot overload CANFD
-    }
 
     /// if (/*TS ACTIVE button pressed*/)
     //     *state = precharge_engaged;
@@ -66,7 +58,7 @@ void glv_on(State* state, InformationToPassToState* info)
     //    *state = REFLASH_TUNE;
 }
 
-void precharge_engaged(State* state, InformationToPassToState* info)
+void precharge_engaged(State* state)
 {
     if (rateLimitOk(info)) {
         // DO AND SEND THINGS
@@ -83,7 +75,7 @@ void precharge_engaged(State* state, InformationToPassToState* info)
     //     *state = GLV_ON;
 }
 
-void precharging(State* state, InformationToPassToState* info)
+void precharging(State* state)
 {
     if (rateLimitOk(info)) {
         // DO AND SEND THINGS
@@ -100,7 +92,7 @@ void precharging(State* state, InformationToPassToState* info)
     //     *state = TS_DISCHARGE_OFF;
 }
 
-void precharge_complete(State* state, InformationToPassToState* info)
+void precharge_complete(State* state)
 {
     if (rateLimitOk(info)) {
         // DO AND SEND THINGS
@@ -117,7 +109,7 @@ void precharge_complete(State* state, InformationToPassToState* info)
     //     *state = TS_DISCHARGE_OFF;
 }
 
-void drive_standby(State* state, InformationToPassToState* info)
+void drive_standby(State* state)
 {
     if (rateLimitOk(info)) {
         // DO AND SEND THINGS
@@ -136,17 +128,8 @@ void drive_standby(State* state, InformationToPassToState* info)
     //     *state = TS_DISCHARGE_OFF;
 }
 
-void drive_active_idle(State* state, InformationToPassToState* info)
+void drive_active_idle(State* state)
 {
-    if (rateLimitOk(info)) {
-        // DO AND SEND THINGS
-
-        // ONLY INCLUDE BELOW LINE IF MESSAGE SENT
-        info->lastMessageTick = HAL_GetTick();
-    } else {
-        // Nothing, cannot overload CANFD
-    }
-
     // LOTS OF https://github.com/Gaucho-Racing/VDM-24/blob/9ee4839ee6e5ce32a51602fe23723db5d23b1eaf/src/main.cpp#L1214
 
     // if (/*Throttle is pushed*/)
@@ -159,20 +142,8 @@ void drive_active_idle(State* state, InformationToPassToState* info)
     //     *state = TS_DISCHARGE_OFF;
 }
 
-void drive_active_power(State* state, InformationToPassToState* info)
+void drive_active_power(State* state)
 {
-    if (rateLimitOk(info)) {
-        // DO AND SEND THINGS
-
-        // TORQUE MAPPING LINKS HERE
-        // ADD OPTION TO SHIFT TO IDLE OR REGEN
-
-        // ONLY INCLUDE BELOW LINE IF MESSAGE SENT
-        info->lastMessageTick = HAL_GetTick();
-    } else {
-        // Nothing, cannot overload CANFD
-    }
-
     // LOTS OF https://github.com/Gaucho-Racing/VDM-24/blob/9ee4839ee6e5ce32a51602fe23723db5d23b1eaf/src/main.cpp#L1214
 
     // if (/*Accelerator gradient plausibility violation*/)    // SEND WARNING TO DASH
@@ -183,19 +154,8 @@ void drive_active_power(State* state, InformationToPassToState* info)
     //     *state = TS_DISCHARGE_OFF;
 }
 
-void drive_active_regen(State* state, InformationToPassToState* info)
+void drive_active_regen(State* state)
 {
-    if (rateLimitOk(info)) {
-        // DO AND SEND THINGS
-
-        // Brake math, turn on brakes lightly
-
-        // ONLY INCLUDE BELOW LINE IF MESSAGE SENT
-        info->lastMessageTick = HAL_GetTick();
-    } else {
-        // Nothing, cannot overload CANFD
-    }
-
     // LOTS OF https://github.com/Gaucho-Racing/VDM-24/blob/9ee4839ee6e5ce32a51602fe23723db5d23b1eaf/src/main.cpp#L1214
     // Some math in https://github.com/Gaucho-Racing/VDM-24/blob/9ee4839ee6e5ce32a51602fe23723db5d23b1eaf/src/main.cpp#L1253
 
@@ -207,24 +167,15 @@ void drive_active_regen(State* state, InformationToPassToState* info)
     //     *state = TS_DISCHARGE_OFF;
 }
 
-void ts_discharge_off(State* state, InformationToPassToState* info)
+void ts_discharge_off(State* state)
 {
-    if (rateLimitOk(info)) {
-        // DO AND SEND THINGS
-
-        // ONLY INCLUDE BELOW LINE IF MESSAGE SENT
-        info->lastMessageTick = HAL_GetTick();
-    } else {
-        // Nothing, cannot overload CANFD
-    }
-
     // if (/*Main power off*/ && /*Errors resolved*/)
     //     *state = GLV_ON;
     // if (/*Main power off*/ && !/*Errors resolved*/)
     //     *state = ERROR;
 }
 
-void reflash_tune(State* state, InformationToPassToState* info)
+void reflash_tune(State* state)
 {
     // READ SD CARD INFORMATION INTO INFO and then
     // *state = GLV_ON;
@@ -233,27 +184,8 @@ void reflash_tune(State* state, InformationToPassToState* info)
     //     *state = ERROR;
 }
 
-void error(State* state, InformationToPassToState* info)
+void error(State* state)
 {
-    if (rateLimitOk(info)) {
-        // DO AND SEND THINGS
-
-        // ONLY INCLUDE BELOW LINE IF MESSAGE SENT
-        info->lastMessageTick = HAL_GetTick();
-    } else {
-        // Nothing, cannot overload CANFD
-    }
-
     // if (/*Errors resolved*/)
     //     *state = GLV_ON;
-}
-
-_Bool rateLimitOk(InformationToPassToState* info)
-{
-    return HAL_GetTick() - info->lastMessageTick > 1000 / info->communicationFrequency;
-}
-
-InformationToPassToState* readInformation()
-{
-    // Parse reading from fdCan
 }
