@@ -125,8 +125,15 @@ void writeMessage(uint32_t identifier, uint8_t* data, uint32_t len, uint8_t bus)
 
 void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 {
-  uint32_t msg = hfdcan->msgRam->RxFIFO0SA;
+    
   // read from buffer
+
+  uint32_t dataLength = hfdcan->DataLength;
+  uint32_t msgPtr = hfdcan->msgRam->RxFIFO0SA;
+  uint32_t data[dataLength];
+  for (int i = 0; i < dataLength; i++) {
+    data[i] = *(hfdcan->msgRam->RxFIFO0SA + i);
+  }
 
   // update info
 
