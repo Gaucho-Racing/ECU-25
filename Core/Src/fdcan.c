@@ -102,7 +102,7 @@ void writeMessage(uint32_t identifier, uint8_t* data, uint32_t len, uint8_t bus)
     TxHeader.BitRateSwitch = FDCAN_BRS_ON;
     TxHeader.FDFormat = FDCAN_FD_CAN;
     TxHeader.TxEventFifoControl = FDCAN_NO_TX_EVENTS; // change to FDCAN_STORE_TX_EVENTS if you need to store info regarding transmitted messages
-    TxHeader.MessageMarker = 0 // also change this to a real address if you change fifo control
+    TxHeader.MessageMarker = 0; // also change this to a real address if you change fifo control
     HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &TxHeader, data);
   }
   // } else if (bus == 2) {
