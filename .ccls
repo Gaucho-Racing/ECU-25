@@ -2,3 +2,5 @@ clang
 -ICore/Inc
 -IApplication/Inc
 -IDrivers/STM32G4xx_HAL_Driver/Inc
+-IDrivers/CMSIS/Core/Include
+-IDrivers/CMSIS/Device/ST/STM32G4xx/Include
