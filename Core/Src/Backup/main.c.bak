@@ -105,7 +105,7 @@ int main(void)
 
   /** @attention */
   // THIS IS WHERE WE WILL REGISTER ALL INTERRUPT CALLBACKS
-
+  // THIS IS WHERE WE WILL IMPLEMENT ALL HARDWARE CAN FILTERS
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -115,9 +115,6 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
-    stateMachineTick(state);
-
   }
   /* USER CODE END 3 */
 }
