@@ -50,7 +50,7 @@ void glv_on(State* state) {
     // Here it waits for the TS ACTIVE button to be pressed.
 
     if (true /*TS ACTIVE from CAN*/)
-        *state = precharge_engaged;
+        *state = PRECHARGE_ENGAGED;
 }
 
 void precharge_engaged(State* state)
