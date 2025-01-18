@@ -86,6 +86,10 @@
 
 // } FDCAN_TxHeaderTypeDef;
 
+
+
+
+/*
 void writeMessage(uint32_t identifier, uint8_t* data, uint32_t len, uint8_t bus) {
   
   // initialize header
@@ -118,10 +122,43 @@ void writeMessage(uint32_t identifier, uint8_t* data, uint32_t len, uint8_t bus)
   //   TxHeader.IsFileMatchingFrame =
   //   HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, );
 }
+*/
+FDCAN_TxHeaderTypeDef TxHeader1;
+FDCAN_RxHeaderTypeDef RxHeader1;
+uint8_t TxData1[128];
+uint8_t RxData1[128];
+
+FDCAN_TxHeaderTypeDef TxHeader2;
+FDCAN_RxHeaderTypeDef RxHeader2;
+uint8_t TxData2[128];
+uint8_t RxData2[128];
 
 void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 {
-    
+    if((RxFifo0ITs & FDCAN_IT_RX_FIFO0_NEW_MESSAGE) != RESET) {
+        if(HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO0, &RxHeader1, RxData1) != HAL_OK) {
+            Error_Handler();
+        }
+
+        if(HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0) != HAL_OK) {
+            Error_Handler();
+        }
+    }
+}
+
+void HAL_FDCAN_RxFifo1Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo1ITs)
+{
+    if((RxFifo1ITs & FDCAN_IT_RX_FIFO1_NEW_MESSAGE) != RESET) {
+        if(HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &RxHeader2, RxData2) != HAL_OK) {
+            Error_Handler();
+        }
+
+        if(HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO1_NEW_MESSAGE, 0) != HAL_OK) {
+            Error_Handler();
+        }
+    }
+}
+/*    
   // read from buffer
 
   uint32_t dataLength = hfdcan->DataLength;
@@ -134,7 +171,7 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
   // update info
 
   // change state
-}
+*/
 
 /* USER CODE END 0 */
 
@@ -156,7 +193,7 @@ void MX_FDCAN1_Init(void)
   hfdcan1.Init.ClockDivider = FDCAN_CLOCK_DIV1;
   hfdcan1.Init.FrameFormat = FDCAN_FRAME_FD_BRS;
   hfdcan1.Init.Mode = FDCAN_MODE_NORMAL;
-  hfdcan1.Init.AutoRetransmission = DISABLE;
+  hfdcan1.Init.AutoRetransmission = ENABLE;
   hfdcan1.Init.TransmitPause = DISABLE;
   hfdcan1.Init.ProtocolException = DISABLE;
   hfdcan1.Init.NominalPrescaler = 8;
@@ -194,7 +231,7 @@ void MX_FDCAN2_Init(void)
   hfdcan2.Init.ClockDivider = FDCAN_CLOCK_DIV1;
   hfdcan2.Init.FrameFormat = FDCAN_FRAME_FD_BRS;
   hfdcan2.Init.Mode = FDCAN_MODE_NORMAL;
-  hfdcan2.Init.AutoRetransmission = DISABLE;
+  hfdcan2.Init.AutoRetransmission = ENABLE;
   hfdcan2.Init.TransmitPause = DISABLE;
   hfdcan2.Init.ProtocolException = DISABLE;
   hfdcan2.Init.NominalPrescaler = 8;
@@ -205,7 +242,7 @@ void MX_FDCAN2_Init(void)
   hfdcan2.Init.DataSyncJumpWidth = 1;
   hfdcan2.Init.DataTimeSeg1 = 1;
   hfdcan2.Init.DataTimeSeg2 = 1;
-  hfdcan2.Init.StdFiltersNbr = 0;
+  hfdcan2.Init.StdFiltersNbr = 1;
   hfdcan2.Init.ExtFiltersNbr = 0;
   hfdcan2.Init.TxFifoQueueMode = FDCAN_TX_FIFO_OPERATION;
   if (HAL_FDCAN_Init(&hfdcan2) != HAL_OK)
@@ -263,6 +300,19 @@ void HAL_FDCAN_MspInit(FDCAN_HandleTypeDef* fdcanHandle)
     HAL_NVIC_EnableIRQ(FDCAN1_IT0_IRQn);
   /* USER CODE BEGIN FDCAN1_MspInit 1 */
 
+    FDCAN_FilterTypeDef fdcan1_filter;
+
+    fdcan1_filter.IdType = FDCAN_STANDARD_ID;
+    fdcan1_filter.FilterIndex = 0;
+    fdcan1_filter.FilterType = FDCAN_FILTER_MASK;
+    fdcan1_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
+    fdcan1_filter.FilterID1 = 0x0200000; // filter messages in 0x02 range
+    fdcan1_filter.FilterID2 = 0xFF00000;
+
+    if(HAL_FDCAN_ConfigFilter(&hfdcan1, &fdcan1_filter) != HAL_OK) {
+        Error_Handler();
+    }
+
   /* USER CODE END FDCAN1_MspInit 1 */
   }
   else if(fdcanHandle->Instance==FDCAN2)
@@ -302,6 +352,20 @@ void HAL_FDCAN_MspInit(FDCAN_HandleTypeDef* fdcanHandle)
     HAL_NVIC_SetPriority(FDCAN2_IT0_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(FDCAN2_IT0_IRQn);
   /* USER CODE BEGIN FDCAN2_MspInit 1 */
+    FDCAN_FilterTypeDef fdcan2_filter;
+
+    fdcan2_filter.IdType = FDCAN_STANDARD_ID;
+    fdcan2_filter.FilterIndex = 0;
+    fdcan2_filter.FilterType = FDCAN_FILTER_MASK;
+    fdcan2_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO1;
+    fdcan2_filter.FilterID1 = 0x0200000; // filter messages in 0x02 range
+    fdcan2_filter.FilterID2 = 0xFF00000;
+
+    if(HAL_FDCAN_ConfigFilter(&hfdcan2, &fdcan2_filter) != HAL_OK) {
+        Error_Handler();
+    }
+
+    
 
   /* USER CODE END FDCAN2_MspInit 1 */
   }
