@@ -1,5 +1,6 @@
 *.o
 *.out
+*.bak
 build
 CMakeLists.txt.user
 CMakeCache.txt
