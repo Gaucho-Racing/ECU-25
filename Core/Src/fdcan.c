@@ -212,7 +212,22 @@ void MX_FDCAN1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN FDCAN1_Init 2 */
+  FDCAN_FilterTypeDef fdcan1_filter;
 
+  fdcan1_filter.IdType = FDCAN_STANDARD_ID;
+  fdcan1_filter.FilterIndex = 0;
+  fdcan1_filter.FilterType = FDCAN_FILTER_MASK;
+  fdcan1_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
+  fdcan1_filter.FilterID1 = 0x0200000; // filter messages in 0x02 range
+  fdcan1_filter.FilterID2 = 0xFF00000;
+
+  if(HAL_FDCAN_ConfigFilter(&hfdcan1, &fdcan1_filter) != HAL_OK) {
+      Error_Handler();
+  }
+
+  if(HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0) != HAL_OK) {
+      Error_Handler();
+  }
   /* USER CODE END FDCAN1_Init 2 */
 
 }
@@ -250,7 +265,22 @@ void MX_FDCAN2_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN FDCAN2_Init 2 */
+  FDCAN_FilterTypeDef fdcan2_filter;
 
+  fdcan2_filter.IdType = FDCAN_STANDARD_ID;
+  fdcan2_filter.FilterIndex = 0;
+  fdcan2_filter.FilterType = FDCAN_FILTER_MASK;
+  fdcan2_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO1;
+  fdcan2_filter.FilterID1 = 0x0200000; // filter messages in 0x02 range
+  fdcan2_filter.FilterID2 = 0xFF00000;
+
+  if(HAL_FDCAN_ConfigFilter(&hfdcan2, &fdcan2_filter) != HAL_OK) {
+      Error_Handler();
+  }
+
+  if(HAL_FDCAN_ActivateNotification(&hfdcan2, FDCAN_IT_RX_FIFO1_NEW_MESSAGE, 0) != HAL_OK) {
+      Error_Handler();
+  }
   /* USER CODE END FDCAN2_Init 2 */
 
 }
@@ -300,18 +330,6 @@ void HAL_FDCAN_MspInit(FDCAN_HandleTypeDef* fdcanHandle)
     HAL_NVIC_EnableIRQ(FDCAN1_IT0_IRQn);
   /* USER CODE BEGIN FDCAN1_MspInit 1 */
 
-    FDCAN_FilterTypeDef fdcan1_filter;
-
-    fdcan1_filter.IdType = FDCAN_STANDARD_ID;
-    fdcan1_filter.FilterIndex = 0;
-    fdcan1_filter.FilterType = FDCAN_FILTER_MASK;
-    fdcan1_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
-    fdcan1_filter.FilterID1 = 0x0200000; // filter messages in 0x02 range
-    fdcan1_filter.FilterID2 = 0xFF00000;
-
-    if(HAL_FDCAN_ConfigFilter(&hfdcan1, &fdcan1_filter) != HAL_OK) {
-        Error_Handler();
-    }
 
   /* USER CODE END FDCAN1_MspInit 1 */
   }
@@ -352,18 +370,6 @@ void HAL_FDCAN_MspInit(FDCAN_HandleTypeDef* fdcanHandle)
     HAL_NVIC_SetPriority(FDCAN2_IT0_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(FDCAN2_IT0_IRQn);
   /* USER CODE BEGIN FDCAN2_MspInit 1 */
-    FDCAN_FilterTypeDef fdcan2_filter;
-
-    fdcan2_filter.IdType = FDCAN_STANDARD_ID;
-    fdcan2_filter.FilterIndex = 0;
-    fdcan2_filter.FilterType = FDCAN_FILTER_MASK;
-    fdcan2_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO1;
-    fdcan2_filter.FilterID1 = 0x0200000; // filter messages in 0x02 range
-    fdcan2_filter.FilterID2 = 0xFF00000;
-
-    if(HAL_FDCAN_ConfigFilter(&hfdcan2, &fdcan2_filter) != HAL_OK) {
-        Error_Handler();
-    }
 
     
 

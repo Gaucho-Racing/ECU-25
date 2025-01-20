@@ -101,17 +101,16 @@ int main(void)
   HAL_FDCAN_Start(&hfdcan1);
   HAL_FDCAN_Start(&hfdcan2);
   
-  HAL_FDCAN_EnableTxBufferRequest();
 
   /** @attention */
   // THIS IS WHERE WE WILL REGISTER ALL INTERRUPT CALLBACKS
-  // THIS IS WHERE WE WILL IMPLEMENT ALL HARDWARE CAN FILTERS
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    stateMachineTick(&state);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
