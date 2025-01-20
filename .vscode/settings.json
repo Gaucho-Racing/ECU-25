@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "statemachine.h": "c",
+        "stm32g4xx_hal.h": "c",
+        "stdbool.h": "c",
+        "stm32g4xx_hal_fdcan.h": "c",
+        "stm32g4xx_hal_def.h": "c"
+    }
+}
