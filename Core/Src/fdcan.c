@@ -88,49 +88,43 @@
 
 
 
+FDCAN_TxHeaderTypeDef TxHeader = {
+    .IdType = FDCAN_STANDARD_ID,
+    .TxFrameType = FDCAN_DATA_FRAME,
+    .ErrorStateIndicator = FDCAN_ESI_ACTIVE, // honestly this might be a value you have to read from a node
+                                             // FDCAN_ESI_ACTIVE is just a state that assumes there are minimal errors
+    .BitRateSwitch = FDCAN_BRS_ON,
+    .FDFormat = FDCAN_FD_CAN,
+    .TxEventFifoControl = FDCAN_NO_TX_EVENTS, // change to FDCAN_STORE_TX_EVENTS if you need to store info regarding transmitted messages
+    .MessageMarker = 0 // also change this to a real address if you change fifo control
+};
 
-/*
 void writeMessage(uint32_t identifier, uint8_t* data, uint32_t len, uint8_t bus) {
-  
-  // initialize header
-  FDCAN_TxHeaderTypeDef TxHeader;
-  // primary bus
-  // we're just gonna assume this is the only bus to use
-  if (bus == 1) {
     TxHeader.Identifier = identifier;
-    TxHeader.IdType = FDCAN_STANDARD_ID;
-    TxHeader.TxFrameType = FDCAN_DATA_FRAME;
     TxHeader.DataLength = len;
-    TxHeader.ErrorStateIndicator = FDCAN_ESI_ACTIVE; // honestly this might be a value you have to read from a node
-                                                     // FDCAN_ESI_ACTIVE is just a state that assumes there are minimal errors
-    TxHeader.BitRateSwitch = FDCAN_BRS_ON;
-    TxHeader.FDFormat = FDCAN_FD_CAN;
-    TxHeader.TxEventFifoControl = FDCAN_NO_TX_EVENTS; // change to FDCAN_STORE_TX_EVENTS if you need to store info regarding transmitted messages
-    TxHeader.MessageMarker = 0; // also change this to a real address if you change fifo control
-    HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &TxHeader, data);
-  }
-  // } else if (bus == 2) {
-  //   TxHeader.Identifier = 
-  //   TxHeader.IdType = 
-  //   TxHeader.RxFrameType = 
-  //   TxHeader.DataLength = 
-  //   TxHeader.ErrorStateIndicator = 
-  //   TxHeader.BitRateSwitch = 
-  //   TxHeader.FDFormat = 
-  //   TxHeader.RxTimestamp = 
-  //   TxHeader.FilterIndex = 
-  //   TxHeader.IsFileMatchingFrame =
-  //   HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, );
+
+    FDCAN_HandleTypeDef *handle;
+    switch(bus) {
+        case 1:
+            handle = &hfdcan1;
+            break;
+        case 2:
+            handle = &hfdcan2;
+            break;
+        default:
+            Error_Handler();
+            return;
+    }
+
+    if(HAL_FDCAN_AddMessageToTxFifoQ(handle, &TxHeader, data) != HAL_OK) {
+        Error_Handler();
+    }
 }
-*/
-FDCAN_TxHeaderTypeDef TxHeader1;
+
 FDCAN_RxHeaderTypeDef RxHeader1;
-uint8_t TxData1[128];
 uint8_t RxData1[128];
 
-FDCAN_TxHeaderTypeDef TxHeader2;
 FDCAN_RxHeaderTypeDef RxHeader2;
-uint8_t TxData2[128];
 uint8_t RxData2[128];
 
 void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
@@ -212,6 +206,7 @@ void MX_FDCAN1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN FDCAN1_Init 2 */
+  // hardware filter
   FDCAN_FilterTypeDef fdcan1_filter;
 
   fdcan1_filter.IdType = FDCAN_STANDARD_ID;
@@ -228,6 +223,7 @@ void MX_FDCAN1_Init(void)
   if(HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0) != HAL_OK) {
       Error_Handler();
   }
+
   /* USER CODE END FDCAN1_Init 2 */
 
 }
