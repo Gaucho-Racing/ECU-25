@@ -99,22 +99,9 @@ FDCAN_TxHeaderTypeDef TxHeader = {
     .MessageMarker = 0 // also change this to a real address if you change fifo control
 };
 
-void writeMessage(uint32_t identifier, uint8_t* data, uint32_t len, uint8_t bus) {
+void writeMessage(FDCAN_HandleTypeDef *handle, uint32_t identifier, uint8_t* data, uint32_t len) {
     TxHeader.Identifier = identifier;
     TxHeader.DataLength = len;
-
-    FDCAN_HandleTypeDef *handle;
-    switch(bus) {
-        case 1:
-            handle = &hfdcan1;
-            break;
-        case 2:
-            handle = &hfdcan2;
-            break;
-        default:
-            Error_Handler();
-            return;
-    }
 
     if(HAL_FDCAN_AddMessageToTxFifoQ(handle, &TxHeader, data) != HAL_OK) {
         Error_Handler();
