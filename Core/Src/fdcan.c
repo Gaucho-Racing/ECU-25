@@ -99,9 +99,22 @@ FDCAN_TxHeaderTypeDef TxHeader = {
     .MessageMarker = 0 // also change this to a real address if you change fifo control
 };
 
-void writeMessage(FDCAN_HandleTypeDef *handle, uint32_t identifier, uint8_t* data, uint32_t len) {
-    TxHeader.Identifier = identifier;
+void writeMessage(uint8_t bus, uint16_t msgID, uint8_t destID, uint8_t data[], uint32_t len) {
+    TxHeader.Identifier = (LOCAL_GR_ID << 20) | (msgID << 8) | destID;
     TxHeader.DataLength = len;
+
+    FDCAN_HandleTypeDef *handle;
+    switch(bus) {
+        case 1:
+            handle = &hfdcan1;
+            break;
+        case 2:
+            handle = &hfdcan2;
+            break;
+        default:
+            return;
+    }
+
 
     if(HAL_FDCAN_AddMessageToTxFifoQ(handle, &TxHeader, data) != HAL_OK) {
         Error_Handler();
@@ -114,12 +127,16 @@ uint8_t RxData1[128];
 FDCAN_RxHeaderTypeDef RxHeader2;
 uint8_t RxData2[128];
 
+
+
 void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 {
     if((RxFifo0ITs & FDCAN_IT_RX_FIFO0_NEW_MESSAGE) != RESET) {
         if(HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO0, &RxHeader1, RxData1) != HAL_OK) {
             Error_Handler();
         }
+
+        // TODO: call application-specific handler here
 
         if(HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0) != HAL_OK) {
             Error_Handler();
@@ -185,7 +202,7 @@ void MX_FDCAN1_Init(void)
   hfdcan1.Init.DataSyncJumpWidth = 1;
   hfdcan1.Init.DataTimeSeg1 = 1;
   hfdcan1.Init.DataTimeSeg2 = 1;
-  hfdcan1.Init.StdFiltersNbr = 0;
+  hfdcan1.Init.StdFiltersNbr = 1;
   hfdcan1.Init.ExtFiltersNbr = 0;
   hfdcan1.Init.TxFifoQueueMode = FDCAN_TX_FIFO_OPERATION;
   if (HAL_FDCAN_Init(&hfdcan1) != HAL_OK)
@@ -200,8 +217,8 @@ void MX_FDCAN1_Init(void)
   fdcan1_filter.FilterIndex = 0;
   fdcan1_filter.FilterType = FDCAN_FILTER_MASK;
   fdcan1_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
-  fdcan1_filter.FilterID1 = 0x0200000; // filter messages in 0x02 range
-  fdcan1_filter.FilterID2 = 0xFF00000;
+  fdcan1_filter.FilterID1 = LOCAL_GR_ID; // filter messages with ECU destination
+  fdcan1_filter.FilterID2 = 0x00000FF;
 
   if(HAL_FDCAN_ConfigFilter(&hfdcan1, &fdcan1_filter) != HAL_OK) {
       Error_Handler();
@@ -257,8 +274,8 @@ void MX_FDCAN2_Init(void)
   fdcan2_filter.FilterIndex = 0;
   fdcan2_filter.FilterType = FDCAN_FILTER_MASK;
   fdcan2_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO1;
-  fdcan2_filter.FilterID1 = 0x0200000; // filter messages in 0x02 range
-  fdcan2_filter.FilterID2 = 0xFF00000;
+  fdcan2_filter.FilterID1 = LOCAL_GR_ID; // filter messages with ECU destination
+  fdcan2_filter.FilterID2 = 0x00000FF;
 
   if(HAL_FDCAN_ConfigFilter(&hfdcan2, &fdcan2_filter) != HAL_OK) {
       Error_Handler();
