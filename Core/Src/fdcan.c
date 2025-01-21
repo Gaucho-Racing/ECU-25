@@ -211,6 +211,8 @@ void MX_FDCAN1_Init(void)
       Error_Handler();
   }
 
+  // runnit
+  HAL_FDCAN_Start(&hfdcan1);
   /* USER CODE END FDCAN1_Init 2 */
 
 }
@@ -248,6 +250,7 @@ void MX_FDCAN2_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN FDCAN2_Init 2 */
+  // hardware filter
   FDCAN_FilterTypeDef fdcan2_filter;
 
   fdcan2_filter.IdType = FDCAN_STANDARD_ID;
@@ -264,6 +267,9 @@ void MX_FDCAN2_Init(void)
   if(HAL_FDCAN_ActivateNotification(&hfdcan2, FDCAN_IT_RX_FIFO1_NEW_MESSAGE, 0) != HAL_OK) {
       Error_Handler();
   }
+
+  // runnit
+  HAL_FDCAN_Start(&hfdcan2);
   /* USER CODE END FDCAN2_Init 2 */
 
 }

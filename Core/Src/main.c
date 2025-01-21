@@ -98,8 +98,6 @@ int main(void)
   MX_ADC3_Init();
   MX_LPUART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  HAL_FDCAN_Start(&hfdcan1);
-  HAL_FDCAN_Start(&hfdcan2);
   
 
   /** @attention */
