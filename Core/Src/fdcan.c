@@ -22,69 +22,11 @@
 
 /* USER CODE BEGIN 0 */
 #include "stm32g4xx_hal_fdcan.h"
+#include "CANdler.h"
 #include <stdint.h>
 
-// BUILD ALL INTERRUPT CALLBACKS HERE (HEADERS IN fdcan.h)
 
 
-// HAL_StatusTypeDef HAL_FDCAN_Start(FDCAN_HandleTypeDef *hfdcan);
-// HAL_StatusTypeDef HAL_FDCAN_Stop(FDCAN_HandleTypeDef *hfdcan);
-// HAL_StatusTypeDef HAL_FDCAN_AddMessageToTxFifoQ(FDCAN_HandleTypeDef *hfdcan, const FDCAN_TxHeaderTypeDef *pTxHeader,
-//                                                 const uint8_t *pTxData);
-// uint32_t HAL_FDCAN_GetLatestTxFifoQRequestBuffer(const FDCAN_HandleTypeDef *hfdcan);
-// HAL_StatusTypeDef HAL_FDCAN_AbortTxRequest(FDCAN_HandleTypeDef *hfdcan, uint32_t BufferIndex);
-// HAL_StatusTypeDef HAL_FDCAN_GetRxMessage(FDCAN_HandleTypeDef *hfdcan, uint32_t RxLocation,
-//                                          FDCAN_RxHeaderTypeDef *pRxHeader, uint8_t *pRxData);
-// HAL_StatusTypeDef HAL_FDCAN_GetTxEvent(FDCAN_HandleTypeDef *hfdcan, FDCAN_TxEventFifoTypeDef *pTxEvent);
-// HAL_StatusTypeDef HAL_FDCAN_GetHighPriorityMessageStatus(const FDCAN_HandleTypeDef *hfdcan,
-//                                                          FDCAN_HpMsgStatusTypeDef *HpMsgStatus);
-// HAL_StatusTypeDef HAL_FDCAN_GetProtocolStatus(const FDCAN_HandleTypeDef *hfdcan,
-//                                               FDCAN_ProtocolStatusTypeDef *ProtocolStatus);
-// HAL_StatusTypeDef HAL_FDCAN_GetErrorCounters(const FDCAN_HandleTypeDef *hfdcan,
-//                                              FDCAN_ErrorCountersTypeDef *ErrorCounters);
-// uint32_t HAL_FDCAN_IsTxBufferMessagePending(const FDCAN_HandleTypeDef *hfdcan, uint32_t TxBufferIndex);
-// uint32_t HAL_FDCAN_GetRxFifoFillLevel(const FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo);
-// uint32_t HAL_FDCAN_GetTxFifoFreeLevel(const FDCAN_HandleTypeDef *hfdcan);
-// uint32_t HAL_FDCAN_IsRestrictedOperationMode(const FDCAN_HandleTypeDef *hfdcan);
-// HAL_StatusTypeDef HAL_FDCAN_ExitRestrictedOperationMode(FDCAN_HandleTypeDef *hfdcan);
-
-
-// typedef struct
-// {
-//   uint32_t Identifier;          /*!< Specifies the identifier.
-//                                      This parameter must be a number between:
-//                                       - 0 and 0x7FF, if IdType is FDCAN_STANDARD_ID
-//                                       - 0 and 0x1FFFFFFF, if IdType is FDCAN_EXTENDED_ID               */
-
-//   uint32_t IdType;              /*!< Specifies the identifier type for the message that will be
-//                                      transmitted.
-//                                      This parameter can be a value of @ref FDCAN_id_type               */
-
-//   uint32_t TxFrameType;         /*!< Specifies the frame type of the message that will be transmitted.
-//                                      This parameter can be a value of @ref FDCAN_frame_type            */
-
-//   uint32_t DataLength;          /*!< Specifies the length of the frame that will be transmitted.
-//                                       This parameter can be a value of @ref FDCAN_data_length_code     */
-
-//   uint32_t ErrorStateIndicator; /*!< Specifies the error state indicator.
-//                                      This parameter can be a value of @ref FDCAN_error_state_indicator */
-
-//   uint32_t BitRateSwitch;       /*!< Specifies whether the Tx frame will be transmitted with or without
-//                                      bit rate switching.
-//                                      This parameter can be a value of @ref FDCAN_bit_rate_switching    */
-
-//   uint32_t FDFormat;            /*!< Specifies whether the Tx frame will be transmitted in classic or
-//                                      FD format.
-//                                      This parameter can be a value of @ref FDCAN_format                */
-
-//   uint32_t TxEventFifoControl;  /*!< Specifies the event FIFO control.
-//                                      This parameter can be a value of @ref FDCAN_EFC                   */
-
-//   uint32_t MessageMarker;       /*!< Specifies the message marker to be copied into Tx Event FIFO
-//                                      element for identification of Tx message status.
-//                                      This parameter must be a number between 0 and 0xFF                */
-
-// } FDCAN_TxHeaderTypeDef;
 
 
 
@@ -121,22 +63,22 @@ void writeMessage(uint8_t bus, uint16_t msgID, uint8_t destID, uint8_t data[], u
     }
 }
 
-FDCAN_RxHeaderTypeDef RxHeader1;
-uint8_t RxData1[128];
 
-FDCAN_RxHeaderTypeDef RxHeader2;
-uint8_t RxData2[128];
 
 
 
 void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 {
+    static FDCAN_RxHeaderTypeDef RxHeader;
+    static uint8_t RxData[64];
+
     if((RxFifo0ITs & FDCAN_IT_RX_FIFO0_NEW_MESSAGE) != RESET) {
-        if(HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO0, &RxHeader1, RxData1) != HAL_OK) {
+        if(HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO0, &RxHeader, RxData) != HAL_OK) {
             Error_Handler();
         }
 
-        // TODO: call application-specific handler here
+        uint16_t msgID = (RxHeader.Identifier & 0x00FFF00) >> 8;
+        handleCANMessage(msgID, RxData, RxHeader.DataLength, RxHeader.RxTimestamp);
 
         if(HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0) != HAL_OK) {
             Error_Handler();
@@ -146,30 +88,21 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 
 void HAL_FDCAN_RxFifo1Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo1ITs)
 {
+    static FDCAN_RxHeaderTypeDef RxHeader;
+    static uint8_t RxData[64];
     if((RxFifo1ITs & FDCAN_IT_RX_FIFO1_NEW_MESSAGE) != RESET) {
-        if(HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &RxHeader2, RxData2) != HAL_OK) {
+        if(HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &RxHeader, RxData) != HAL_OK) {
             Error_Handler();
         }
+
+        uint16_t msgID = (RxHeader.Identifier & 0x00FFF00) >> 8;
+        handleCANMessage(msgID, RxData, RxHeader.DataLength, RxHeader.RxTimestamp);
 
         if(HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO1_NEW_MESSAGE, 0) != HAL_OK) {
             Error_Handler();
         }
     }
 }
-/*    
-  // read from buffer
-
-  uint32_t dataLength = hfdcan->DataLength;
-  uint32_t msgPtr = hfdcan->msgRam->RxFIFO0SA;
-  uint32_t data[dataLength];
-  for (int i = 0; i < dataLength; i++) {
-    data[i] = *(hfdcan->msgRam->RxFIFO0SA + i);
-  }
-
-  // update info
-
-  // change state
-*/
 
 /* USER CODE END 0 */
 

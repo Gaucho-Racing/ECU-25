@@ -38,7 +38,6 @@ extern FDCAN_HandleTypeDef hfdcan1;
 extern FDCAN_HandleTypeDef hfdcan2;
 
 /* USER CODE BEGIN Private defines */
-// TODO: make these part of a define-generating script from csv
 #define LOCAL_GR_ID 0x02
 
 /* USER CODE END Private defines */
@@ -49,11 +48,6 @@ void MX_FDCAN2_Init(void);
 /* USER CODE BEGIN Prototypes */
 void writeMessage(uint8_t bus, uint16_t msgID, uint8_t destID, uint8_t data[], uint32_t len);
 
-extern FDCAN_RxHeaderTypeDef RxHeader1;
-extern uint8_t RxData1[128];
-
-extern FDCAN_RxHeaderTypeDef RxHeader2;
-extern uint8_t RxData2[128];
 
 /* USER CODE END Prototypes */
 
