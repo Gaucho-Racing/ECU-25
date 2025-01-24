@@ -6,63 +6,55 @@
 #include "msgIDs.h"
 #include "grIDs.h"
 
-uint32_t pingTimesArray[256] = {-1};
 
-void pingSchedule()
+const uint8_t pingIDs[] = {GR_ACU,
+                           GR_GR_INVERTER_1,
+                           GR_GR_INVERTER_2,
+                           GR_GR_INVERTER_3,
+                           GR_GR_INVERTER_4,
+                           GR_FAN_CONTROLLER_1,
+                           GR_FAN_CONTROLLER_2,
+                           GR_FAN_CONTROLLER_3,
+                           GR_FAN_CONTROLLER_4,
+                           GR_DASH_PANEL,
+                           GR_STEERING_WHEEL};
+uint32_t pingTimes[PINGCOUNT] = {0};
+
+static bool pingHasReturned[PINGCOUNT] = {false};
+
+
+void pingSchedule(void)
 {
-    static uint8_t lastPingedItem = 10;
-    uint8_t itemToPing = HAL_GetTick() % 250 / 23;
+    static bool hasPinged = false;
 
-    if(lastCase)
+    if(HAL_GetTick() % PINGTIMEOUT >= PINGTIMEOUT/2) {
+        hasPinged = false;
+        return;
+    }
+    if(hasPinged == true) {
+        return;
+    }
 
-    uint8_t bus = 1;
-    uint16_t msgID = MSG_PING;
-    uint8_t destID;
-    uint32_t timeInMS = HAL_GetTick();
-    uint8_t* data = &timeInMS;
-    uint32_t len = 4;
+    // check for timed out pings
+    for(int i = 0; i < PINGCOUNT; i++) {
+        if(!pingHasReturned[i]) {
+            pingTimes[i] = PINGTIMEOUT;
+        }
+
+        pingHasReturned[i] = false;
+    }
 
     uint32_t ms = HAL_GetTick();
-    switch ((HAL_GetTick() % 250 / 23)) {
-        case 0:
-            destID = GR_ACU;
-            break;
-        case 1:
-            destID = GR_GR_INVERTER_1;
-            break;
-        case 2:
-            destID = GR_GR_INVERTER_2;
-            break;
-        case 3:
-            destID = GR_GR_INVERTER_3;
-            break;
-        case 4:
-            destID = GR_GR_INVERTER_4;
-            break;
-        case 5:
-            destID = GR_FAN_CONTROLLER_1;
-            break;
-        case 6:
-            destID = GR_FAN_CONTROLLER_2;
-            break;
-        case 7:
-            destID = GR_FAN_CONTROLLER_3;
-            break;
-        case 8:
-            destID = GR_FAN_CONTROLLER_4;
-            break;
-        case 9:
-            destID = GR_DASH_PANEL;
-            break;
-        case 10:
-            destID = GR_STEERING_WHEEL;
-            break;
-    }
-    
-    pingTimestampsArray[destID] = timeInMS;
-    writeMessage(bus, msgID, destID, data, len);
+    writeMessage(1, MSG_PING, GR_ALL, (uint8_t *)&ms, sizeof(uint32_t));
 }
 
 void respondToPing(uint8_t destID, uint32_t timestamp) {
-    pingTimesArray[destID] = HAL_GetTick() - timestamp;
+    for(int i = 0; i < PINGCOUNT; i++) {
+        if(destID == pingIDs[i]){
+            pingTimes[i] = HAL_GetTick() - timestamp;
+            pingHasReturned[i] = true;
+            return;
+        }
+    }
+    Error_Handler();
 }
