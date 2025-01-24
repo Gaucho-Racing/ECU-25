@@ -47,8 +47,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-State state = GLV_ON;
-InformationToPassToState info;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -108,7 +107,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    stateMachineTick(&state);
+    stateMachineTick();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
