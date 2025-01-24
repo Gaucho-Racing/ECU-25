@@ -1,3 +1,8 @@
+#ifndef STATEMACHINE_H
+#define STATEMACHINE_H
+
+#include <stdint.h>
+
 typedef enum {
     GLV_ON,
     PRECHARGE_ENGAGED,
@@ -12,6 +17,26 @@ typedef enum {
     ERRORSTATE
 } State;
 
+typedef struct {
+    uint8_t ECUState;
+    uint8_t StatusBits[3];
+    uint8_t PowerLevelTorqueMap;
+    uint8_t MaxCellTemp;
+    uint8_t AccumulatorStateOfCharge;
+    uint8_t GLVStateOfCharge;
+    uint16_t TractiveSystemVoltage;
+    uint16_t VehicleSpeed;
+    uint16_t FRWheelRPM;
+    uint16_t FLWheelRPM;
+    uint16_t RRWheelRPM;
+    uint16_t RLWheelRPM;
+    struct {
+        int16_t ACCurrent;
+        uint16_t Temp;
+        uint16_t RPM;
+    } inverters[4];
+} StatusLump;
+
 /*
 General low voltage on
 
@@ -19,59 +44,61 @@ When the grounded low voltage system is turned on, the microcontroller has power
 but the motor controller is not enabled. This is the second state that the car will enter
 after the ECU Flash is complete. Here it waits for the TS ACTIVE button to be pressed.
 */
-void glv_on(State* state);
+void glv_on(StatusLump *status);
 
 /*
 Precharge engaged
 */
-void precharge_engaged(State* state);
+void precharge_engaged(StatusLump *status);
 
 /*
 Precharging
 */
-void precharging(State* state);
+void precharging(StatusLump *status);
 
 /*
 Precharge complete
 */
-void precharge_complete(State* state);
+void precharge_complete(StatusLump *status);
 
 /*
 Ready to go, drive standby
 */
-void drive_standby(State* state);
+void drive_standby(StatusLump *status);
 
 /*
 Drive active sub state, idle
 */
-void drive_active_idle(State* state);
+void drive_active_idle(StatusLump *status);
 
 /*
 Drive active sub state, power
 */
-void drive_active_power(State* state);
+void drive_active_power(StatusLump *status);
 
 /*
 Drive active sub state, regen
 */
-void drive_active_regen(State* state);
+void drive_active_regen(StatusLump *status);
 
 /*
 Shutting down, ts discharge off
 */
-void ts_discharge_off(State* state);
+void ts_discharge_off(StatusLump *status);
 
 /*
 Set new stuff, reflash tune
 */
-void reflash_tune(State* state);
+void reflash_tune(StatusLump *status);
 
 /*
 Error state, error
 */
-void error(State* state);
+void error(StatusLump *status);
 
 /*
 CALL ME! Pass in the state and the info and it will automatically tick
 */
-void stateMachineTick(State* state);
+void stateMachineTick(void);
+
+#endif // STATEMACHINE_H

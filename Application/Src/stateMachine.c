@@ -2,47 +2,49 @@
 #include "stm32g4xx_hal.h"
 #include "stateMachine.h"
 
-void stateMachineTick(State* state)
+StatusLump globalStatus;
+
+void stateMachineTick(void)
 {
-    switch(*state) {
+    switch(globalStatus.ECUState) {
         case GLV_ON:
-            glv_on(state);
+            glv_on(&globalStatus);
             break;
         case PRECHARGE_ENGAGED:
-            precharge_engaged(state);
+            precharge_engaged(&globalStatus);
             break;
         case PRECHARGING:
-            precharging(state);
+            precharging(&globalStatus);
             break;
         case PRECHARGE_COMPLETE:
-            precharge_complete(state);
+            precharge_complete(&globalStatus);
             break;
         case DRIVE_STANDBY:
-            drive_standby(state);
+            drive_standby(&globalStatus);
             break;
         case DRIVE_ACTIVE_IDLE:
-            drive_active_idle(state);
+            drive_active_idle(&globalStatus);
             break;
         case DRIVE_ACTIVE_POWER:
-            drive_active_power(state);
+            drive_active_power(&globalStatus);
             break;
         case DRIVE_ACTIVE_REGEN:
-            drive_active_regen(state);
+            drive_active_regen(&globalStatus);
             break;
         case TS_DISCHARGE_OFF:
-            ts_discharge_off(state);
+            ts_discharge_off(&globalStatus);
             break;
         case REFLASH_TUNE:
-            reflash_tune(state);
+            reflash_tune(&globalStatus);
             break;
         case ERRORSTATE:
         default:
-            error(state);
+            error(&globalStatus);
         break;
     }
 }
 
-void glv_on(State* state) {
+void glv_on(StatusLump *status) {
 
     // When the grounded low voltage system is turned on
     // the microcontroller has power, but the motor controller is not enabled.
@@ -50,101 +52,101 @@ void glv_on(State* state) {
     // Here it waits for the TS ACTIVE button to be pressed.
 
     if (true /*TS ACTIVE from CAN*/)
-        *state = PRECHARGE_ENGAGED;
+        status->ECUState = PRECHARGE_ENGAGED;
 }
 
-void precharge_engaged(State* state)
+void precharge_engaged(StatusLump *status)
 {
     if (true /*ACU precharge confirmation recieved*/)
-        *state = PRECHARGING;
+        status->ECUState = PRECHARGING;
     if (true /*TS ACTIVE button disabled*/)
-        *state = GLV_ON;
+        status->ECUState = GLV_ON;
 }
 
-void precharging(State* state)
+void precharging(StatusLump *status)
 {
     if (true /*ACU precharge success confirmation*/)
-        *state = PRECHARGE_COMPLETE;
+        status->ECUState = PRECHARGE_COMPLETE;
     if (false /*TS ACTIVE button disabled*/ || false /*ACU precharge cancellation*/)
-        *state = TS_DISCHARGE_OFF;
+        status->ECUState = TS_DISCHARGE_OFF;
 }
 
-void precharge_complete(State* state)
+void precharge_complete(StatusLump *status)
 {
     if (false /*BRAKE on*/ && false/*ReadyToDrive ON*/)
-        *state = DRIVE_STANDBY;
+        status->ECUState = DRIVE_STANDBY;
     if (false /*TS ACTIVE button disabled*/ || false /*ACU shutdown*/ || false /*Critical error*/)
-        *state = TS_DISCHARGE_OFF;
+        status->ECUState = TS_DISCHARGE_OFF;
 }
 
-void drive_standby(State* state)
+void drive_standby(StatusLump *status)
 {
     if (true /*Valid torque request*/)
-        *state = DRIVE_ACTIVE_IDLE; // not sure if it's idle and not some other state
+        status->ECUState = DRIVE_ACTIVE_IDLE; // not sure if it's idle and not some other state
     if (false /*ReadyToDrive OFF*/)
-        *state = PRECHARGE_COMPLETE;
+        status->ECUState = PRECHARGE_COMPLETE;
     if (false /*TS ACTIVE button disabled*/ || false/*ACU shutdown*/ || false/*Critical error*/)
-        *state = TS_DISCHARGE_OFF;
+        status->ECUState = TS_DISCHARGE_OFF;
 }
 
-void drive_active_idle(State* state)
+void drive_active_idle(StatusLump *status)
 {
     // LOTS OF https://github.com/Gaucho-Racing/VDM-24/blob/9ee4839ee6e5ce32a51602fe23723db5d23b1eaf/src/main.cpp#L1214
 
     if (true /*Throttle is pushed*/)
-       *state = DRIVE_ACTIVE_POWER;
+       *status = DRIVE_ACTIVE_POWER;
     if (false /*No violation*/ && false /*Throttle is none*/ && false /*Speed > X mph*/ && false /*Not regenerating power*/)
-       *state = DRIVE_ACTIVE_REGEN;
+       status->ECUState = DRIVE_ACTIVE_REGEN;
     if (false /*Violation*/)   // SEND WARNING TO DASH
-       *state = DRIVE_STANDBY;
+       status->ECUState = DRIVE_STANDBY;
     if (false /*TS ACTIVE button disabled*/ || false/*ACU shutdown*/ || false/*Critical error*/)
-        *state = TS_DISCHARGE_OFF;
+        status->ECUState = TS_DISCHARGE_OFF;
 }
 
-void drive_active_power(State* state)
+void drive_active_power(StatusLump *status)
 {
     // LOTS OF https://github.com/Gaucho-Racing/VDM-24/blob/9ee4839ee6e5ce32a51602fe23723db5d23b1eaf/src/main.cpp#L1214
 
     if (false /*Accelerator gradient plausibility violation*/)    // SEND WARNING TO DASH
-        *state = DRIVE_STANDBY;
+        status->ECUState = DRIVE_STANDBY;
     if (false /*Brake over threshold*/ && /*Throttle engaged*/)
-        *state = DRIVE_STANDBY;
+        status->ECUState = DRIVE_STANDBY;
     if (false /*TS ACTIVE button disabled*/ || false /*ACU shutdown*/ || false /*Critical error*/)
-        *state = TS_DISCHARGE_OFF;
+        status->ECUState = TS_DISCHARGE_OFF;
 }
 
-void drive_active_regen(State* state)
+void drive_active_regen(StatusLump *status)
 {
     // LOTS OF https://github.com/Gaucho-Racing/VDM-24/blob/9ee4839ee6e5ce32a51602fe23723db5d23b1eaf/src/main.cpp#L1214
     // Some math in https://github.com/Gaucho-Racing/VDM-24/blob/9ee4839ee6e5ce32a51602fe23723db5d23b1eaf/src/main.cpp#L1253
 
     if (true /*Throttle engaged*/)
-        *state = DRIVE_ACTIVE_POWER;
+        status->ECUState = DRIVE_ACTIVE_POWER;
     if (false /*Settings say no regen braking*/)
-        *state = DRIVE_ACTIVE_IDLE;
+        status->ECUState = DRIVE_ACTIVE_IDLE;
     if (false /*TS ACTIVE button disabled*/ || false /*ACU shutdown*/ || false /*Critical error*/)
-        *state = TS_DISCHARGE_OFF;
+        status->ECUState = TS_DISCHARGE_OFF;
 }
 
-void ts_discharge_off(State* state)
+void ts_discharge_off(StatusLump *status)
 {
     if (true /*Main power off*/ && true /*Errors resolved*/)
-        *state = GLV_ON;
+        status->ECUState = GLV_ON;
     if (false /*Main power off*/ && !true/*Errors resolved*/)
-        *state = ERROR;
+        status->ECUState = ERROR;
 }
 
-void reflash_tune(State* state)
+void reflash_tune(StatusLump *status)
 {
     // READ SD CARD INFORMATION INTO INFO and then
-    *state = GLV_ON;
+    status->ECUState = GLV_ON;
 
     if (true /*Flash error*/)
-        *state = ERROR;
+        status->ECUState = ERROR;
 }
 
-void error(State* state)
+void error(StatusLump *status)
 {
     if (true /*Errors resolved*/)
-        *state = GLV_ON;
+        status->ECUState = GLV_ON;
 }
