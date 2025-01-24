@@ -137,7 +137,7 @@ void MX_FDCAN1_Init(void)
   hfdcan1.Init.DataSyncJumpWidth = 1;
   hfdcan1.Init.DataTimeSeg1 = 5;
   hfdcan1.Init.DataTimeSeg2 = 4;
-  hfdcan1.Init.StdFiltersNbr = 1;
+  hfdcan1.Init.StdFiltersNbr = 2;
   hfdcan1.Init.ExtFiltersNbr = 0;
   hfdcan1.Init.TxFifoQueueMode = FDCAN_TX_FIFO_OPERATION;
   if (HAL_FDCAN_Init(&hfdcan1) != HAL_OK)
@@ -154,6 +154,13 @@ void MX_FDCAN1_Init(void)
   fdcan1_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
   fdcan1_filter.FilterID1 = LOCAL_GR_ID; // filter messages with ECU destination
   fdcan1_filter.FilterID2 = 0x00000FF;
+
+  if(HAL_FDCAN_ConfigFilter(&hfdcan1, &fdcan1_filter) != HAL_OK) {
+      Error_Handler();
+  }
+
+  fdcan1_filter.FilterIndex = 1;
+  fdcan1_filter.FilterID1 = 0xFF; // filter messages for all targets
 
   if(HAL_FDCAN_ConfigFilter(&hfdcan1, &fdcan1_filter) != HAL_OK) {
       Error_Handler();
@@ -194,7 +201,7 @@ void MX_FDCAN2_Init(void)
   hfdcan2.Init.DataSyncJumpWidth = 1;
   hfdcan2.Init.DataTimeSeg1 = 5;
   hfdcan2.Init.DataTimeSeg2 = 4;
-  hfdcan2.Init.StdFiltersNbr = 1;
+  hfdcan2.Init.StdFiltersNbr = 2;
   hfdcan2.Init.ExtFiltersNbr = 0;
   hfdcan2.Init.TxFifoQueueMode = FDCAN_TX_FIFO_OPERATION;
   if (HAL_FDCAN_Init(&hfdcan2) != HAL_OK)
@@ -213,6 +220,13 @@ void MX_FDCAN2_Init(void)
   fdcan2_filter.FilterID2 = 0x00000FF;
 
   if(HAL_FDCAN_ConfigFilter(&hfdcan2, &fdcan2_filter) != HAL_OK) {
+      Error_Handler();
+  }
+
+  fdcan2_filter.FilterIndex = 1;
+  fdcan2_filter.FilterID1 = 0xFF; // filter messages for all targets
+
+  if(HAL_FDCAN_ConfigFilter(&hfdcan1, &fdcan1_filter) != HAL_OK) {
       Error_Handler();
   }
 

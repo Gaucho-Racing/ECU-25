@@ -30,6 +30,7 @@ extern "C" {
 
 /* USER CODE BEGIN Includes */
 #include <stdbool.h>
+#include "msgIDs.h"
 
 /* USER CODE END Includes */
 
@@ -38,7 +39,7 @@ extern FDCAN_HandleTypeDef hfdcan1;
 extern FDCAN_HandleTypeDef hfdcan2;
 
 /* USER CODE BEGIN Private defines */
-#define LOCAL_GR_ID 0x02
+#define LOCAL_GR_ID GR_ECU
 
 /* USER CODE END Private defines */
 
