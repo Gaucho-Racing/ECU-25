@@ -26,7 +26,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stateMachine.h"
-
+#include "pinging.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
