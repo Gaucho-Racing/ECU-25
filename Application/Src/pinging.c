@@ -6,7 +6,7 @@
 #include "msgIDs.h"
 #include "grIDs.h"
 
-uint32_t pingTimesArray[256];
+uint32_t pingTimesArray[256] = {-1};
 
 void pingSchedule()
 {
@@ -64,5 +64,5 @@ void pingSchedule()
 }
 
 void respondToPing(uint8_t destID, uint32_t timestamp) {
-    pingTimesArray[destID] = HAL_GetTick()
+    pingTimesArray[destID] = HAL_GetTick() - timestamp;
 }
