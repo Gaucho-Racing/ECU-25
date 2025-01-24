@@ -78,7 +78,8 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
         }
 
         uint16_t msgID = (RxHeader.Identifier & 0x00FFF00) >> 8;
-        handleCANMessage(msgID, RxData, RxHeader.DataLength, RxHeader.RxTimestamp);
+        uint8_t srcID  = (RxHeader.Identifier & 0xFF00000) >> 20;
+        handleCANMessage(msgID, srcID, RxData, RxHeader.DataLength, RxHeader.RxTimestamp);
 
         if(HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0) != HAL_OK) {
             Error_Handler();

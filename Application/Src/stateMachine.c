@@ -2,7 +2,11 @@
 #include "stm32g4xx_hal.h"
 #include "stateMachine.h"
 
-StatusLump globalStatus;
+StatusLump globalStatus = {
+    .ECUState = GLV_ON;
+    .StatusBits = {0};
+    
+};
 
 void stateMachineTick(void)
 {
