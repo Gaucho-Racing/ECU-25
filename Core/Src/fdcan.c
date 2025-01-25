@@ -226,7 +226,7 @@ void MX_FDCAN2_Init(void)
   fdcan2_filter.FilterIndex = 1;
   fdcan2_filter.FilterID1 = 0xFF; // filter messages for all targets
 
-  if(HAL_FDCAN_ConfigFilter(&hfdcan1, &fdcan1_filter) != HAL_OK) {
+  if(HAL_FDCAN_ConfigFilter(&hfdcan1, &fdcan2_filter) != HAL_OK) {
       Error_Handler();
   }
 
