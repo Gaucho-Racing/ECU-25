@@ -106,6 +106,6 @@ typedef struct {
     uint8_t Input_Voltage;
     uint8_t Output_Voltage;
     uint8_t Current;
-} Fan_Status;
+} Fan_Status_Msg;
 
 #endif // CANDLER_H

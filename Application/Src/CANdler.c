@@ -113,15 +113,24 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             globalStatus.RRWheelRPM = globalStatus.inverters[1].RPM;
             globalStatus.FLWheelRPM = globalStatus.inverters[2].RPM;
             globalStatus.FRWheelRPM = globalStatus.inverters[3].RPM;
-            
+
+            globalStatus.VehicleSpeed = (globalStatus.RRWheelRPM + globalStatus.RLWheelRPM) * 3.141592653539 * 8 / 3.55 / 1056.0;  // Probably fix this...
+
             break;
         case MSG_FAN_STATUS:
             if (length != 5) {
                 /* BAD MESSAGE? */
             }
-            Fan_Status* msgFan = (Fan_Status*)data;
+
+            Fan_Status_Msg* msgFan = (Fan_Status_Msg*)data;
+            UNUSED(msgFan);
 
             break;
+
+        case MSG_STEERING_STATUS:
+            if (length != 2) {
+                /* BAD MESSAGE? */
+            }
         /* update globals in stateMachine */
     }
 }
