@@ -19,6 +19,7 @@ Mac and Unix download using your package managers (Mac may need the ARM toolchai
 4. Generate the build stuff with `cmake --preset <target>`. With target in development being `Debug` typically.
 5. Run and Debug, Debug using the provided Debug config, Cortex Debug
 6. Alternatiively try running the `debug.sh` script (does not require VS Code)
+
 Chances are something will not work right the first try
 
 # Debugging
