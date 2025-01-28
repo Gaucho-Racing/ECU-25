@@ -5,7 +5,7 @@
             "includePath": [
                 "${workspaceFolder}/**"
             ],
-            "defines": [],
+            "defines": "STM32G474xx",
             "compilerPath": "/usr/bin/clang-14",
             "cStandard": "c17",
             "cppStandard": "c++17",
