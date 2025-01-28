@@ -97,6 +97,9 @@ int main(void)
   MX_ADC3_Init();
   MX_LPUART1_UART_Init();
   /* USER CODE BEGIN 2 */
+
+  // 10us ticks
+  HAL_SetTickFreq(100000);
   
 
   /** @attention */
