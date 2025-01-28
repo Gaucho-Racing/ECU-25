@@ -1,27 +1,28 @@
-see [git wiki page](https://wiki.gauchoracing.com/books/onboarding/page/git) for a primer on git
-# Required stuff
-## applications
-Mac and Unix download using package managers (besides arm-toolchain), windows use links below
-* [CMAKE](https://cmake.org/download/)  
-* [ARM toolchain (arm-none-eabi), CHECK OS VERSION](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)  
-* [openocd](https://github.com/openocd-org/openocd/releases/tag/v0.12.0)  
-* [ninja](https://github.com/ninja-build/ninja/releases)  
-## vscode extensions
-* CMAKE  
+See [git wiki page](https://wiki.gauchoracing.com/books/onboarding/page/git) for a primer on git
+# Required Stuff
+## Applications
+Mac and Unix download using your package managers (Mac may need the ARM toolchain), Windows use links below
+* [CMAKE](https://cmake.org/download/)
+* [ARM toolchain (arm-none-eabi), CHECK OS VERSION](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
+* [openocd](https://github.com/openocd-org/openocd/releases/tag/v0.12.0)
+* [ninja](https://github.com/ninja-build/ninja/releases)
+## VS Code Extensions
+* CMAKE
 * Cortex Debug
-### Optional Vscode extensions
+### Optional Vscode Extensions
 * Serial Monitor
 
-# How 2 Run
-1. Download Required stuff and add to PATH
-2. Open VSCode  
+# How To Run
+1. Download "Required stuff" and add to your PATH
+2. Open VSCode
 3. If the CMake Extension prompts you to set up the configuration, choose DEBUG and proceed to step 5
-4. Generate the build stuff with `cmake --preset <target>`. With target in development being `Debug` typically.  
-5. Run and Debug, Debug using the provided Debug config, Cortex Debug  
-Cry as nothing works
+4. Generate the build stuff with `cmake --preset <target>`. With target in development being `Debug` typically.
+5. Run and Debug, Debug using the provided Debug config, Cortex Debug
+6. Alternatiively try running the `debug.sh` script (does not require VS Code)
+Chances are something will not work right the first try
 
 # Debugging
-If something doesn't work chances are one of the tools wasn't added to path correctly, run each of the tools independently  
+If something doesn't work chances are one of the tools wasn't added to path correctly, run each of the tools independently
 * CMAKE - `cmake --version`
 * ARM toolchain - `arm-none-eabi-gcc --version`
 * openocd - `openocd --version`
