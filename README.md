@@ -21,7 +21,8 @@ Download "Required Stuff" and add to your PATH.
 4. Run and Debug, Debug using the provided Debug config, Cortex Debug.
 ## Shell Script
 1. Execute the `debug.sh` script (does not require VS Code).
-2. If you are not trying to flash the chip run `debug.sh build` instead.
+2. `openocd` and `gdb` will launch automatically to facilitate debugging, see [gdb cheat sheet](https://darkdust.net/files/GDB%20Cheat%20Sheet.pdf) for instructions.
+3. If you are only attempting to compile run `debug.sh build` instead.
 
 # Debugging
 Chances are something will not work right the first try, likely one of the tools wasn't added to your PATH correctly.
