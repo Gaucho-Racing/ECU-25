@@ -13,11 +13,11 @@ Mac and Unix download using your package managers (Mac may need the ARM toolchai
 * Serial Monitor
 
 # How To Run
-1. Download "Required Stuff" and add to your PATH.
-2. Open VSCode.
-3. If the CMake Extension prompts you to set up the configuration, choose DEBUG and proceed to step 5.
-4. Generate the build stuff with `cmake --preset <target>`. With target in development being `Debug` typically.
-5. Run and Debug, Debug using the provided Debug config, Cortex Debug.
+Download "Required Stuff" and add to your PATH.
+1. Open VSCode.
+2. If the CMake Extension prompts you to set up the configuration, choose DEBUG and proceed to step 4.
+3. Generate the build stuff with `cmake --preset <target>`. With target in development being `Debug` typically.
+4. Run and Debug, Debug using the provided Debug config, Cortex Debug.
 
 Alternatiively you can use the `debug.sh` script (does not require VS Code).
 
