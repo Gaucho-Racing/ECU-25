@@ -27,7 +27,7 @@ void pingSchedule(void)
 {
     static bool hasPinged = false;
 
-    if(HAL_GetTick() % PINGTIMEOUT >= PINGTIMEOUT/2) {
+    if(HAL_GetTick() % (PINGTIMEOUT*100) >= (PINGTIMEOUT*100)/2) {
         hasPinged = false;
         return;
     }
@@ -38,14 +38,14 @@ void pingSchedule(void)
     // check for timed out pings
     for(int i = 0; i < PINGCOUNT; i++) {
         if(!pingHasReturned[i]) {
-            pingTimes[i] = PINGTIMEOUT;
+            pingTimes[i] = PINGTIMEOUT*100;
         }
 
         pingHasReturned[i] = false;
     }
 
-    uint32_t ms = HAL_GetTick();
-    writeMessage(1, MSG_PING, GR_ALL, (uint8_t *)&ms, sizeof(uint32_t));
+    uint32_t tick = HAL_GetTick();
+    writeMessage(1, MSG_PING, GR_ALL, (uint8_t *)&tick, sizeof(uint32_t));
 }
 
 void respondToPing(uint8_t destID, uint32_t timestamp) {

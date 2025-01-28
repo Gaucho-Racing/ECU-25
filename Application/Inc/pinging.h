@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define PINGTIMEOUT 250
+#define PINGTIMEOUT 250 // timeout time for pings in ms
 #define PINGCOUNT 11
 
 extern const uint8_t pingIDs[PINGCOUNT]; // GR IDs of devices that are pinged

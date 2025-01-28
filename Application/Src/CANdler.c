@@ -96,7 +96,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             UNUSED(msgDti);
 
             break;
-        case MSG_GR_INVERTER_STATUS:
+        case MSG_GR_INVERTER_STATUS:    // THIS WILL NEED TO BE REWORKED EXTENSIVELY
             if (length != 19) {
                 /* BAD MESSAGE? */
             }
@@ -119,7 +119,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             if (length != 5) {
                 /* BAD MESSAGE? */
             }
-            Fan_Status* msgFan = (
+            Fan_Status* msgFan = (Fan_Status*)data;
 
             break;
         /* update globals in stateMachine */
