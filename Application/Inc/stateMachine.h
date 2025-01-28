@@ -3,8 +3,6 @@
 
 #include <stdint.h>
 
-StatusLump globalStatus;
-
 typedef enum {
     GLV_ON,
     PRECHARGE_ENGAGED,
@@ -38,6 +36,8 @@ typedef struct {
         uint16_t RPM;
     } inverters[4];
 } StatusLump;
+
+extern StatusLump globalStatus;
 
 /*
 General low voltage on
