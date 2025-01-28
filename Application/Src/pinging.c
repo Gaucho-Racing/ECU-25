@@ -1,5 +1,7 @@
 #include <stdint.h>
 
+#include "CANdler.h"
+#include "stateMachine.h"
 #include "stm32g4xx_hal.h"
 #include "pinging.h"
 #include "fdcan.h"
@@ -39,6 +41,10 @@ void pingSchedule(void)
     for(int i = 0; i < PINGCOUNT; i++) {
         if(!pingHasReturned[i]) {
             pingTimes[i] = PINGTIMEOUT*100;
+
+            *globalStatus.StatusBits &= ~(1 << i);  // Plz double check
+        } else {
+            *globalStatus.StatusBits |= (1 << i);   // Plz double check
         }
 
         pingHasReturned[i] = false;
