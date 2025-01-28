@@ -34,6 +34,7 @@ typedef struct {
     uint8_t HV_Output_Current;
 } ACU_Status_Msg;
 
+// Bad very not good code
 typedef struct {
     uint8_t Cell_0_Voltage;
     uint8_t Cell_0_Temp;
@@ -53,8 +54,27 @@ typedef struct {
 
 typedef struct {
     uint8_t Cell_64_Voltage;
-    uint8_t
-}
+    uint8_t Cell_64_Temp;
+    uint8_t Cell_94_Temp;
+    uint8_t Cell_95_Voltage;
+    uint8_t Cell_95_Temp;
 
+} MSG_ACU_CELL_DATA_3;
+
+typedef struct {
+    uint8_t Cell_95_Voltage_1;
+    uint8_t Cell_64_Temp;
+    uint8_t Cell_95_Voltage_2; // there's a duplicate for some reason; don't ask me
+    uint8_t Cell_95_Temp;
+
+} MSG_ACU_CELL_DATA_4;
+
+typedef struct {
+    uint8_t Cell_64_Voltage;
+    uint8_t Cell_64_Temp;
+    uint8_t Cell_95_voltage;
+    uint8_t Cell_95_Temp;
+
+} MSG_ACU_CELL_DATA_5;
 
 #endif // CANDLER_H
