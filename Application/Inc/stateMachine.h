@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+StatusLump globalStatus;
+
 typedef enum {
     GLV_ON,
     PRECHARGE_ENGAGED,
