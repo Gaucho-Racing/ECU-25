@@ -113,7 +113,7 @@ void drive_active_power(StatusLump *status)
 
     if (false /*Accelerator gradient plausibility violation*/)    // SEND WARNING TO DASH
         status->ECUState = DRIVE_STANDBY;
-    if (false /*Brake over threshold*/ && /*Throttle engaged*/)
+    if (false /*Brake over threshold*/ && false /*Throttle engaged*/)
         status->ECUState = DRIVE_STANDBY;
     if (false /*TS ACTIVE button disabled*/ || false /*ACU shutdown*/ || false /*Critical error*/)
         status->ECUState = TS_DISCHARGE_OFF;
