@@ -77,7 +77,7 @@ void precharging(StatusLump *status)
 
 void precharge_complete(StatusLump *status)
 {
-    if (false /*BRAKE on*/ && false/*ReadyToDrive ON*/)
+    if (false /*BRAKE on*/ && false /*ReadyToDrive ON*/)
         status->ECUState = DRIVE_STANDBY;
     if (false /*TS ACTIVE button disabled*/ || false /*ACU shutdown*/ || false /*Critical error*/)
         status->ECUState = TS_DISCHARGE_OFF;
