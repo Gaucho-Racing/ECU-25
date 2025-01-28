@@ -72,9 +72,20 @@ typedef struct {
 typedef struct {
     uint8_t Cell_64_Voltage;
     uint8_t Cell_64_Temp;
-    uint8_t Cell_95_voltage;
+    uint8_t Cell_95_Voltage;
     uint8_t Cell_95_Temp;
 
 } MSG_ACU_CELL_DATA_5;
+
+
+
+typedef struct {
+    uint16_t Fan_Speed;
+    uint8_t Input_Voltage;
+    uint8_t Output_Voltage;
+    uint8_t Current;
+} FAN_STATUS;
+
+
 
 #endif // CANDLER_H
