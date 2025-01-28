@@ -18,18 +18,9 @@ typedef struct {
     uint8_t SDC_Voltage;
     uint8_t Min_Cell_Voltage;
     uint8_t Max_Cell_Temp;
-    uint8_t Over_Temp_Error;
-    uint8_t Over_Voltage_Error;
-    uint8_t Under_Voltage_Error;
-    uint8_t Over_Current_Error;
-    uint8_t Under_Current_Error;
-    uint8_t Under_Voltage_20v_Warning;
-    uint8_t Under_Voltage_12v_Warning;
-    uint8_t Under_Voltage_SDC_Warning;
+    uint8_t Error_Warning_Bits;
     uint8_t Precharge_Error;
-    uint8_t IRminus_Precharge_State;
-    uint8_t IRplus_State;
-    uint8_t Software_Latch;
+    uint8_t IR_State_Software_Latch_Bits;
     uint8_t HV_Input_Voltage;
     uint8_t HV_Output_Voltage;
     uint8_t HV_Input_Current;
@@ -60,7 +51,7 @@ typedef struct {
     uint8_t Water_temperature;
     uint16_t Motor_RPM;
     uint8_t Motor_temperature;
-    uint8_t fault_map[8];
+    uint8_t fault_map;
 } Gr_Inverter_Status_Msg;
 
 typedef struct {
@@ -76,8 +67,7 @@ typedef struct {
     int32_t FOC_Iq;
     uint8_t Throttle;
     uint8_t Brake;
-    uint8_t Digital_IO_Input[4];
-    uint8_t Digital_IO_Output[4];
+    uint8_t Digital_IO;
     uint32_t Drive_Enable;
     uint16_t Flags;
     uint8_t CAN_Version;
