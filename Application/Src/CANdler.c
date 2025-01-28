@@ -33,7 +33,6 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             char* string = (char*)data;
-            UNUSED(string);
 
             break;
         case MSG_PING:
@@ -94,7 +93,6 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             Msg_Lv_Dc_Dc_Status* msgLv = (Msg_Lv_Dc_Dc_Status*)data;
-            UNUSED(msgLv);
 
             break;
         case MSG_DTI_INVERTER_STATUS:
@@ -103,7 +101,6 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             Dti_Inverter_Status_Msg* msgDti = (Dti_Inverter_Status_Msg*)data;
-            UNUSED(msgDti);
 
             break;
         case MSG_GR_INVERTER_STATUS:    // THIS WILL NEED TO BE REWORKED EXTENSIVELY
@@ -111,9 +108,9 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 /* BAD MESSAGE? */
             }
 
-            Msg_Gr_Inverter_Status* msgGri = (Msg_Gr_Inverter_Status*)data;
-            globalStatus.inverters[0].ACCurrent = msgGri->AC_Current;
-            globalStatus.inverters[0].Temp = findTernaryMax(msgGri->U_MOSFET_Temperature, msgGri->V_MOSFET_Temperature, msgGri->W_MOSFET_Temperature);
+            Gr_Inverter_Status_Msg* msgGri = (Gr_Inverter_Status_Msg*)data;
+            globalStatus.inverters[0].ACCurrent = msgGri->AC_current;
+            globalStatus.inverters[0].Temp = findTernaryMax(msgGri->U_MOSFET_temperature, msgGri->V_MOSFET_temperature, msgGri->W_MOSFET_temperature);
             globalStatus.inverters[0].RPM = msgGri->Motor_RPM;
             globalStatus.inverters[1] = globalStatus.inverters[0];
             globalStatus.inverters[2] = globalStatus.inverters[1];
@@ -133,7 +130,6 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             Fan_Status_Msg* msgFan = (Fan_Status_Msg*)data;
-            UNUSED(msgFan);
 
             break;
 
