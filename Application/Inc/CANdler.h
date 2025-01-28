@@ -34,4 +34,27 @@ typedef struct {
     uint8_t HV_Output_Current;
 } ACU_Status_Msg;
 
+typedef struct {
+    uint8_t Cell_0_Voltage;
+    uint8_t Cell_0_Temp;
+    uint8_t Cell_30_Temp;
+    uint8_t Cell_31_Voltage;
+    uint8_t Cell_31_Temp;
+
+} MSG_ACU_CELL_DATA_1;
+
+typedef struct {
+    uint8_t Cell_32_Voltage;
+    uint8_t Cell_32_Temp;
+    uint8_t Cell_33_Voltage;
+    uint8_t Cell_63_Temp;
+
+} MSG_ACU_CELL_DATA_2;
+
+typedef struct {
+    uint8_t Cell_64_Voltage;
+    uint8_t
+}
+
+
 #endif // CANDLER_H

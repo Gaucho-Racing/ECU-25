@@ -1,7 +1,9 @@
+#include <stdbool.h>
+
 #include "CANdler.h"
 #include "stateMachine.h"
 #include "msgIDs.h"
-#include <stdbool.h>
+#include "pinging.h"
 
 void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t length, uint32_t timestamp) {
     switch(msgID) {
@@ -15,6 +17,8 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             if (length != 4) {
                 /* BAD MESSAGE? */
             }
+
+            respondToPing(srcID, *(uint32_t*)data);
 
             break;
         case MSG_ACU_STATUS:
