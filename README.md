@@ -1,7 +1,7 @@
 See [git wiki page](https://wiki.gauchoracing.com/books/onboarding/page/git) for a primer on git
 # Required Stuff
 ## Applications
-Mac and Unix download using your package managers (Mac may need the ARM toolchain), Windows use links below
+Mac and Unix download using your package managers (Mac may need the ARM toolchain), Windows should use the links below:
 * [CMAKE](https://cmake.org/download/)
 * [ARM toolchain (arm-none-eabi), CHECK OS VERSION](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
 * [openocd](https://github.com/openocd-org/openocd/releases/tag/v0.12.0)
@@ -13,7 +13,7 @@ Mac and Unix download using your package managers (Mac may need the ARM toolchai
 * Serial Monitor
 
 # How To Run
-1. Download "Required stuff" and add to your PATH
+1. Download "Required Stuff" and add to your PATH
 2. Open VSCode
 3. If the CMake Extension prompts you to set up the configuration, choose DEBUG and proceed to step 5
 4. Generate the build stuff with `cmake --preset <target>`. With target in development being `Debug` typically.
@@ -23,7 +23,7 @@ Mac and Unix download using your package managers (Mac may need the ARM toolchai
 Chances are something will not work right the first try
 
 # Debugging
-If something doesn't work chances are one of the tools wasn't added to path correctly, run each of the tools independently
+If something doesn't work chances are one of the tools wasn't added to path correctly, run each of the tools independently:
 * CMAKE - `cmake --version`
 * ARM toolchain - `arm-none-eabi-gcc --version`
 * openocd - `openocd --version`
