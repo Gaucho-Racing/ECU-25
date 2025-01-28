@@ -34,58 +34,51 @@ typedef struct {
     uint8_t HV_Output_Current;
 } ACU_Status_Msg;
 
-// Bad very not good code
 typedef struct {
-    uint8_t Cell_0_Voltage;
-    uint8_t Cell_0_Temp;
-    uint8_t Cell_30_Temp;
-    uint8_t Cell_31_Voltage;
-    uint8_t Cell_31_Temp;
-
-} MSG_ACU_CELL_DATA_1;
-
-typedef struct {
-    uint8_t Cell_32_Voltage;
-    uint8_t Cell_32_Temp;
-    uint8_t Cell_33_Voltage;
-    uint8_t Cell_63_Temp;
-
-} MSG_ACU_CELL_DATA_2;
-
-typedef struct {
-    uint8_t Cell_64_Voltage;
-    uint8_t Cell_64_Temp;
-    uint8_t Cell_94_Temp;
-    uint8_t Cell_95_Voltage;
-    uint8_t Cell_95_Temp;
-
-} MSG_ACU_CELL_DATA_3;
-
-typedef struct {
-    uint8_t Cell_95_Voltage_1;
-    uint8_t Cell_64_Temp;
-    uint8_t Cell_95_Voltage_2; // there's a duplicate for some reason; don't ask me
-    uint8_t Cell_95_Temp;
-
-} MSG_ACU_CELL_DATA_4;
-
-typedef struct {
-    uint8_t Cell_64_Voltage;
-    uint8_t Cell_64_Temp;
-    uint8_t Cell_95_Voltage;
-    uint8_t Cell_95_Temp;
-
-} MSG_ACU_CELL_DATA_5;
-
-
+     uint8_t Input_Voltage;
+     uint8_t Output_Voltage;
+     uint8_t Input_Current;
+     uint8_t Output_Current;
+} Msg_Lv_Dc_Dc_Status;
 
 typedef struct {
     uint16_t Fan_Speed;
     uint8_t Input_Voltage;
     uint8_t Output_Voltage;
     uint8_t Current;
-} FAN_STATUS;
+} Fan_Status_Msg;
 
+typedef struct {
+    uint16_t AC_current;
+    uint16_t DC_current;
+    uint16_t DC_voltage;
+    uint8_t U_MOSFET_temperature;
+    uint8_t V_MOSFET_temperature;
+    uint8_t W_MOSFET_temperature;
+    uint8_t Water_temperature;
+    uint16_t Motor_RPM;
+    uint8_t Motor_temperature;
+    uint8_t fault_map[8];
+} Gr_Inverter_Status_Msg;
 
+typedef struct {
+    int32_t ERPM;
+    int16_t Duty_Cycle;
+    int16_t Input_Voltage;
+    int16_t AC_Current;
+    int16_t DC_Current;
+    int16_t Controller_Temp;
+    int16_t Motor_Temp;
+    uint8_t Faults;
+    int32_t FOC_Id;
+    int32_t FOC_Iq;
+    uint8_t Throttle;
+    uint8_t Brake;
+    uint8_t Digital_IO_Input[4];
+    uint8_t Digital_IO_Output[4];
+    uint32_t Drive_Enable;
+    uint16_t Flags;
+    uint8_t CAN_Version;
+} Dti_Inverter_Status_Msg;
 
 #endif // CANDLER_H
