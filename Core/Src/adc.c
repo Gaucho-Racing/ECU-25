@@ -26,7 +26,13 @@ uint32_t analogRead(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin) {
     ADC_ChannelConfTypeDef sConfig = {0};
     uint32_t channel;
 
-    
+    if (GPIOx == GPIOA) {
+      
+    } else if (GPIOx == GPIOB) {
+
+    } else if (GPIOx == GPIOC) {
+
+    }
 
 
     HAL_ADC_Start(&hadc1);
