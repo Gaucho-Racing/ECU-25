@@ -74,19 +74,19 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             //Error handling and leaving error state
-            if (errorFlagBitsCan && globalStatus.TractiveSystemVoltage >= 60)
+            if ((errorFlagBitsCan || msgAcu->Precharge_Error == 0b1) && globalStatus.TractiveSystemVoltage >= 60)
             {
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
-            else if(errorFlagBitsCan){
+            else if(errorFlagBitsCan || msgAcu->Precharge_Error == 0b1){
                 globalStatus.ECUState = ERRORSTATE
             }
             else if (globalStatus.ECUState == ERRORSTATE || globalStatus.ECUState == TS_DISCHARGE_OFF && globalStatus.TractiveSystemVoltage < 60)
             {
                 globalStatus.ECUState = GLV_ON;
             }
-            // If there are warnings, or there is a Precharge Error or IR- ever becomes 0 while not in either GLV_ON or PRECHARGE_ENGAGED, it must start discharging.
-            if((msgAcu->Precharge_Error == 0b1 || getBit(msgAcu->IR_State_Software_Latch_Bits, 0) == 0b0) && globalStatus.ECUState != GLV_ON && globalStatus.ECUState != PRECHARGE_ENGAGED){
+            // If IR- ever becomes 0 while not in GLV_ON or PRECHARGE_ENGAGED, that is a precharge cancellation and it must start discharging.
+            if(getBit(msgAcu->IR_State_Software_Latch_Bits, 0) == 0b0 && globalStatus.ECUState != GLV_ON && globalStatus.ECUState != PRECHARGE_ENGAGED){
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
             
@@ -146,7 +146,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             globalStatus.FLWheelRPM = globalStatus.inverters[2].RPM;
             globalStatus.FRWheelRPM = globalStatus.inverters[3].RPM;
 
-            globalStatus.VehicleSpeed = (globalStatus.RRWheelRPM + globalStatus.RLWheelRPM) * 3.141592653539 * 8 / 3.55 / 1056.0;  // Probably fix this...
+            globalStatus.VehicleSpeed = (globalStatus.RRWheelRPM + globalStatus.RLWheelRPM) * 3.141592653589 * 8 / 3.55 / 1056.0;  // Probably fix this...
 
             if(msgGri->fault_map == 0x00 && (errorFlagBitsCan == 2 || errorFlagBitsCan == 3)){
                 errorFlagBitsCan -= 2;

@@ -113,7 +113,7 @@ void ts_discharge_off(StatusLump *status)
     // 
     if (status->TractiveSystemVoltage >= 60 && true /*time spent discharging >= 5 seconds*/) // Magic number :)
         status->ECUState = ERRORSTATE;
-    // Other studd handled in can
+    // Other stuff handled in can
 }
 
 void reflash_tune(StatusLump *status)
@@ -127,9 +127,9 @@ void reflash_tune(StatusLump *status)
 
 void error(StatusLump *status)
 {
-    // DISCHARGE IF TS VOLTAGE >= 60
+    // DISCHARGE IF TS VOLTAGE >= 60 for some reason
     if(status->TractiveSystemVoltage >= 60){
         status->ECUState = TS_DISCHARGE_OFF;
     }
-    /* Only error resolved when MSG_ACU says we are good -> Handled in CANdler*/
+    /* Only error resolved when MSG_ACU AND GRI says we are good -> Handled in CANdler*/
 }
