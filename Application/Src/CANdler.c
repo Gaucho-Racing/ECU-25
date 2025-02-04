@@ -53,7 +53,22 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             globalStatus.GLVStateOfCharge = msgAcu->GLV_SOC;
             globalStatus.TractiveSystemVoltage = msgAcu->TS_Voltage;
             globalStatus.MaxCellTemp = msgAcu->Max_Cell_Temp;
-    
+
+            if (msgAcu->Error_Warning_Bits != 0xFF)
+            {
+                globalStatus.ECUState = ERRORSTATE;
+            }
+
+            if (msgAcu->Precharge_Error ....)
+            {
+                globalStatus.ECUSta
+            }
+
+            if (msgAcu->Error_Warning_Bits == 0xFF && globalStatus.ECUState == ERRORSTATE)
+            {
+                globalStatus.ECUState = GLV_ON;
+            }
+
             break;
 
         // Technically we can read the cell data, but it isn't necessary for us
