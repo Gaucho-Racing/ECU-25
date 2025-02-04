@@ -78,12 +78,16 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 globalStatus.ECUState = GLV_ON;
             }
             
-            if(getBit(msgAcu->IR_State_Software_Latch_Bits, 0) == 0b1 && globalStatus.ECUState == PRECHARGE_COMPLETE){
+            if(getBit(msgAcu->IR_State_Software_Latch_Bits, 0) == 0b1 && globalStatus.TractiveSystemVoltage >= 60){
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
             
-            if(getBit(msgAcu->IR_State_Software_Latch_Bits, 0) == 0b0 && getBit(msgAcu->IR_State_Software_Latch_Bits, 0) && globalStatus.ECUState == PRECHARGE_COMPLETE){
-                globalStatus.ECUState = TS_DISCHARGE_OFF;
+            if(getBit(msgAcu->IR_State_Software_Latch_Bits, 0) == 0b1 && globalStatus.TractiveSystemVoltage < 60){
+                globalStatus.ECUState = GLV_ON;
+            }
+            
+            if(getBit(msgAcu->IR_State_Software_Latch_Bits, 1) == 0b0 && getBit(msgAcu->IR_State_Software_Latch_Bits, 1) && globalStatus.ECUState == PRECHARGING){
+                globalStatus.ECUState = PRECHARGE_COMPLETE;
             }
             break;
 
@@ -201,7 +205,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
             
 
-            steerSettings.buttonFlags &= data[0];
+            steerSettings.buttonFlags |= data[0];
             steerSettings.buttonFlags &= data[1];
 
             // steering stauts msg parsing

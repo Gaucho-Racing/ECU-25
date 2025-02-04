@@ -118,5 +118,9 @@ void reflash_tune(StatusLump *status)
 
 void error(StatusLump *status)
 {
+    // DISCHARGE IF TS VOLTAGE >= 60
+    if(status->TractiveSystemVoltage >= 60){
+        status->ECUState = TS_DISCHARGE_OFF;
+    }
     /* Only error resolved when MSG_ACU says we are good */
 }
