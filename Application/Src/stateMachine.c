@@ -102,7 +102,7 @@ void drive_standby(StatusLump *status)
 {
     // If not rtd, then go back to precharge_complete
     if (!HAL_GPIO_ReadPin(RTD_CONTROL_GPIO_Port, RTD_CONTROL_Pin))
-        status->ECUState = precharge_complete;
+        status->ECUState = PRECHARGE_COMPLETE;
     // TS ACTIVE, ACU shutdown, errors handled in CANdler.c
 }
 
