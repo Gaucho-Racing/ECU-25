@@ -22,12 +22,19 @@
 
 /* USER CODE BEGIN 0 */
 
-uint32_t analogRead(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, uint32_t *maxValueOut) {
+uint16_t pins[] = {};
+GPIO_TypeDef ports[] = {};
+uint8_t ADCNums[] = {};
+
+uint32_t analogRead(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, uint32_t *maxValue) {
     ADC_ChannelConfTypeDef sConfig = {0};
     uint32_t channel;
 
     if (GPIOx == GPIOA) {
-      if (GPIO_Pin == GPIO_PIN_0)
+      switch GPIO_Pin {
+        case GPIO_PIN_0:
+        case GPIO_PIN_1:
+      }
     } else if (GPIOx == GPIOB) {
 
     } else if (GPIOx == GPIOC) {
