@@ -51,6 +51,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     Application/Src/stateMachine.c
     Application/Src/pinging.c
     Application/Src/CANdler.c
+    Application/Src/driving.c
 )
 
 # Add include paths
