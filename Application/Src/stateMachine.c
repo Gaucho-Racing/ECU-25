@@ -112,7 +112,7 @@ void reflash_tune(StatusLump *status)
     status->ECUState = GLV_ON;
 
     if (true /*Flash error*/)
-        status->ECUState = ERROR;
+        status->ECUState = ERRORSTATE;
 }
 
 void error(StatusLump *status)
