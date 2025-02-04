@@ -183,11 +183,15 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 globalStatus.ECUState = PRECHARGE_ENGAGED;
             }
             
-            if (ts_off && globalStatus.ECUState == PRECHARGE_ENGAGED){
+            else if (ts_off && globalStatus.ECUState == PRECHARGE_ENGAGED){
                 globalStatus.ECUState = GLV_ON;
             }
             
-            if (ts_off && globalStatus.ECUState == PRECHARGING){
+            else if (ts_off && globalStatus.ECUState == PRECHARGING){
+                globalStatus.ECUState = TS_DISCHARGE_OFF;
+            }
+
+            else if (ts_off && globalStatus.ECUState == PRECHARGE_COMPLETE){
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
             

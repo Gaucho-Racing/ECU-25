@@ -22,12 +22,12 @@
 
 /* USER CODE BEGIN 0 */
 
-uint32_t analogRead(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin) {
+uint32_t analogRead(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, uint32_t *maxValueOut) {
     ADC_ChannelConfTypeDef sConfig = {0};
     uint32_t channel;
 
     if (GPIOx == GPIOA) {
-      
+      if (GPIO_Pin == GPIO_PIN_0)
     } else if (GPIOx == GPIOB) {
 
     } else if (GPIOx == GPIOC) {
