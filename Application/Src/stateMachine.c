@@ -2,6 +2,7 @@
 #include "stm32g4xx_hal.h"
 #include "stateMachine.h"
 #include "driving.h"
+#include "main.h"
 
 StatusLump globalStatus = {
     .ECUState = GLV_ON,
@@ -9,8 +10,15 @@ StatusLump globalStatus = {
     
 };
 
+uint8_t numberOfBadMessages = 0;
+
 void stateMachineTick(void)
 {
+    if (numberOfBadMessages > 2)
+    {
+        Error_Handler();
+    }
+
     switch(globalStatus.ECUState) {
         case GLV_ON:
             glv_on(&globalStatus);
@@ -49,15 +57,14 @@ void stateMachineTick(void)
     }
 }
 
-void glv_on(StatusLump *status) {
-
+void glv_on(StatusLump *status)
+{
     // When the grounded low voltage system is turned on
     // the microcontroller has power, but the motor controller is not enabled.
     // This is the second state that the car will enter after the ECU Flash is complete.
     // Here it waits for the TS ACTIVE button to be pressed.
 
-    if (true /*TS ACTIVE from CAN*/)
-        status->ECUState = PRECHARGE_ENGAGED;
+    // GLV handled in CANdler.c::handleCANMessage, under case MSG_DASH_STATUS
 }
 
 void precharge_engaged(StatusLump *status)
@@ -74,9 +81,11 @@ void precharge_engaged(StatusLump *status)
 
 void precharging(StatusLump *status)
 {
-    if (status->TractiveSystemVoltage > 590 /*ACU precharge success confirmation*/)
+    //max voltage is 600, 580 is about when it will be done
+    if (status->TractiveSystemVoltage > 580 /*ACU precharge success confirmation*/)
         status->ECUState = PRECHARGE_COMPLETE;
     //TS ACTIVE button disabled || ACU precharge cancellation --> TS_DISCHARGE_OFF is handled in CANdler.c
+    // line 66, 176
     // if (false /*TS ACTIVE button disabled*/ || false /*ACU precharge cancellation*/)
     //    status->ECUState = TS_DISCHARGE_OFF;
 }
@@ -110,6 +119,5 @@ void reflash_tune(StatusLump *status)
 
 void error(StatusLump *status)
 {
-    if (true /*Errors resolved*/)
-        status->ECUState = GLV_ON;
+    /* Only error resolved when MSG_ACU says we are good*/
 }

@@ -38,6 +38,7 @@ typedef struct {
 } StatusLump;
 
 extern StatusLump globalStatus;
+extern uint8_t numberOfBadMessages;
 
 /*
 General low voltage on

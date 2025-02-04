@@ -29,7 +29,10 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
     switch(msgID) {
         case MSG_DEBUG:
             if (length > 64) {
-                /* BAD MESSAGE? */
+                numberOfBadMessages++;
+                return;
+            } else {
+                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
 
             char* string = (char*)data;
@@ -45,7 +48,10 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             break;
         case MSG_ACU_STATUS:
             if (length != 24) {
-                /* BAD MESSAGE? */
+                numberOfBadMessages++;
+                return;
+            } else {
+                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
 
             ACU_Status_Msg* msgAcu = (ACU_Status_Msg*)data;
@@ -105,7 +111,10 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
         //     break;
         case MSG_LV_DC_DC_STATUS:
             if (length != 8) {
-                /* BAD MESSAGE? */
+                numberOfBadMessages++;
+                return;
+            } else {
+                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
 
             Msg_Lv_Dc_Dc_Status* msgLv = (Msg_Lv_Dc_Dc_Status*)data;
@@ -113,15 +122,22 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             break;
         case MSG_DTI_INVERTER_STATUS:
             if (length != 32) {
-                /* BAD MESSAGE? */
+                numberOfBadMessages++;
+                return;
+            } else {
+                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
 
             Dti_Inverter_Status_Msg* msgDti = (Dti_Inverter_Status_Msg*)data;
+            //used for torque vectoring; outside of scope
             uint8_t throttle = msgDti->Throttle;
             break;
         case MSG_GR_INVERTER_STATUS:    // THIS WILL NEED TO BE REWORKED EXTENSIVELY
             if (length != 19) {
-                /* BAD MESSAGE? */
+                numberOfBadMessages++;
+                return;
+            } else {
+                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
 
             Gr_Inverter_Status_Msg* msgGri = (Gr_Inverter_Status_Msg*)data;
@@ -147,28 +163,38 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             break;
         case MSG_DASH_STATUS:
             if (length != 1) {
-                /* BAD MESSAGE? */
+                numberOfBadMessages++;
+                return;
+            } else {
+                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
 
             bool ts_active = getBit(*data, 0);
             bool ts_off = getBit(*data, 1);
             bool rtd_on = getBit(*data, 2);
             bool rtd_off = getBit(*data, 3);
-            bool ams_led = getBit(*data, 2);
-            bool imd_led = getBit(*data, 3);
+            bool ams_led = getBit(*data, 4);
+            bool imd_led = getBit(*data, 5);
 
-            if (!ts_active && globalStatus.ECUState == PRECHARGE_ENGAGED){
+            if(ts_active && globalStatus.ECUState == GLV_ON){
+                globalStatus.ECUState = PRECHARGE_ENGAGED;
+            }
+            
+            if (ts_off && globalStatus.ECUState == PRECHARGE_ENGAGED){
                 globalStatus.ECUState = GLV_ON;
             }
             
-            if (!ts_active && globalStatus.ECUState == PRECHARGING){
+            if (ts_off && globalStatus.ECUState == PRECHARGING){
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
             
             break;
         case MSG_FAN_STATUS:
             if (length != 5) {
-                /* BAD MESSAGE? */
+                numberOfBadMessages++;
+                return;
+            } else {
+                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
 
             Fan_Status_Msg* msgFan = (Fan_Status_Msg*)data;
@@ -177,8 +203,13 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
         case MSG_STEERING_STATUS:
             if (length != 2) {
-                /* BAD MESSAGE? */
+                numberOfBadMessages++;
+                return;
+            } else {
+                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
-        /* update globals in stateMachine */
+
+            // steering stauts msg parsing
+
     }
 }
