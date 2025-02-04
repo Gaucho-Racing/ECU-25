@@ -74,25 +74,24 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             // Will have to be changed once warning bits go away
 
-            if(msgAcu->Error_Warning_Bits != 0x00){
-                if(errorFlagBitsCan == 0){
-                    errorFlagBitsCan = 1;
-                }
-                else if(errorFlagBitsCan == 2){
-                    errorFlagBitsCan = 3;
-                }
+            //errorFlagBitsCan logic
+            if(msgAcu->Error_Warning_Bits != 0x00 && (errorFlagBitsCan == 0 || errorFlagBitsCan == 2)){
+                errorFlagBitsCan += 1;
             }
-            if (!errorFlagBitsCan && globalStatus.ECUState == ERRORSTATE)
+            else if(msgAcu->Error_Warning_Bits == 0x00 && (errorFlagBitsCan == 1 || errorFlagBitsCan == 3)){
+                errorFlagBitsCan -= 1;
+            }
+
+            if (errorFlagBitsCan)
             {
-                globalStatus.ECUState = GLV_ON;
+                globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
-            if (!errorFlagBitsCan && globalStatus.ECUState == TS_DISCHARGE_OFF && globalStatus.TractiveSystemVoltage < 60)
+            else if (globalStatus.ECUState == ERRORSTATE || globalStatus.ECUState == TS_DISCHARGE_OFF && globalStatus.TractiveSystemVoltage < 60)
             {
                 globalStatus.ECUState = GLV_ON;
             }
             // If there are warnings, or there is a Precharge Error or IR- ever becomes 0 while not in either GLV_ON or PRECHARGE_ENGAGED, it must start discharging.
-            // First condition will have to be changed once warning bits go away
-            if((msgAcu->Error_Warning_Bits != 0x00 || msgAcu->Precharge_Error == 0b1 || getBit(msgAcu->IR_State_Software_Latch_Bits, 0) == 0b0) && globalStatus.ECUState != GLV_ON && globalStatus.ECUState != PRECHARGE_ENGAGED){
+            if((msgAcu->Precharge_Error == 0b1 || getBit(msgAcu->IR_State_Software_Latch_Bits, 0) == 0b0) && globalStatus.ECUState != GLV_ON && globalStatus.ECUState != PRECHARGE_ENGAGED){
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
             
@@ -103,7 +102,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             // If it is precharging with IR- closed and then IR+ goes closed as well, precharge is complete (success confirmation)
             // IR+ -> 1 is precharge success confirmation
-            if(getBit(msgAcu->IR_State_Software_Latch_Bits, 1) == 0b1 && getBit(msgAcu->IR_State_Software_Latch_Bits, 1) == 0b1 && globalStatus.ECUState == PRECHARGING){
+            if(getBit(msgAcu->IR_State_Software_Latch_Bits, 0) == 0b1 && getBit(msgAcu->IR_State_Software_Latch_Bits, 1) == 0b1 && globalStatus.ECUState == PRECHARGING){
                 globalStatus.ECUState = PRECHARGE_COMPLETE;
             }
             break;
@@ -154,14 +153,19 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             globalStatus.VehicleSpeed = (globalStatus.RRWheelRPM + globalStatus.RLWheelRPM) * 3.141592653539 * 8 / 3.55 / 1056.0;  // Probably fix this...
 
-            // Is this supposed to check the state to make sure its not GLV_ON or PRECHARGE_ENGAGED?
-            if (msgGri->fault_map != 0x00)
+            if(msgGri->fault_map == 0x00 && (errorFlagBitsCan == 2 || errorFlagBitsCan == 3)){
+                errorFlagBitsCan -= 2;
+            }
+
+            else if(msgGri->fault_map != 0x00 && (errorFlagBitsCan == 0 || errorFlagBitsCan == 1)){
+                errorFlagBitsCan += 2;
+            }
+
+            if (errorFlagBitsCan)
             {
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
-
-            // Do we need to make this global to check for acu errors as well?
-            if (msgGri->fault_map == 0x00 && globalStatus.ECUState == ERRORSTATE) 
+            else if(globalStatus.ECUState == ERRORSTATE || globalStatus.ECUState == TS_DISCHARGE_OFF && globalStatus.TractiveSystemVoltage < 60) 
             {
                 globalStatus.ECUState = GLV_ON;
             }
