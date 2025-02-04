@@ -12,6 +12,10 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
 
+# Error highlighting
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fdiagnostics-color")
+set(CMAKE_C_LINK_FLAGS "${CMAKE_C_LINK_FLAGS} -fdiagnostics-color")
+
 
 # Define the build type
 if(NOT CMAKE_BUILD_TYPE)
