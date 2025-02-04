@@ -73,4 +73,6 @@ typedef struct {
     uint8_t Current;
 } Fan_Status_Msg;
 
+extern uint8_t errorFlagBitsCan;
+
 #endif // CANDLER_H

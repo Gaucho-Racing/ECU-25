@@ -6,6 +6,8 @@
 #include "pinging.h"
 #include "adc.h"
 
+uint8_t errorFlagBitsCan = 0;
+
 uint8_t getBit(uint8_t number, uint8_t indexFromRight)
 {
     return (number >> (7 - indexFromRight)) & 0b1;
@@ -72,6 +74,10 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             // Will have to be changed once warning bits go away
             if (msgAcu->Error_Warning_Bits == 0x00 && globalStatus.ECUState == ERRORSTATE)
+            {
+                globalStatus.ECUState = GLV_ON;
+            }
+            if (msgAcu->Error_Warning_Bits == 0x00 && globalStatus.ECUState == TS_DISCHARGE_OFF && globalStatus.TractiveSystemVoltage < 60)
             {
                 globalStatus.ECUState = GLV_ON;
             }
