@@ -47,6 +47,7 @@ void MX_ADC2_Init(void);
 void MX_ADC3_Init(void);
 
 /* USER CODE BEGIN Prototypes */
+uint32_t analogRead(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, );
 
 /* USER CODE END Prototypes */
 

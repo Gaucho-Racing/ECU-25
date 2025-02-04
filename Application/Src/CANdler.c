@@ -4,6 +4,7 @@
 #include "stateMachine.h"
 #include "msgIDs.h"
 #include "pinging.h"
+#include "adc.h"
 
 uint8_t getBit(uint8_t number, uint8_t indexFromRight)
 {

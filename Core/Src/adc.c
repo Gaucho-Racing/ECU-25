@@ -22,10 +22,17 @@
 
 /* USER CODE BEGIN 0 */
 
-uint32_t analogRead1() {
+uint32_t analogRead(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin) {
+    ADC_ChannelConfTypeDef sConfig = {0};
+    uint32_t channel;
+
+    
+
+
     HAL_ADC_Start(&hadc1);
     HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
     raw = HAL_ADC_GetValue(&hadc1);
+    return raw;
 }
 
 /* USER CODE END 0 */
