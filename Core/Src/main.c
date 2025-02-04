@@ -58,7 +58,11 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+void infiniteLoopContents(void)
+{
+  stateMachineTick();
+  pingSchedule();
+}
 /* USER CODE END 0 */
 
 /**
@@ -100,21 +104,14 @@ int main(void)
 
   // 10us ticks
   HAL_SetTickFreq(100000);
-  
-
-  /** @attention */
-  // THIS IS WHERE WE WILL REGISTER ALL INTERRUPT CALLBACKS
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    stateMachineTick();
-  
-    pingSchedule();
     /* USER CODE END WHILE */
-
+    infiniteLoopContents();
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -187,15 +184,20 @@ void Error_Handler(void)
   HAL_FDCAN_DeInit(&hfdcan2);
 
   // Start everything again
-  HAL_FDCAN_Init();
-  HAL_FDCAN_Init();
+  HAL_FDCAN_Init(&hfdcan1);
+  HAL_FDCAN_Init(&hfdcan2);
+
+  // Setup interrupts
   __enable_irq();
 
   globalStatus.ECUState = ERRORSTATE;
-  // Start CAN
-  // Setup interrupts
 
-  // NVIC_SystemReset();  // Should everything be broken fr
+  while(1)  // Same as in main()
+  {
+    infiniteLoopContents();
+  }
+
+  // NVIC_SystemReset();  // Magic reset everything, ideally we never ever need this
 
   /* USER CODE END Error_Handler_Debug */
 }

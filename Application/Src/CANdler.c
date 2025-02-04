@@ -55,6 +55,14 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             globalStatus.MaxCellTemp = msgAcu->Max_Cell_Temp;
     
             break;
+        case MSG_ACU_PRECHARGE:
+            if (length != 1) {
+                /* BAD MESSAGE? */
+            }
+
+            if (gl)
+
+            break;
         // Technically we can read the cell data, but it isn't necessary for us
         // case MSG_ACU_CELL_DATA_1:
         //     if (length != 64) {

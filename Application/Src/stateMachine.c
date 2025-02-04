@@ -59,13 +59,11 @@ void glv_on(StatusLump *status) {
         status->ECUState = TS_DISCHARGE_OFF;
         return;
     }
-
-    status->ECUState = PRECHARGE_ENGAGED;
 }
 
 void precharge_engaged(StatusLump *status)
 {
-    if (status->Set /*ACU precharge confirmation recieved*/)
+    if (status->SetTSAc /*ACU precharge confirmation recieved*/)
         status->ECUState = PRECHARGING;
     if (true /*TS ACTIVE button disabled*/)
         status->ECUState = GLV_ON;
