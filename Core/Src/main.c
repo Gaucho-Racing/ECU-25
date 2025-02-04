@@ -180,11 +180,23 @@ void SystemClock_Config(void)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
   __disable_irq();
-  while (1)
-  {
-  }
+
+  // Stop CAN
+  HAL_FDCAN_DeInit(&hfdcan1);
+  HAL_FDCAN_DeInit(&hfdcan2);
+
+  // Start everything again
+  HAL_FDCAN_Init();
+  HAL_FDCAN_Init();
+  __enable_irq();
+
+  globalStatus.ECUState = ERRORSTATE;
+  // Start CAN
+  // Setup interrupts
+
+  // NVIC_SystemReset();  // Should everything be broken fr
+
   /* USER CODE END Error_Handler_Debug */
 }
 

@@ -2,5 +2,8 @@
     "files.associations": {
         "*.h": "c",
         "*.c": "c",
+        "array": "c",
+        "string": "c",
+        "string_view": "c"
     }
 }
