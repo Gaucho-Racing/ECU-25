@@ -173,8 +173,8 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             else if (ts_off && globalStatus.ECUState == PRECHARGE_ENGAGED){
                 globalStatus.ECUState = GLV_ON;
             }
-            
-            else if (ts_off && (globalStatus.ECUState == PRECHARGING || globalStatus.ECUState == PRECHARGE_COMPLETE || globalStatus.ECUState == DRIVE_STANDBY)){
+            // If it is not in GLV_ON, PRECHARGE_ENGAGED or ERRORSTATE, if ts_off is ever true it must go to discharge
+            else if (ts_off && globalStatus.ECUState != ERRORSTATE){
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
             
