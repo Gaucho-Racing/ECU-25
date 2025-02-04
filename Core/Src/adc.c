@@ -22,6 +22,12 @@
 
 /* USER CODE BEGIN 0 */
 
+uint32_t analogRead1() {
+    HAL_ADC_Start(&hadc1);
+    HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
+    raw = HAL_ADC_GetValue(&hadc1);
+}
+
 /* USER CODE END 0 */
 
 ADC_HandleTypeDef hadc1;

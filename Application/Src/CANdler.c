@@ -59,9 +59,9 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 globalStatus.ECUState = ERRORSTATE;
             }
 
-            if (msgAcu->Precharge_Error ....)
+            if (msgAcu->Precharge_Error == 0b1)            
             {
-                globalStatus.ECUSta
+                globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
 
             if (msgAcu->Error_Warning_Bits == 0xFF && globalStatus.ECUState == ERRORSTATE)
@@ -139,6 +139,11 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             globalStatus.VehicleSpeed = (globalStatus.RRWheelRPM + globalStatus.RLWheelRPM) * 3.141592653539 * 8 / 3.55 / 1056.0;  // Probably fix this...
 
+            if (msgGri->fault_map != 0xFF)
+            {
+                globalStatus.ECUState = TS_DISCHARGE_OFF;
+            }
+
             break;
         case MSG_DASH_STATUS:
             if (length != 1) {
@@ -147,7 +152,10 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             bool ts_active = getBit(*data, 0);
             bool ts_off = getBit(*data, 1);
-            bool ts_off = getBit(*data, 1);
+            bool rtd_on = getBit(*data, 2);
+            bool rtd_off = getBit(*data, 3);
+            bool ams_led = getBit(*data, 2);
+            bool imd_led = getBit(*data, 3);
 
             if (!ts_active && globalStatus.ECUState == PRECHARGE_ENGAGED){
                 globalStatus.ECUState = GLV_ON;

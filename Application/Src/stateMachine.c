@@ -76,16 +76,14 @@ void precharging(StatusLump *status)
 {
     if (status->TractiveSystemVoltage > 590 /*ACU precharge success confirmation*/)
         status->ECUState = PRECHARGE_COMPLETE;
-    //TS ACTIVE button disabled --> TS_DISCHARGE_OFF is handled in CANdler.c
-    if (false /*TS ACTIVE button disabled*/ || false /*ACU precharge cancellation*/)
-        status->ECUState = TS_DISCHARGE_OFF;
+    //TS ACTIVE button disabled || ACU precharge cancellation --> TS_DISCHARGE_OFF is handled in CANdler.c
+    // if (false /*TS ACTIVE button disabled*/ || false /*ACU precharge cancellation*/)
+    //    status->ECUState = TS_DISCHARGE_OFF;
 }
 
 void precharge_complete(StatusLump *status)
 {
-    //HAL_ADC_Start(&hadc1);
-    HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-    raw = HAL_ADC_GetValue(&hadc1);
+
 
     if (false /*BRAKE on*/ && false /*ReadyToDrive ON*/)
         status->ECUState = DRIVE_STANDBY;
@@ -112,8 +110,6 @@ void reflash_tune(StatusLump *status)
 
 void error(StatusLump *status)
 {
-    
-
     if (true /*Errors resolved*/)
         status->ECUState = GLV_ON;
 }
