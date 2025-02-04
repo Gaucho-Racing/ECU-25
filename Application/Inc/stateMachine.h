@@ -63,25 +63,7 @@ Precharge complete
 */
 void precharge_complete(StatusLump *status);
 
-/*
-Ready to go, drive standby
-*/
-void drive_standby(StatusLump *status);
 
-/*
-Drive active sub state, idle
-*/
-void drive_active_idle(StatusLump *status);
-
-/*
-Drive active sub state, power
-*/
-void drive_active_power(StatusLump *status);
-
-/*
-Drive active sub state, regen
-*/
-void drive_active_regen(StatusLump *status);
 
 /*
 Shutting down, ts discharge off

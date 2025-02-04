@@ -7,12 +7,12 @@
 
 uint8_t getBit(uint8_t number, uint8_t indexFromRight)
 {
-    return (number >> indexFromRight) & 0b1;
+    return (number >> (7 - indexFromRight)) & 0b1;
 }
 
 uint8_t get2Bits(uint8_t number, uint8_t indexFromRight)
 {
-    return (number >> indexFromRight) & 0b11;
+    return (number >> (7 - indexFromRight)) & 0b11;
 }
 
 uint16_t findTernaryMax(const uint16_t a, const uint16_t b, const uint16_t c)
@@ -55,22 +55,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             globalStatus.MaxCellTemp = msgAcu->Max_Cell_Temp;
     
             break;
-        case MSG_ACU_PRECHARGE:
-            if (length != 1) {
-                /* BAD MESSAGE? */
-            }
 
-            bool ts_active = ((*data) & 1) == 1;
-
-            if (!ts_active && globalStatus.ECUState == PRECHARGE_ENGAGED){
-                globalStatus.ECUState = GLV_ON;
-            }
-            
-            if (!ts_active && globalStatus.ECUState == PRECHARGING){
-                globalStatus.ECUState = TS_DISCHARGE_OFF;
-            }
-
-            break;
         // Technically we can read the cell data, but it isn't necessary for us
         // case MSG_ACU_CELL_DATA_1:
         //     if (length != 64) {
@@ -117,7 +102,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             Dti_Inverter_Status_Msg* msgDti = (Dti_Inverter_Status_Msg*)data;
-            
+            uint8_t throttle = msgDti->Throttle;
             break;
         case MSG_GR_INVERTER_STATUS:    // THIS WILL NEED TO BE REWORKED EXTENSIVELY
             if (length != 19) {
@@ -141,6 +126,22 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             break;
         case MSG_DASH_STATUS:
+            if (length != 1) {
+                /* BAD MESSAGE? */
+            }
+
+            bool ts_active = getBit(*data, 0);
+            bool ts_off = getBit(*data, 1);
+            bool ts_off = getBit(*data, 1);
+
+            if (!ts_active && globalStatus.ECUState == PRECHARGE_ENGAGED){
+                globalStatus.ECUState = GLV_ON;
+            }
+            
+            if (!ts_active && globalStatus.ECUState == PRECHARGING){
+                globalStatus.ECUState = TS_DISCHARGE_OFF;
+            }
+            
             break;
         case MSG_FAN_STATUS:
             if (length != 5) {
