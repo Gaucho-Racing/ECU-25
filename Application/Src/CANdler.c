@@ -63,21 +63,14 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             globalStatus.TractiveSystemVoltage = msgAcu->TS_Voltage;
             globalStatus.MaxCellTemp = msgAcu->Max_Cell_Temp;
 
-            // Took care of this, sent to TS_DISCHARGE
+            // Took care of this, sent to TS_DISCHARGE instead
             /*
             if (msgAcu->Error_Warning_Bits != 0x00)
             {
                 globalStatus.ECUState = ERRORSTATE;
             }*/
 
-            // This is why I shouldn't code so late at night
-            /*
-            if (msgAcu->Precharge_Error == 0b1 && (globalStatus.ECUState != GLV_ON || globalStatus.ECUState != ERRORSTATE))
-            {
-                globalStatus.ECUState = TS_DISCHARGE_OFF;
-            }*/
-
-            // Errors resolved. Will have to be changed once warning bits go away
+            // Will have to be changed once warning bits go away
             if (msgAcu->Error_Warning_Bits == 0x00 && globalStatus.ECUState == ERRORSTATE)
             {
                 globalStatus.ECUState = GLV_ON;
@@ -88,8 +81,13 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
             
-            // If it is precharging with IR- closed and then IR+ goes closed as well, precharge is complete
-            // IR+ is precharge success confirmation
+            // IR- -> 1 = ACU Precharge Confirmation
+            if(getBit(globalStatus.ECUState == PRECHARGE_ENGAGED && msgAcu->IR_State_Software_Latch_Bits, 0) == 0b1){
+                globalStatus.ECUState = PRECHARGING;
+            }
+
+            // If it is precharging with IR- closed and then IR+ goes closed as well, precharge is complete (success confirmation)
+            // IR+ -> 1 is precharge success confirmation
             if(getBit(msgAcu->IR_State_Software_Latch_Bits, 1) == 0b1 && getBit(msgAcu->IR_State_Software_Latch_Bits, 1) == 0b1 && globalStatus.ECUState == PRECHARGING){
                 globalStatus.ECUState = PRECHARGE_COMPLETE;
             }
@@ -147,7 +145,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
 
-            if (msgGri->fault_map == 0x00 && globalStatus.ECUState == TS_DISCHARGE_OFF) 
+            if (msgGri->fault_map == 0x00 && (globalStatus.ECUState == TS_DISCHARGE_OFF || globalStatus.ECUState == ERRORSTATE)) 
             {
                 globalStatus.ECUState = GLV_ON;
             }
@@ -176,15 +174,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 globalStatus.ECUState = GLV_ON;
             }
             
-            else if (ts_off && globalStatus.ECUState == PRECHARGING){
-                globalStatus.ECUState = TS_DISCHARGE_OFF;
-            }
-
-            else if (ts_off && globalStatus.ECUState == PRECHARGE_COMPLETE){
-                globalStatus.ECUState = TS_DISCHARGE_OFF;
-            }
-
-            else if (ts_off && globalStatus.ECUState == DRIVE_STANDBY){
+            else if (ts_off && (globalStatus.ECUState == PRECHARGING || globalStatus.ECUState == PRECHARGE_COMPLETE || globalStatus.ECUState == DRIVE_STANDBY)){
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
             
