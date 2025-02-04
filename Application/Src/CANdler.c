@@ -41,6 +41,8 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
         case MSG_PING:
             if (length != 4) {
                 /* BAD MESSAGE? */
+            } else {
+                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
 
             respondToPing(srcID, *(uint32_t*)data);

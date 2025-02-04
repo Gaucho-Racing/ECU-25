@@ -14,8 +14,9 @@ uint8_t numberOfBadMessages = 0;
 
 void stateMachineTick(void)
 {
-    if (numberOfBadMessages > 2)
+    if (numberOfBadMessages >= 3)   // Magic value, 4 is bad
     {
+        numberOfBadMessages = 0;
         Error_Handler();
     }
 
@@ -119,5 +120,5 @@ void reflash_tune(StatusLump *status)
 
 void error(StatusLump *status)
 {
-    /* Only error resolved when MSG_ACU says we are good*/
+    /* Only error resolved when MSG_ACU says we are good */
 }
