@@ -38,8 +38,8 @@ typedef struct {
 } StatusLump;
 
 typedef struct {
-    uint8_t encoderBits; // byte looks like aabbcc??
-    uint8_t buttonFlags; // byte looks like 1234xxxx, with buttons 1-4 mapped.
+    uint8_t encoderBits;
+    uint8_t buttonFlags;
 } SteerSettings;
 
 extern SteerSettings steerSettings;
