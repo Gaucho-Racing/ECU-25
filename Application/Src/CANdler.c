@@ -82,7 +82,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
             
             // IR- -> 1 = ACU Precharge Confirmation
-            if(getBit(globalStatus.ECUState == PRECHARGE_ENGAGED && msgAcu->IR_State_Software_Latch_Bits, 0) == 0b1){
+            if(globalStatus.ECUState == PRECHARGE_ENGAGED && getBit(msgAcu->IR_State_Software_Latch_Bits, 0) == 0b1){
                 globalStatus.ECUState = PRECHARGING;
             }
 
@@ -146,7 +146,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             // Do we need to make this global to check for acu errors as well?
-            if (msgGri->fault_map == 0x00 && (globalStatus.ECUState == TS_DISCHARGE_OFF || globalStatus.ECUState == ERRORSTATE)) 
+            if (msgGri->fault_map == 0x00 && globalStatus.ECUState == ERRORSTATE) 
             {
                 globalStatus.ECUState = GLV_ON;
             }
