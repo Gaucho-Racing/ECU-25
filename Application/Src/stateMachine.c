@@ -110,9 +110,10 @@ void drive_standby(StatusLump *status)
 
 void ts_discharge_off(StatusLump *status)
 {
-    // This needs to go to error and wait for errors to be resolved because discharging is almost always error case
-    if (status->TractiveSystemVoltage < 60) // Magic number :)
+    // 
+    if (status->TractiveSystemVoltage >= 60 && true /*time spent discharging >= 5 seconds*/) // Magic number :)
         status->ECUState = ERRORSTATE;
+    // Other studd handled in can
 }
 
 void reflash_tune(StatusLump *status)

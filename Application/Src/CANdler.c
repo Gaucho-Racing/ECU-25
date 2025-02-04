@@ -65,15 +65,6 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             globalStatus.TractiveSystemVoltage = msgAcu->TS_Voltage;
             globalStatus.MaxCellTemp = msgAcu->Max_Cell_Temp;
 
-            // Took care of this, sent to TS_DISCHARGE instead
-            /*
-            if (msgAcu->Error_Warning_Bits != 0x00)
-            {
-                globalStatus.ECUState = ERRORSTATE;
-            }*/
-
-            // Will have to be changed once warning bits go away
-
             //errorFlagBitsCan logic
             if(msgAcu->Error_Warning_Bits != 0x00 && (errorFlagBitsCan == 0 || errorFlagBitsCan == 2)){
                 errorFlagBitsCan += 1;
@@ -82,9 +73,13 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 errorFlagBitsCan -= 1;
             }
 
-            if (errorFlagBitsCan)
+            //Error handling and leaving error state
+            if (errorFlagBitsCan && globalStatus.TractiveSystemVoltage >= 60)
             {
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
+            }
+            else if(errorFlagBitsCan){
+                globalStatus.ECUState = ERRORSTATE
             }
             else if (globalStatus.ECUState == ERRORSTATE || globalStatus.ECUState == TS_DISCHARGE_OFF && globalStatus.TractiveSystemVoltage < 60)
             {
@@ -161,9 +156,12 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 errorFlagBitsCan += 2;
             }
 
-            if (errorFlagBitsCan)
+            if (errorFlagBitsCan && globalStatus.TractiveSystemVoltage >= 60)
             {
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
+            }
+            else if(errorFlagBitsCan){
+                globalStatus.ECUState = ERRORSTATE;
             }
             else if(globalStatus.ECUState == ERRORSTATE || globalStatus.ECUState == TS_DISCHARGE_OFF && globalStatus.TractiveSystemVoltage < 60) 
             {
