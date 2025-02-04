@@ -55,6 +55,8 @@ void glv_on(StatusLump *status) {
     // This is the second state that the car will enter after the ECU Flash is complete.
     // Here it waits for the TS ACTIVE button to be pressed.
 
+    // GLV_ON --> PRECHARGE_ENGAGED when message MSG_ACU_PRECHARGE handled
+
     if (status->TractiveSystemVoltage > 60) {
         status->ECUState = TS_DISCHARGE_OFF;
         return;
@@ -63,10 +65,12 @@ void glv_on(StatusLump *status) {
 
 void precharge_engaged(StatusLump *status)
 {
-    if (status->SetTSAc /*ACU precharge confirmation recieved*/)
+    if (status-> /*ACU precharge confirmation recieved*/) {
         status->ECUState = PRECHARGING;
-    if (true /*TS ACTIVE button disabled*/)
+    }
+    if (status-> /*TS ACTIVE button disabled*/) {
         status->ECUState = GLV_ON;
+    }
 }
 
 void precharging(StatusLump *status)
@@ -81,7 +85,8 @@ void precharging(StatusLump *status)
 
 void precharge_complete(StatusLump *status)
 {
-    if (false /*BRAKE on*/ && false /*ReadyToDrive ON*/)
+
+    if ( /*BRAKE on*/ && false /*ReadyToDrive ON*/)
         status->ECUState = DRIVE_STANDBY;
     if (false /*TS ACTIVE button disabled*/ || false /*ACU shutdown*/ || false /*Critical error*/)
         status->ECUState = TS_DISCHARGE_OFF;
@@ -114,6 +119,8 @@ void drive_active_idle(StatusLump *status)
 void drive_active_power(StatusLump *status)
 {
     // LOTS OF https://github.com/Gaucho-Racing/VDM-24/blob/9ee4839ee6e5ce32a51602fe23723db5d23b1eaf/src/main.cpp#L1214
+
+    
 
     if (false /*Accelerator gradient plausibility violation*/)    // SEND WARNING TO DASH
         status->ECUState = DRIVE_STANDBY;

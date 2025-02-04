@@ -60,7 +60,15 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 /* BAD MESSAGE? */
             }
 
-            if (gl)
+            bool ts_active = ((*data) & 1) == 1;
+
+            if (!ts_active && globalStatus.ECUState == PRECHARGE_ENGAGED){
+                globalStatus.ECUState = GLV_ON;
+            }
+            
+            if (!ts_active && globalStatus.ECUState == PRECHARGING){
+                globalStatus.ECUState = TS_DISCHARGE_OFF;
+            }
 
             break;
         // Technically we can read the cell data, but it isn't necessary for us
@@ -101,7 +109,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             Msg_Lv_Dc_Dc_Status* msgLv = (Msg_Lv_Dc_Dc_Status*)data;
-
+            
             break;
         case MSG_DTI_INVERTER_STATUS:
             if (length != 32) {
@@ -109,7 +117,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             Dti_Inverter_Status_Msg* msgDti = (Dti_Inverter_Status_Msg*)data;
-
+            
             break;
         case MSG_GR_INVERTER_STATUS:    // THIS WILL NEED TO BE REWORKED EXTENSIVELY
             if (length != 19) {
@@ -131,6 +139,8 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             globalStatus.VehicleSpeed = (globalStatus.RRWheelRPM + globalStatus.RLWheelRPM) * 3.141592653539 * 8 / 3.55 / 1056.0;  // Probably fix this...
 
+            break;
+        case MSG_DASH_STATUS:
             break;
         case MSG_FAN_STATUS:
             if (length != 5) {
