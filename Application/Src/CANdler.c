@@ -158,7 +158,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             } else {
                 numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
-
+            // Isn't rtd a port? Why is rtd_on and rtd_off needed here?
             bool ts_active = getBit(*data, 0);
             bool ts_off = getBit(*data, 1);
             bool rtd_on = getBit(*data, 2);

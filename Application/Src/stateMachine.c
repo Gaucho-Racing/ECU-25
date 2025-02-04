@@ -71,10 +71,7 @@ void glv_on(StatusLump *status)
 
 void precharge_engaged(StatusLump *status)
 {
-    // Where ACU precharge?? Not in CAN or ACU Status.
-    // if(true) left as is for now, straight to precharging
-    if (true /*ACU precharge confirmation recieved*/)
-       status->ECUState = PRECHARGING;
+    // ACU confirmation is IR-, handled in CANdler.c
     //TS ACTIVE botton disabled --> GLV_ON is handled in CANdler.c
     //if (true /*TS ACTIVE button disabled*/)
     //   status->ECUState = GLV_ON;
@@ -84,21 +81,29 @@ void precharge_engaged(StatusLump *status)
 void precharging(StatusLump *status)
 {
     //max voltage is 600, 580 is about when it will be done
-    if (status->TractiveSystemVoltage > 580 /*ACU precharge success confirmation*/)
+    // This might be unnecessary, we already check for success confirmation in CAN
+    /*
+    if (status->TractiveSystemVoltage > 580)
         status->ECUState = PRECHARGE_COMPLETE;
+    */
     //TS ACTIVE button disabled || ACU precharge cancellation --> TS_DISCHARGE_OFF is handled in CANdler.c
     // line 66, 176
-    // if (false /*TS ACTIVE button disabled*/ || false /*ACU precharge cancellation*/)
-    //    status->ECUState = TS_DISCHARGE_OFF;
 }
 
 void precharge_complete(StatusLump *status)
 {
-    if (analogRead(BRAKE_F_SIGNAL_GPIO_Port, BRAKE_F_SIGNAL_Pin) && analogRead(BRAKE_R_SIGNAL_GPIO_Port, BRAKE_R_SIGNAL_Pin) /*BRAKE on*/ && HAL_GPIO_ReadPin(RTD_CONTROL_GPIO_Port, RTD_CONTROL_Pin) /*ReadyToDrive ON*/)
+    // If front, rear, and rtd, then go to DRIVE_STANDBY
+    if (analogRead(BRAKE_F_SIGNAL_GPIO_Port, BRAKE_F_SIGNAL_Pin) && analogRead(BRAKE_R_SIGNAL_GPIO_Port, BRAKE_R_SIGNAL_Pin) && HAL_GPIO_ReadPin(RTD_CONTROL_GPIO_Port, RTD_CONTROL_Pin))
         status->ECUState = DRIVE_STANDBY;
-    // TS ACTIVE disabled handled in CANdler.c
-    if (false /*ACU shutdown*/ || false /*Critical error*/)
-        status->ECUState = TS_DISCHARGE_OFF;
+    // TS ACTIVE, ACU shutdown, errors handled in CANdler.c
+}
+
+void drive_standby(StatusLump *status)
+{
+    // If not rtd, then go back to precharge_complete
+    if (!HAL_GPIO_ReadPin(RTD_CONTROL_GPIO_Port, RTD_CONTROL_Pin))
+        status->ECUState = precharge_complete;
+    // TS ACTIVE, ACU shutdown, errors handled in CANdler.c
 }
 
 void ts_discharge_off(StatusLump *status)
@@ -123,5 +128,5 @@ void error(StatusLump *status)
     if(status->TractiveSystemVoltage >= 60){
         status->ECUState = TS_DISCHARGE_OFF;
     }
-    /* Only error resolved when MSG_ACU says we are good */
+    /* Only error resolved when MSG_ACU says we are good -> Handled in CANdler*/
 }
