@@ -73,11 +73,20 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }*/
 
             // Will have to be changed once warning bits go away
-            if (msgAcu->Error_Warning_Bits == 0x00 && globalStatus.ECUState == ERRORSTATE)
+
+            if(msgAcu->Error_Warning_Bits != 0x00){
+                if(errorFlagBitsCan == 0){
+                    errorFlagBitsCan = 1;
+                }
+                else if(errorFlagBitsCan == 2){
+                    errorFlagBitsCan = 3;
+                }
+            }
+            if (!errorFlagBitsCan && globalStatus.ECUState == ERRORSTATE)
             {
                 globalStatus.ECUState = GLV_ON;
             }
-            if (msgAcu->Error_Warning_Bits == 0x00 && globalStatus.ECUState == TS_DISCHARGE_OFF && globalStatus.TractiveSystemVoltage < 60)
+            if (!errorFlagBitsCan && globalStatus.ECUState == TS_DISCHARGE_OFF && globalStatus.TractiveSystemVoltage < 60)
             {
                 globalStatus.ECUState = GLV_ON;
             }
