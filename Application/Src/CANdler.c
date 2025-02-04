@@ -63,30 +63,34 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             globalStatus.TractiveSystemVoltage = msgAcu->TS_Voltage;
             globalStatus.MaxCellTemp = msgAcu->Max_Cell_Temp;
 
+            // Took care of this, sent to TS_DISCHARGE
+            /*
             if (msgAcu->Error_Warning_Bits != 0x00)
             {
                 globalStatus.ECUState = ERRORSTATE;
-            }
+            }*/
 
+            // This is why I shouldn't code so late at night
+            /*
             if (msgAcu->Precharge_Error == 0b1 && (globalStatus.ECUState != GLV_ON || globalStatus.ECUState != ERRORSTATE))
             {
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
-            }
+            }*/
 
+            // Errors resolved. Will have to be changed once warning bits go away
             if (msgAcu->Error_Warning_Bits == 0x00 && globalStatus.ECUState == ERRORSTATE)
             {
                 globalStatus.ECUState = GLV_ON;
             }
-            
-            if(getBit(msgAcu->IR_State_Software_Latch_Bits, 0) == 0b1 && globalStatus.TractiveSystemVoltage >= 60){
+            // If there are warnings, or there is a Precharge Error or IR- ever becomes 0 while not in either GLV_ON or PRECHARGE_ENGAGED, it must start discharging.
+            // First condition will have to be changed once warning bits go away
+            if((msgAcu->Error_Warning_Bits != 0x00 || msgAcu->Precharge_Error == 0b1 || getBit(msgAcu->IR_State_Software_Latch_Bits, 0) == 0b0) && globalStatus.ECUState != GLV_ON && globalStatus.ECUState != PRECHARGE_ENGAGED){
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
             
-            if(getBit(msgAcu->IR_State_Software_Latch_Bits, 0) == 0b1 && globalStatus.TractiveSystemVoltage < 60){
-                globalStatus.ECUState = GLV_ON;
-            }
-            
-            if(getBit(msgAcu->IR_State_Software_Latch_Bits, 1) == 0b0 && getBit(msgAcu->IR_State_Software_Latch_Bits, 1) && globalStatus.ECUState == PRECHARGING){
+            // If it is precharging with IR- closed and then IR+ goes closed as well, precharge is complete
+            // IR+ is precharge success confirmation
+            if(getBit(msgAcu->IR_State_Software_Latch_Bits, 1) == 0b1 && getBit(msgAcu->IR_State_Software_Latch_Bits, 1) == 0b1 && globalStatus.ECUState == PRECHARGING){
                 globalStatus.ECUState = PRECHARGE_COMPLETE;
             }
             break;
@@ -137,6 +141,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             globalStatus.VehicleSpeed = (globalStatus.RRWheelRPM + globalStatus.RLWheelRPM) * 3.141592653539 * 8 / 3.55 / 1056.0;  // Probably fix this...
 
+            // Is this supposed to check the state to make sure its not GLV_ON or PRECHARGE_ENGAGED?
             if (msgGri->fault_map != 0x00)
             {
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
