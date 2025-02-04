@@ -78,6 +78,9 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 globalStatus.ECUState = GLV_ON;
             }
 
+            if(getBit(msgAcu->IR_State_Software_Latch_Bits, 0) == 0b1 && globalStatus.ECUState == PRECHARGE_COMPLETE){
+                globalStatus.ECUState = TS_DISCHARGE_OFF;
+            }
             break;
 
         case MSG_LV_DC_DC_STATUS:

@@ -37,6 +37,13 @@ typedef struct {
     } inverters[4];
 } StatusLump;
 
+typedef struct {
+    uint8_t encoderBits; // byte looks like aabbcc??
+    uint8_t buttonFlags; // byte looks like 1234xxxx, with buttons 1-4 mapped.
+} SteerSettings;
+
+extern SteerSettings steerSettings;
+
 extern StatusLump globalStatus;
 extern uint8_t numberOfBadMessages;
 

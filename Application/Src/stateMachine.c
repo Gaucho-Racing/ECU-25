@@ -7,10 +7,11 @@
 StatusLump globalStatus = {
     .ECUState = GLV_ON,
     .StatusBits = {0}
-    
 };
 
 uint8_t numberOfBadMessages = 0;
+
+SteerSettings steerSettings = {0};
 
 void stateMachineTick(void)
 {
