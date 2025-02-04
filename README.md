@@ -1,4 +1,5 @@
-See [git wiki page](https://wiki.gauchoracing.com/books/onboarding/page/git) for a primer on `git`.
+# State Machine
+![GR25 State Machine](/GR25StateMachine.png)
 # Required Stuff
 ## Applications
 Mac and Unix download using your package managers (Mac may need the ARM toolchain), Windows should use the links below:
@@ -23,6 +24,8 @@ Download "Required Stuff" and add to your PATH.
 1. Execute the `debug.sh` script (does not require VS Code).
 2. `openocd` and `gdb` will launch automatically to facilitate debugging, see [gdb cheat sheet](https://darkdust.net/files/GDB%20Cheat%20Sheet.pdf) for instructions.
 3. If you are only attempting to compile run `debug.sh build` instead.
+
+See [git wiki page](https://wiki.gauchoracing.com/books/onboarding/page/git) for a primer on `git`.
 
 # Debugging
 Chances are something will not work right the first try, likely one of the tools wasn't added to your PATH correctly.
