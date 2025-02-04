@@ -102,10 +102,8 @@ void precharge_complete(StatusLump *status)
 
 void ts_discharge_off(StatusLump *status)
 {
-    if (true /*Main power off*/ && true /*Errors resolved*/)
+    if (status->TractiveSystemVoltage < 60) // Magic number :)
         status->ECUState = GLV_ON;
-    if (false /*Main power off*/ && !true/*Errors resolved*/)
-        status->ECUState = ERROR;
 }
 
 void reflash_tune(StatusLump *status)

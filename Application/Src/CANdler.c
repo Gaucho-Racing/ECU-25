@@ -63,12 +63,12 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             globalStatus.TractiveSystemVoltage = msgAcu->TS_Voltage;
             globalStatus.MaxCellTemp = msgAcu->Max_Cell_Temp;
 
-            if (msgAcu->Error_Warning_Bits != 0xFF)
+            if (msgAcu->Error_Warning_Bits != 0x00)
             {
                 globalStatus.ECUState = ERRORSTATE;
             }
 
-            if (msgAcu->Precharge_Error == 0b1)            
+            if (msgAcu->Precharge_Error == 0b1 && (globalStatus.ECUState != GLV_ON || globalStatus.ECUState != ERRORSTATE))
             {
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
@@ -192,6 +192,10 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             else if (ts_off && globalStatus.ECUState == PRECHARGE_COMPLETE){
+                globalStatus.ECUState = TS_DISCHARGE_OFF;
+            }
+
+            else if (ts_off && globalStatus.ECUState == DRIVE_STANDBY){
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
             

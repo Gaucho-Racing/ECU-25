@@ -48,8 +48,9 @@ void MX_ADC3_Init(void);
 
 /* USER CODE BEGIN Prototypes */
 typedef enum{
-  
-}
+  BSE_SIGNAL
+};
+
 uint32_t analogRead(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, uint32_t *maxValue /* out parameter for maximum value of read */); 
 
 /* USER CODE END Prototypes */

@@ -22,9 +22,6 @@
 
 /* USER CODE BEGIN 0 */
 
-uint16_t pins[] = {};
-GPIO_TypeDef ports[] = {};
-uint8_t ADCNums[] = {};
 
 uint32_t analogRead(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, uint32_t *maxValue) {
     ADC_ChannelConfTypeDef sConfig = {0};
