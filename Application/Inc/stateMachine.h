@@ -74,7 +74,7 @@ void precharge_complete(StatusLump *status);
 /*
 Drive standby
 */
-void drive_standby(StatusLump *status)
+void drive_standby(StatusLump *status);
 
 /*
 Shutting down, ts discharge off
