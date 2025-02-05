@@ -179,6 +179,15 @@ void Error_Handler(void)
   /* USER CODE BEGIN Error_Handler_Debug */
   __disable_irq();
 
+  if (globalStatus.TractiveSystemVoltage >= 60)
+  {
+    globalStatus.ECUState = TS_DISCHARGE_OFF;
+  }
+  else
+  {
+    globalStatus.ECUState = ERRORSTATE;
+  }
+
   // Stop CAN
   HAL_FDCAN_DeInit(&hfdcan1);
   HAL_FDCAN_DeInit(&hfdcan2);
@@ -190,15 +199,12 @@ void Error_Handler(void)
   // Setup interrupts
   __enable_irq();
 
-  globalStatus.ECUState = ERRORSTATE;
-  globalStatus.TractiveSystemVoltage = 65;
-
   while(1)  // Same as in main()
   {
     infiniteLoopContents();
   }
 
-  // NVIC_SystemReset();  // Magic reset everything, ideally we never ever need this
+  // NVIC_SystemReset();  // Reset everything, cannot use as TS might be connected
 
   /* USER CODE END Error_Handler_Debug */
 }
