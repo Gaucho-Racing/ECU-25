@@ -15,7 +15,7 @@ SteerSettings steerSettings = {0};
 
 void stateMachineTick(void)
 {
-    if (numberOfBadMessages >= 3)   // Magic value, 4 is bad
+    if (numberOfBadMessages >= 3)   // Magic value, 3 is bad
     {
         numberOfBadMessages = 0;
         Error_Handler();
