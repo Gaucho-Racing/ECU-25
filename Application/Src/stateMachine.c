@@ -61,6 +61,9 @@ void stateMachineTick(void)
 
 void glv_on(StatusLump *status)
 {
+    // For safety
+    if(status->TractiveSystemVoltage >= 60)
+        status->ECUState = TS_DISCHARGE_OFF;
     // When the grounded low voltage system is turned on
     // the microcontroller has power, but the motor controller is not enabled.
     // This is the second state that the car will enter after the ECU Flash is complete.
@@ -71,6 +74,9 @@ void glv_on(StatusLump *status)
 
 void precharge_engaged(StatusLump *status)
 {
+    // For safety
+    if(status->TractiveSystemVoltage >= 60)
+        status->ECUState = TS_DISCHARGE_OFF;
     // ACU confirmation is IR-, handled in CANdler.c
     //TS ACTIVE botton disabled --> GLV_ON is handled in CANdler.c
     //if (true /*TS ACTIVE button disabled*/)
