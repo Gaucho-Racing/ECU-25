@@ -1,6 +1,8 @@
 #ifndef DRIVING_H
 #define DRIVING_H
 
+#include "stateMachine.h"
+
 /*
 Ready to go, drive standby
 */

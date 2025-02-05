@@ -79,7 +79,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
             else if(errorFlagBitsCan || msgAcu->Precharge_Error == 0b1){
-                globalStatus.ECUState = ERRORSTATE
+                globalStatus.ECUState = ERRORSTATE;
             }
             else if (globalStatus.ECUState == ERRORSTATE || globalStatus.ECUState == TS_DISCHARGE_OFF && globalStatus.TractiveSystemVoltage < 60)
             {

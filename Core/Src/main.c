@@ -191,6 +191,7 @@ void Error_Handler(void)
   __enable_irq();
 
   globalStatus.ECUState = ERRORSTATE;
+  globalStatus.TractiveSystemVoltage = 65;
 
   while(1)  // Same as in main()
   {

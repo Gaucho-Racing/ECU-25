@@ -104,16 +104,6 @@ void precharge_complete(StatusLump *status)
     // TS ACTIVE, ACU shutdown, errors handled in CANdler.c
 }
 
-void drive_standby(StatusLump *status)
-{
-    // If not rtd, then go back to precharge_complete
-    if (!HAL_GPIO_ReadPin(RTD_CONTROL_GPIO_Port, RTD_CONTROL_Pin))
-        status->ECUState = PRECHARGE_COMPLETE;
-    if(false /*Valid torque request*/ || false /*APPS stuff*/)
-        status->ECUState = DRIVE_ACTIVE_IDLE;
-    // TS ACTIVE, ACU shutdown, errors handled in CANdler.c
-}
-
 void ts_discharge_off(StatusLump *status)
 {
     // 

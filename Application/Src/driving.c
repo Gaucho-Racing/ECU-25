@@ -1,14 +1,17 @@
-#include "driving.h"
+#include <stdbool.h>
+
 #include "stateMachine.h"
+#include "driving.h"
+#include "main.h"
 
 void drive_standby(StatusLump *status)
 {
-    if (true /*Valid torque request*/)
-        status->ECUState = DRIVE_ACTIVE_IDLE; // not sure if it's idle and not some other state
-    if (false /*ReadyToDrive OFF*/)
+    // If not rtd, then go back to precharge_complete
+    if (!HAL_GPIO_ReadPin(RTD_CONTROL_GPIO_Port, RTD_CONTROL_Pin))
         status->ECUState = PRECHARGE_COMPLETE;
-    if (false /*TS ACTIVE button disabled*/ || false/*ACU shutdown*/ || false/*Critical error*/)
-        status->ECUState = TS_DISCHARGE_OFF;
+    if(false /*Valid torque request*/ || false /*APPS stuff*/)
+        status->ECUState = DRIVE_ACTIVE_IDLE;
+    // TS ACTIVE, ACU shutdown, errors handled in CANdler.c
 }
 
 void drive_active_idle(StatusLump *status)
