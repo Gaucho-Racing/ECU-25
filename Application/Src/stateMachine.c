@@ -10,6 +10,7 @@ StatusLump globalStatus = {
 };
 
 uint8_t numberOfBadMessages = 0;
+uint32_t dischargeTickMillis = 0;
 
 SteerSettings steerSettings = {0};
 
@@ -19,6 +20,10 @@ void stateMachineTick(void)
     {
         numberOfBadMessages = 0;
         Error_Handler();
+    }
+
+    if(globalStatus.ECUState != TS_DISCHARGE_OFF){
+        dischargeTickMillis = 0;
     }
 
     switch(globalStatus.ECUState) {
@@ -113,10 +118,13 @@ void precharge_complete(StatusLump *status)
 
 void ts_discharge_off(StatusLump *status)
 {
-    // 
-    if (status->TractiveSystemVoltage >= 60 && true /*time spent discharging >= 5 seconds*/) // Magic number :)
+    if(dischargeTickMillis == 0){
+        dischargeTickMillis = HAL_GetTick();
+    }
+    
+    if ((HAL_GetTick() - dischargeTickMillis)/1000 > 5 /*time spent discharging >= 5 seconds*/) // Magic number :)
     {
-        status->ECUState = ERRORSTATE;  // This sends us to ERRORSTATE with powered TS?
+        status->ECUState = ERRORSTATE;  // This sends us to ERRORSTATE with powered TS? Yes, ERRORSTATE will send it back if voltage >= 60
     }
     // Other stuff handled in can
 }
