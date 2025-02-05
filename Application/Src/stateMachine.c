@@ -116,7 +116,7 @@ void ts_discharge_off(StatusLump *status)
     // 
     if (status->TractiveSystemVoltage >= 60 && true /*time spent discharging >= 5 seconds*/) // Magic number :)
     {
-        status->ECUState = ERRORSTATE;
+        status->ECUState = ERRORSTATE;  // This sends us to ERRORSTATE with powered TS?
     }
     // Other stuff handled in can
 }

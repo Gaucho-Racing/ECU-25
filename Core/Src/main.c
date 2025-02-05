@@ -27,6 +27,7 @@
 /* USER CODE BEGIN Includes */
 #include "stateMachine.h"
 #include "pinging.h"
+#include "msgIDs.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -177,8 +178,10 @@ void SystemClock_Config(void)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
+  // Stop interrupts
   __disable_irq();
 
+  // Determine exit state
   if (globalStatus.TractiveSystemVoltage >= 60)
   {
     globalStatus.ECUState = TS_DISCHARGE_OFF;
@@ -192,12 +195,18 @@ void Error_Handler(void)
   HAL_FDCAN_DeInit(&hfdcan1);
   HAL_FDCAN_DeInit(&hfdcan2);
 
+  // Wait 3 ms
+  HAL_Delay(3);
+
   // Start everything again
   HAL_FDCAN_Init(&hfdcan1);
   HAL_FDCAN_Init(&hfdcan2);
 
-  // Setup interrupts
+    // Setup interrupts
   __enable_irq();
+
+  // Send debug message
+  writeMessage(1, MSG_DEBUG, GR_ALL, (uint8_t*)"ECU Internal Failure", 21);
 
   while(1)  // Same as in main()
   {
