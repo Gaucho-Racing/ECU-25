@@ -10,15 +10,20 @@ StatusLump globalStatus = {
 };
 
 uint8_t numberOfBadMessages = 0;
+uint32_t dischargeStartTick = 0;
 
 SteerSettings steerSettings = {0};
 
 void stateMachineTick(void)
 {
-    if (numberOfBadMessages >= 3)   // Magic value, 4 is bad
+    if (numberOfBadMessages >= 3)   // Magic value, 3 is bad
     {
         numberOfBadMessages = 0;
         Error_Handler();
+    }
+
+    if(globalStatus.ECUState != TS_DISCHARGE_OFF){
+        dischargeStartTick = 0;
     }
 
     switch(globalStatus.ECUState) {
@@ -61,6 +66,12 @@ void stateMachineTick(void)
 
 void glv_on(StatusLump *status)
 {
+    // For safety
+    if(status->TractiveSystemVoltage >= 60)
+    {
+        status->ECUState = TS_DISCHARGE_OFF;
+    }
+
     // When the grounded low voltage system is turned on
     // the microcontroller has power, but the motor controller is not enabled.
     // This is the second state that the car will enter after the ECU Flash is complete.
@@ -71,6 +82,11 @@ void glv_on(StatusLump *status)
 
 void precharge_engaged(StatusLump *status)
 {
+    // For safety
+    if(status->TractiveSystemVoltage >= 60)
+    {
+        status->ECUState = TS_DISCHARGE_OFF;
+    }
     // ACU confirmation is IR-, handled in CANdler.c
     //TS ACTIVE botton disabled --> GLV_ON is handled in CANdler.c
     //if (true /*TS ACTIVE button disabled*/)
@@ -94,25 +110,23 @@ void precharge_complete(StatusLump *status)
 {
     // If front, rear, and rtd, then go to DRIVE_STANDBY
     if (analogRead(BRAKE_F_SIGNAL_GPIO_Port, BRAKE_F_SIGNAL_Pin) && analogRead(BRAKE_R_SIGNAL_GPIO_Port, BRAKE_R_SIGNAL_Pin) && HAL_GPIO_ReadPin(RTD_CONTROL_GPIO_Port, RTD_CONTROL_Pin))
+    {
         status->ECUState = DRIVE_STANDBY;
-    // TS ACTIVE, ACU shutdown, errors handled in CANdler.c
-}
-
-void drive_standby(StatusLump *status)
-{
-    // If not rtd, then go back to precharge_complete
-    if (!HAL_GPIO_ReadPin(RTD_CONTROL_GPIO_Port, RTD_CONTROL_Pin))
-        status->ECUState = PRECHARGE_COMPLETE;
-    if(false /*Valid torque request*/ || false /*APPS stuff*/)
-        status->ECUState = DRIVE_ACTIVE_IDLE;
+    }
     // TS ACTIVE, ACU shutdown, errors handled in CANdler.c
 }
 
 void ts_discharge_off(StatusLump *status)
 {
-    // This needs to go to error and wait for errors to be resolved because discharging is almost always error case
-    if (status->TractiveSystemVoltage < 60) // Magic number :)
-        status->ECUState = ERRORSTATE;
+    if(dischargeStartTick == 0){
+        dischargeStartTick = HAL_GetTick();
+    }
+    
+    if ((HAL_GetTick() - dischargeStartTick)/100000 > 5) // Magic number :)
+    {
+        status->ECUState = ERRORSTATE;  // This sends us to ERRORSTATE with powered TS? Yes, ERRORSTATE will send it back if voltage >= 60
+    }
+    // Other stuff handled in can
 }
 
 void reflash_tune(StatusLump *status)
@@ -121,14 +135,17 @@ void reflash_tune(StatusLump *status)
     status->ECUState = GLV_ON;
 
     if (true /*Flash error*/)
+    {
         status->ECUState = ERRORSTATE;
+    }
 }
 
 void error(StatusLump *status)
 {
-    // DISCHARGE IF TS VOLTAGE >= 60
-    if(status->TractiveSystemVoltage >= 60){
+    // DISCHARGE IF TS VOLTAGE >= 60 for some reason
+    if(status->TractiveSystemVoltage >= 60)
+    {
         status->ECUState = TS_DISCHARGE_OFF;
     }
-    /* Only error resolved when MSG_ACU says we are good -> Handled in CANdler*/
+    /* Only error resolved when MSG_ACU AND GRI says we are good -> Handled in CANdler*/
 }

@@ -6,6 +6,8 @@
 #include "pinging.h"
 #include "adc.h"
 
+uint8_t errorFlagBitsCan = 0;
+
 uint8_t getBit(uint8_t number, uint8_t indexFromRight)
 {
     return (number >> (7 - indexFromRight)) & 0b1;
@@ -63,22 +65,25 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             globalStatus.TractiveSystemVoltage = msgAcu->TS_Voltage;
             globalStatus.MaxCellTemp = msgAcu->Max_Cell_Temp;
 
-            // Took care of this, sent to TS_DISCHARGE instead
-            /*
-            if (msgAcu->Error_Warning_Bits != 0x00)
-            {
-                globalStatus.ECUState = ERRORSTATE;
-            }*/
+            //errorFlagBitsCan logic
+            if(msgAcu->Error_Warning_Bits != 0x00 && (errorFlagBitsCan == 0 || errorFlagBitsCan == 2)){
+                errorFlagBitsCan += 1;
+            }
+            else if(msgAcu->Error_Warning_Bits == 0x00 && (errorFlagBitsCan == 1 || errorFlagBitsCan == 3)){
+                errorFlagBitsCan -= 1;
+            }
 
-            // Will have to be changed once warning bits go away
-            if (msgAcu->Error_Warning_Bits == 0x00 && globalStatus.ECUState == ERRORSTATE)
+            //Error handling and leaving error state
+            if ((errorFlagBitsCan || msgAcu->Precharge_Error == 0b1) && globalStatus.TractiveSystemVoltage >= 60)
+            {
+                globalStatus.ECUState = TS_DISCHARGE_OFF;
+            }
+            else if(errorFlagBitsCan || msgAcu->Precharge_Error == 0b1){
+                globalStatus.ECUState = ERRORSTATE;
+            }
+            else if (globalStatus.ECUState == ERRORSTATE || globalStatus.ECUState == TS_DISCHARGE_OFF && globalStatus.TractiveSystemVoltage < 60)
             {
                 globalStatus.ECUState = GLV_ON;
-            }
-            // If there are warnings, or there is a Precharge Error or IR- ever becomes 0 while not in either GLV_ON or PRECHARGE_ENGAGED, it must start discharging.
-            // First condition will have to be changed once warning bits go away
-            if((msgAcu->Error_Warning_Bits != 0x00 || msgAcu->Precharge_Error == 0b1 || getBit(msgAcu->IR_State_Software_Latch_Bits, 0) == 0b0) && globalStatus.ECUState != GLV_ON && globalStatus.ECUState != PRECHARGE_ENGAGED){
-                globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
             
             // IR- -> 1 = ACU Precharge Confirmation
@@ -86,10 +91,20 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 globalStatus.ECUState = PRECHARGING;
             }
 
+            // If IR- ever becomes 0 while not in GLV_ON or PRECHARGE_ENGAGED, that is a precharge cancellation and it must start discharging.
+            if(getBit(msgAcu->IR_State_Software_Latch_Bits, 0) == 0b0 && globalStatus.ECUState != GLV_ON && globalStatus.ECUState != PRECHARGE_ENGAGED){
+                globalStatus.ECUState = TS_DISCHARGE_OFF;
+            }
+
             // If it is precharging with IR- closed and then IR+ goes closed as well, precharge is complete (success confirmation)
             // IR+ -> 1 is precharge success confirmation
-            if(getBit(msgAcu->IR_State_Software_Latch_Bits, 1) == 0b1 && getBit(msgAcu->IR_State_Software_Latch_Bits, 1) == 0b1 && globalStatus.ECUState == PRECHARGING){
+            if(getBit(msgAcu->IR_State_Software_Latch_Bits, 0) == 0b1 && getBit(msgAcu->IR_State_Software_Latch_Bits, 1) == 0b1 && globalStatus.ECUState == PRECHARGING){
                 globalStatus.ECUState = PRECHARGE_COMPLETE;
+            }
+
+            //If IR+ ever opens on or after the precharging complete state, start discharging
+            if(getBit(msgAcu->IR_State_Software_Latch_Bits, 1) == 0b0 && globalStatus.ECUState != GLV_ON && globalStatus.ECUState != PRECHARGE_ENGAGED && globalStatus>ECUState != PRECHARGING){
+                globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
             break;
 
@@ -137,16 +152,24 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             globalStatus.FLWheelRPM = globalStatus.inverters[2].RPM;
             globalStatus.FRWheelRPM = globalStatus.inverters[3].RPM;
 
-            globalStatus.VehicleSpeed = (globalStatus.RRWheelRPM + globalStatus.RLWheelRPM) * 3.141592653539 * 8 / 3.55 / 1056.0;  // Probably fix this...
+            globalStatus.VehicleSpeed = (globalStatus.RRWheelRPM + globalStatus.RLWheelRPM) * 3.141592653589 * 8 / 3.55 / 1056.0;  // Probably fix this...
 
-            // Is this supposed to check the state to make sure its not GLV_ON or PRECHARGE_ENGAGED?
-            if (msgGri->fault_map != 0x00)
+            if(msgGri->fault_map == 0x00 && (errorFlagBitsCan == 2 || errorFlagBitsCan == 3)){
+                errorFlagBitsCan -= 2;
+            }
+
+            else if(msgGri->fault_map != 0x00 && (errorFlagBitsCan == 0 || errorFlagBitsCan == 1)){
+                errorFlagBitsCan += 2;
+            }
+
+            if (errorFlagBitsCan && globalStatus.TractiveSystemVoltage >= 60)
             {
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
-
-            // Do we need to make this global to check for acu errors as well?
-            if (msgGri->fault_map == 0x00 && globalStatus.ECUState == ERRORSTATE) 
+            else if(errorFlagBitsCan){
+                globalStatus.ECUState = ERRORSTATE;
+            }
+            else if(globalStatus.ECUState == ERRORSTATE || globalStatus.ECUState == TS_DISCHARGE_OFF && globalStatus.TractiveSystemVoltage < 60) 
             {
                 globalStatus.ECUState = GLV_ON;
             }

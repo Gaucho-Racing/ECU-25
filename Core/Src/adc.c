@@ -28,7 +28,7 @@ uint32_t analogRead(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, uint32_t *maxValue) 
     uint32_t channel;
 
     if (GPIOx == GPIOA) {
-      switch GPIO_Pin {
+      switch (GPIO_Pin) {
         case GPIO_PIN_0:
         case GPIO_PIN_1:
       }
@@ -41,7 +41,7 @@ uint32_t analogRead(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, uint32_t *maxValue) 
 
     HAL_ADC_Start(&hadc1);
     HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-    raw = HAL_ADC_GetValue(&hadc1);
+    uint32_t raw = HAL_ADC_GetValue(&hadc1);
     return raw;
 }
 
