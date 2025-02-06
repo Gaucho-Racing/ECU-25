@@ -4,8 +4,6 @@
 #include <stdint.h>
 
 void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t length, uint32_t timestamp);
-uint8_t getBit(uint8_t number, uint8_t indexFromRight);
-uint8_t get2Bits(uint8_t number, uint8_t indexFromRight);
 
 typedef struct {
     uint8_t Accumulator_Voltage;

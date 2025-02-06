@@ -5,18 +5,10 @@
 #include "msgIDs.h"
 #include "pinging.h"
 #include "adc.h"
+#include "utils.h"
 
 uint8_t errorFlagBitsCan = 0;
 
-uint8_t getBit(uint8_t number, uint8_t indexFromRight)
-{
-    return (number >> (7 - indexFromRight)) & 0b1;
-}
-
-uint8_t get2Bits(uint8_t number, uint8_t indexFromRight)
-{
-    return (number >> (7 - indexFromRight)) & 0b11;
-}
 
 uint16_t findTernaryMax(const uint16_t a, const uint16_t b, const uint16_t c)
 {
