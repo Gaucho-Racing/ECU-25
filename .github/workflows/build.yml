@@ -1,0 +1,13 @@
+name: Build
+
+on: [push]
+
+jobs:
+  make:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup environemnt
+      run: sudo apt-get install -y --no-install-suggests --no-install-recommends gcc-arm-none-eabi
+    - name: Compile program
+      run: cmake --preset Debug
