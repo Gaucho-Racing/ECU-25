@@ -12,6 +12,4 @@ jobs:
     - name: Setup environemnt
       run: sudo apt-get install -y --no-install-suggests --no-install-recommends gcc-arm-none-eabi ninja-build
     - name: Compile program
-      run: |
-        chmod +x ./debug.sh
-        ./debug.sh build
+      run: cmake --preset Debug
