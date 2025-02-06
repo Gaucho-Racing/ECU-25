@@ -8,6 +8,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup environemnt
-      run: sudo apt-get install -y --no-install-suggests --no-install-recommends gcc-arm-none-eabi ninja
+      run: sudo apt-get install -y --no-install-suggests --no-install-recommends gcc-arm-none-eabi ninja-build
     - name: Compile program
       run: cmake --preset Debug
