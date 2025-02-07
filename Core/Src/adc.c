@@ -21,8 +21,6 @@
 #include "adc.h"
 
 /* USER CODE BEGIN 0 */
-
-
 uint32_t analogRead(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, uint32_t *maxValue) {
     ADC_ChannelConfTypeDef sConfig = {0};
     uint32_t channel;
@@ -44,7 +42,6 @@ uint32_t analogRead(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, uint32_t *maxValue) 
     uint32_t raw = HAL_ADC_GetValue(&hadc1);
     return raw;
 }
-
 /* USER CODE END 0 */
 
 ADC_HandleTypeDef hadc1;

@@ -4,6 +4,7 @@
 #include "driving.h"
 #include "main.h"
 #include "utils.h"
+#include "adc.h"
 
 StatusLump globalStatus = {
     .ECUState = GLV_ON,
