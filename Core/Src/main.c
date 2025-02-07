@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "adc.h"
+#include "dma.h"
 #include "fdcan.h"
 #include "usart.h"
 #include "gpio.h"
@@ -96,11 +97,11 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_FDCAN1_Init();
   MX_FDCAN2_Init();
   MX_ADC1_Init();
   MX_ADC2_Init();
-  MX_ADC3_Init();
   MX_LPUART1_UART_Init();
   /* USER CODE BEGIN 2 */
 
@@ -114,6 +115,7 @@ int main(void)
   {
     infiniteLoopContents();
     /* USER CODE END WHILE */
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
