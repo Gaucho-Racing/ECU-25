@@ -124,6 +124,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
 
+            // USE ACUWarning(acuMsgTwo) HERE FOR DASH WARNINGS
             break;
         case MSG_ACU_STATUS_3:
             if (length != 8) {
