@@ -86,6 +86,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             // If IR- ever becomes 0 while not in GLV_ON or PRECHARGE_ENGAGED, that is a precharge cancellation and it must start discharging.
             if(getBit(msgAcu->IR_State_Software_Latch_Bits, 0) == 0b0 && globalStatus.ECUState != GLV_ON && globalStatus.ECUState != PRECHARGE_ENGAGED)
             {
+                digitalWrite(BRAKE_F_SIGNAL_GPIO_Port, BRAKE_F_SIGNAL_Pin)
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
 
