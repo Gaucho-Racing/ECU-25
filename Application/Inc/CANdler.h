@@ -26,6 +26,22 @@ typedef struct {
 } ACU_Status_Msg;
 
 typedef struct {
+    uint8_t Accumulator_Voltage;
+    uint8_t TS_Voltage;
+    uint8_t Accumulator_Current;
+    uint8_t Accumulator_SOC;
+    uint8_t GLV_SOC;
+} ACU_Status_MsgOne;
+
+typedef struct {
+    
+} ACU_Status_MsgTwo;
+
+typedef struct {
+
+} ACU_St
+
+typedef struct {
      uint8_t Input_Voltage;
      uint8_t Output_Voltage;
      uint8_t Input_Current;
