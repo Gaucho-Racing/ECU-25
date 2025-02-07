@@ -31,4 +31,4 @@ void setSoftwareLatch(uint8_t close)
 }
 
 uint8_t getNumErrorsACU()
-uint8_t getNumErrorsACU()
+uint8_t getNumErrorsGRI()
