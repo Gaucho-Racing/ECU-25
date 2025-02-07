@@ -27,4 +27,4 @@ void setSoftwareLatch(uint8_t close)
     }
 }
 
-void switchState(*status, State to, )
+void switchState(StatusLump *status, State to, uint8_t )
