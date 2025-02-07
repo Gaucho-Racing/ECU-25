@@ -6,29 +6,9 @@
 void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t length, uint32_t timestamp);
 
 typedef struct {
-    uint8_t Accumulator_Voltage;
-    uint8_t TS_Voltage;
-    uint8_t Accumulator_Current;
-    uint8_t Accumulator_SOC;
-    uint8_t GLV_SOC;
-    uint8_t V_20v_Voltage;
-    uint8_t V_12v_Voltage;
-    uint8_t SDC_Voltage;
-    uint8_t Min_Cell_Voltage;
-    uint8_t Max_Cell_Temp;
-    uint8_t Error_Warning_Bits;
-    uint8_t Precharge_Error;
-    uint8_t IR_State_Software_Latch_Bits;
-    uint8_t HV_Input_Voltage;
-    uint8_t HV_Output_Voltage;
-    uint8_t HV_Input_Current;
-    uint8_t HV_Output_Current;
-} ACU_Status_Msg;
-
-typedef struct {
-    uint8_t Accumulator_Voltage;
-    uint8_t TS_Voltage;
-    uint8_t Accumulator_Current;
+    uint8_t Accumulator_Voltage;    // should be uint16_t according to spreadsheet? 
+    uint8_t TS_Voltage;             // uint16_t? 
+    uint8_t Accumulator_Current;    // uint16_t? 
     uint8_t Accumulator_SOC;
     uint8_t GLV_SOC;
 } ACU_Status_MsgOne;
@@ -62,33 +42,18 @@ typedef struct {
     uint16_t AC_current;
     uint16_t DC_current;
     uint16_t DC_voltage;
+} Inverter_Status_Msg_One;
+
+typedef struct {
     uint8_t U_MOSFET_temperature;
     uint8_t V_MOSFET_temperature;
     uint8_t W_MOSFET_temperature;
-    uint8_t Water_temperature;
-    uint16_t Motor_RPM;
-    uint8_t Motor_temperature;
-    uint8_t fault_map;
-} Gr_Inverter_Status_Msg;
+} Inverter_Status_Msg_Two;
 
 typedef struct {
-    int32_t ERPM;
-    int16_t Duty_Cycle;
-    int16_t Input_Voltage;
-    int16_t AC_Current;
-    int16_t DC_Current;
-    int16_t Controller_Temp;
-    int16_t Motor_Temp;
-    uint8_t Faults;
-    int32_t FOC_Id;
-    int32_t FOC_Iq;
-    uint8_t Throttle;
-    uint8_t Brake;
-    uint8_t Digital_IO;
-    uint32_t Drive_Enable;
-    uint16_t Flags;
-    uint8_t CAN_Version;
-} Dti_Inverter_Status_Msg;
+    uint8_t Motor_temperature;
+    uint8_t fault_map;
+} Inverter_Status_Msg_Three;
 
 typedef struct {
     uint16_t Fan_Speed;
@@ -96,6 +61,17 @@ typedef struct {
     uint8_t Output_Voltage;
     uint8_t Current;
 } Fan_Status_Msg;
+
+typedef struct {
+    uint8_t BMS_LED;        // data type for bms_led and imd_led are just 'b' on spreadsheet, not sure how to define that
+    uint8_t IMD_LED;
+    uint8_t Button_LED_1_R;
+    uint8_t Button_LED_1_G;
+    uint8_t Button_LED_1_B;
+    uint8_t Button_LED_2_R;
+    uint8_t Button_LED_2_G;
+    uint8_t Button_LED_2_B;
+} Dash_Config_Msg;
 
 extern uint8_t errorFlagBitsCan;
 

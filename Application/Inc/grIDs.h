@@ -1,8 +1,9 @@
 // Auto-generated header file
 // Define GR IDs
 
-#ifndef GRIDS.H
-#define GRIDS.H
+#ifndef GRIDS_H
+#define GRIDS_H
+
 #define GR_DEBUGGER 0x01
 #define GR_ECU 0x02
 #define GR_ACU 0x03
@@ -43,6 +44,7 @@
 #define GR_SAM18 0x26
 #define GR_SAM19 0x27
 #define GR_SAM20 0x28
-#define GR_LV_DC-DC 0x29
+#define GR_LV_DC_DC 0x29
 #define GR_ALL 0xFF
-#endif // GRIDS.H
+
+#endif // GRIDS_H
