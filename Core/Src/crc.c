@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "crc.h"
+#include "stm32g4xx_hal_crc.h"
 
 /* USER CODE BEGIN 0 */
 
