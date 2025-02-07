@@ -29,6 +29,3 @@ void setSoftwareLatch(uint8_t close)
         HAL_GPIO_WritePin(SOFTWARE_OK_GPIO_Port, SOFTWARE_OK_Pin, GPIO_PIN_RESET);
     }
 }
-
-uint8_t getNumErrorsACU()
-uint8_t getNumErrorsGRI()
