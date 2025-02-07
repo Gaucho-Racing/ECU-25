@@ -71,10 +71,10 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             globalStatus.MaxCellTemp = acuMsgTwo->Max_Cell_Temp;
 
             //errorFlagBitsCan logic
-            if(acuMsgTwo->Error_Warning_Bits != 0x00 && (errorFlagBitsCan == 0 || errorFlagBitsCan == 2)){
+            if(ACUError(acuMsgTwo) && (errorFlagBitsCan == 0 || errorFlagBitsCan == 2)){
                 errorFlagBitsCan += 1;
             }
-            else if(acuMsgTwo->Error_Warning_Bits == 0x00 && (errorFlagBitsCan == 1 || errorFlagBitsCan == 3)){
+            else if(ACUError(acuMsgTwo) && (errorFlagBitsCan == 1 || errorFlagBitsCan == 3)){
                 errorFlagBitsCan -= 1;
             }
 

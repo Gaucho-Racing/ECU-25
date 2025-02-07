@@ -38,7 +38,7 @@ uint8_t ACUError(ACU_Status_MsgTwo *acuMsgTwo)
 {
     if (getBits(acuMsgTwo->Error_Warning_Bits, 0, 5) != 0x00)
     {
-        return true;
+        return 1;
     }
-    return false;
+    return 0;
 }
