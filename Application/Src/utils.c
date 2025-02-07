@@ -18,7 +18,10 @@ uint8_t get2Bits(uint8_t number, uint8_t indexFromRight)
     return (number >> (7 - indexFromRight)) & 0x03; // 0b11
 }
 
-uint8_t getBits(uint8_t number, uint_)
+uint8_t getBits(uint8_t number, uint8_t indexFromRight, uint8_t length){
+    return (number >> (7 - indexFromRight)) & (length);
+}
+
 void setSoftwareLatch(uint8_t close)
 {
     if (close != 0 && !HAL_GPIO_ReadPin(SOFTWARE_OK_GPIO_Port, SOFTWARE_OK_Pin))
@@ -33,8 +36,9 @@ void setSoftwareLatch(uint8_t close)
 
 uint8_t ACUError(ACU_Status_MsgTwo *acuMsgTwo)
 {
-    if (acuMsgTwo->Error_Warning_Bits != 0x00)
+    if (getBits(acuMsgTwo->Error_Warning_Bits, 0, 5) != 0x00)
     {
-        //
+        return true;
     }
+    return false;
 }
