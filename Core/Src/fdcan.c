@@ -25,11 +25,6 @@
 #include "CANdler.h"
 #include <stdint.h>
 
-
-
-
-
-
 FDCAN_TxHeaderTypeDef TxHeader = {
     .IdType = FDCAN_STANDARD_ID,
     .TxFrameType = FDCAN_DATA_FRAME,
@@ -62,10 +57,6 @@ void writeMessage(uint8_t bus, uint16_t msgID, uint8_t destID, uint8_t data[], u
         Error_Handler();
     }
 }
-
-
-
-
 
 void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 {

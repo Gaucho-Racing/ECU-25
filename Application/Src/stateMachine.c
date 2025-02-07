@@ -72,7 +72,8 @@ void glv_on(StatusLump *status)
     {
         status->ECUState = TS_DISCHARGE_OFF;
     }
-
+    
+    HAL_GPIO_WritePin(SOFTWARE_OK_GPIO_Port, SOFTWARE_OK_Pin, GPIO_PIN_SET);
     // When the grounded low voltage system is turned on
     // the microcontroller has power, but the motor controller is not enabled.
     // This is the second state that the car will enter after the ECU Flash is complete.
@@ -120,6 +121,9 @@ void precharge_complete(StatusLump *status)
 
 void ts_discharge_off(StatusLump *status)
 {
+    if(HAL_GPIO_ReadPin(SOFTWARE_OK_GPIO_Port, SOFTWARE_OK_Pin)){
+        HAL_GPIO_WritePin(SOFTWARE_OK_GPIO_Port, SOFTWARE_OK_Pin, GPIO_PIN_RESET);
+    }
 
     if(dischargeStartMillis == -1){
         dischargeStartMillis = millis();
@@ -146,9 +150,11 @@ void reflash_tune(StatusLump *status)
 void error(StatusLump *status)
 {
     // DISCHARGE IF TS VOLTAGE >= 60 for some reason
+    
     if(status->TractiveSystemVoltage >= 60)
     {
         status->ECUState = TS_DISCHARGE_OFF;
     }
+    
     /* Only error resolved when MSG_ACU AND GRI says we are good -> Handled in CANdler*/
 }

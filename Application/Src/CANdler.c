@@ -68,7 +68,6 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             //Error handling and leaving error state
             if ((errorFlagBitsCan || msgAcu->Precharge_Error == 0b1) && globalStatus.TractiveSystemVoltage >= 60)
             {
-                HAL_GPIO_WritePin(SOFTWARE_OK_GPIO_Port, SOFTWARE_OK_Pin, GPIO_PIN_RESET);
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
             else if(errorFlagBitsCan || msgAcu->Precharge_Error == 0b1){
@@ -87,7 +86,6 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             // If IR- ever becomes 0 while not in GLV_ON or PRECHARGE_ENGAGED, that is a precharge cancellation and it must start discharging.
             if(getBit(msgAcu->IR_State_Software_Latch_Bits, 0) == 0b0 && globalStatus.ECUState != GLV_ON && globalStatus.ECUState != PRECHARGE_ENGAGED)
             {
-                digitalWrite(BRAKE_F_SIGNAL_GPIO_Port, BRAKE_F_SIGNAL_Pin)
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
 
@@ -200,6 +198,16 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
             
             break;
+
+        case MSG_DASH_CONFIG:
+            if (length != 7) {
+                numberOfBadMessages++;
+                return;
+            }
+            else {
+                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
+            }
+
         case MSG_FAN_STATUS:
             if (length != 5) {
                 numberOfBadMessages++;
