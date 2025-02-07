@@ -104,7 +104,9 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             //If ACU software latch ever opens IR- ever opens while IR+ is closed, something has gone wrong
-            if(getBit(msgAcu->IR_State_Software_Latch_Bits, 1) == 0b0 || )
+            if(getBit(msgAcu->IR_State_Software_Latch_Bits, 2) == 0b0 || getBit(msgAcu->IR_State_Software_Latch_Bits, 1) == 0b1 && getBit(msgAcu->IR_State_Software_Latch_Bits, 0) == 0b0){
+                globalStatus.ECUState = TS_DISCHARGE_OFF;
+            }
             break;
 
         case MSG_LV_DC_DC_STATUS:

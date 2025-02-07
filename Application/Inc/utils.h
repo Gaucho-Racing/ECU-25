@@ -8,7 +8,6 @@
 uint32_t millis(void);
 uint8_t getBit(uint8_t number, uint8_t indexFromRight);
 uint8_t get2Bits(uint8_t number, uint8_t indexFromRight);
-uint8_t convertStatusLump(StatusLump lump);
 void setSoftwareLatch(uint8_t close);
 
 typedef struct {

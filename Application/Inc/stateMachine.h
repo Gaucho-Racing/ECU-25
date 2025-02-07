@@ -37,6 +37,13 @@ typedef struct {
     } inverters[4];
 } StatusLump;
 
+union StatusGotLumpy {
+    StatusLump stateAll;
+    uint64_t first;
+    uint64_t second;
+    uint32_t thrid;
+};
+
 typedef struct {
     uint8_t encoderBits;
     uint8_t buttonFlags;
@@ -96,4 +103,4 @@ CALL ME! Pass in the state and the info and it will automatically tick
 */
 void stateMachineTick(void);
 
-#endif // STATEMACHINE_H
+#endif // STATEMACHIE_H
