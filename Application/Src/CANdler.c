@@ -67,11 +67,11 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             //Error handling and leaving error state
-            if ((errorFlagBitsCan || msgAcu->Precharge_Error == 0b1) && globalStatus.TractiveSystemVoltage >= 60)
+            if ((errorFlagBitsCan || msgAcu->Precharge_Error == 0x01) && globalStatus.TractiveSystemVoltage >= 60)
             {
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
-            else if(errorFlagBitsCan || msgAcu->Precharge_Error == 0b1){
+            else if(errorFlagBitsCan || msgAcu->Precharge_Error == 0x01){
                 globalStatus.ECUState = ERRORSTATE;
             }
             else if (globalStatus.ECUState == ERRORSTATE || (globalStatus.ECUState == TS_DISCHARGE_OFF && globalStatus.TractiveSystemVoltage < 60))
@@ -80,36 +80,37 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
             
             // IR- -> 1 = ACU Precharge Confirmation
-            if((globalStatus.ECUState == PRECHARGE_ENGAGED) && (getBit(msgAcu->IR_State_Software_Latch_Bits, 0) == 0b1))
+            if((globalStatus.ECUState == PRECHARGE_ENGAGED) && (getBit(msgAcu->IR_State_Software_Latch_Bits, 0) == 0x01))
             {
                 globalStatus.ECUState = PRECHARGING;
             }
 
             // If IR- ever becomes 0 while not in GLV_ON or PRECHARGE_ENGAGED, that is a precharge cancellation and it must start discharging.
-            if((getBit(msgAcu->IR_State_Software_Latch_Bits, 0)) == 0b0 && (globalStatus.ECUState != GLV_ON) && (globalStatus.ECUState != PRECHARGE_ENGAGED))
+            if((getBit(msgAcu->IR_State_Software_Latch_Bits, 0)) == 0x00 && (globalStatus.ECUState != GLV_ON) && (globalStatus.ECUState != PRECHARGE_ENGAGED))
             {
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
 
             // If it is precharging with IR- closed and then IR+ goes closed as well, precharge is complete (success confirmation)
             // IR+ -> 1 is precharge success confirmation
-            if((getBit(msgAcu->IR_State_Software_Latch_Bits, 0) == 0b1) && (getBit(msgAcu->IR_State_Software_Latch_Bits, 1) == 0b1) && (globalStatus.ECUState == PRECHARGING))
+            if((getBit(msgAcu->IR_State_Software_Latch_Bits, 0) == 0x01) && (getBit(msgAcu->IR_State_Software_Latch_Bits, 1) == 0x01) && (globalStatus.ECUState == PRECHARGING))
             {
                 globalStatus.ECUState = PRECHARGE_COMPLETE;
             }
 
             //If IR+ ever opens on or after the precharging complete state, start discharging
-            if(getBit(msgAcu->IR_State_Software_Latch_Bits, 1) == 0b0 && globalStatus.ECUState != GLV_ON && globalStatus.ECUState != PRECHARGE_ENGAGED && globalStatus.ECUState != PRECHARGING)
+            if(getBit(msgAcu->IR_State_Software_Latch_Bits, 1) == 0x0 && globalStatus.ECUState != GLV_ON && globalStatus.ECUState != PRECHARGE_ENGAGED && globalStatus.ECUState != PRECHARGING)
             {
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
 
             //If ACU software latch ever opens IR- ever opens while IR+ is closed, something has gone wrong
-            if(getBit(msgAcu->IR_State_Software_Latch_Bits, 2) == 0b0 || (getBit(msgAcu->IR_State_Software_Latch_Bits, 1) == 0b1 && getBit(msgAcu->IR_State_Software_Latch_Bits, 0) == 0b0))
+            if(getBit(msgAcu->IR_State_Software_Latch_Bits, 2) == 0x0 || (getBit(msgAcu->IR_State_Software_Latch_Bits, 1) == 0x1 && getBit(msgAcu->IR_State_Software_Latch_Bits, 0) == 0x0))
             {
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
 
+            //If SDC voltage goes below magic number 5V, send to TS DISCHARGE
             break;
 
         case MSG_LV_DC_DC_STATUS:
