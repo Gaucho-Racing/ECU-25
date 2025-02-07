@@ -21,6 +21,8 @@ uint16_t findTernaryMax(const uint16_t a, const uint16_t b, const uint16_t c)
 }
 
 void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t length, uint32_t timestamp) {
+    (void)timestamp;
+
     switch(msgID) {
         case MSG_DEBUG:
             if (length > 64) {
@@ -59,7 +61,6 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             break;
         case MSG_ACU_STATUS_2:
-        //___________________________________________________________________________________
             if (length != 8) {
                 numberOfBadMessages++;
                 return;
@@ -210,6 +211,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             } else {
                 numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
+
             // Isn't rtd a port? Why is rtd_on and rtd_off needed here?
             bool ts_active = getBit(*data, 0);
             bool ts_off = getBit(*data, 1);
@@ -241,7 +243,6 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             else {
                 numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
-            
             
             break;
 

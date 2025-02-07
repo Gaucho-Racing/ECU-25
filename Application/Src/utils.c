@@ -37,7 +37,7 @@ void setSoftwareLatch(uint8_t close)
 
 uint8_t ACUError(ACU_Status_MsgTwo *acuMsgTwo)
 {
-    return getBits(acuMsgTwo->Error_Warning_Bits, 0, 5) != 0x00;
+    return getBits(acuMsgTwo->Error_Warning_Bits, 0, 5) != 0x00 || acuMsgTwo->SDC_Voltage/10 <= ;
 }
 
 uint8_t GRIError(Inverter_Status_Msg_Three *msgGriThree)
