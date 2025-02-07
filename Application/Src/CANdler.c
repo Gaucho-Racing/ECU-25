@@ -74,7 +74,8 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             if(ACUError(acuMsgTwo) && (errorFlagBitsCan == 0 || errorFlagBitsCan == 2)){
                 errorFlagBitsCan += 1;
             }
-            else if(ACUError(acuMsgTwo) && (errorFlagBitsCan == 1 || errorFlagBitsCan == 3)){
+            
+            else if(!ACUError(acuMsgTwo) && (errorFlagBitsCan == 1 || errorFlagBitsCan == 3)){
                 errorFlagBitsCan -= 1;
             }
 
@@ -180,13 +181,14 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             globalStatus.VehicleSpeed = (globalStatus.RRWheelRPM + globalStatus.RLWheelRPM) * 3.141592653589 * 16 / 2 / 3.55 / 1056.0;  // FIXME: Fix the math, copied from VDM-24...
 
-            if(msgGriThree->fault_map == 0x00 && (errorFlagBitsCan == 2 || errorFlagBitsCan == 3)){
+            if(GRIError(msgGriThree) && (errorFlagBitsCan == 0 || errorFlagBitsCan == 1)){
+                errorFlagBitsCan += 2;
+            }
+
+            else if(!GRIError(msgGriThree) && (errorFlagBitsCan == 2 || errorFlagBitsCan == 3)){
                 errorFlagBitsCan -= 2;
             }
 
-            else if(msgGriThree->fault_map != 0x00 && (errorFlagBitsCan == 0 || errorFlagBitsCan == 1)){
-                errorFlagBitsCan += 2;
-            }
 
             if (errorFlagBitsCan && globalStatus.TractiveSystemVoltage >= 60)
             {

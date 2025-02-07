@@ -36,9 +36,10 @@ void setSoftwareLatch(uint8_t close)
 
 uint8_t ACUError(ACU_Status_MsgTwo *acuMsgTwo)
 {
-    if (getBits(acuMsgTwo->Error_Warning_Bits, 0, 5) != 0x00)
-    {
-        return 1;
-    }
-    return 0;
+    return getBits(acuMsgTwo->Error_Warning_Bits, 0, 5) != 0x00;
+}
+
+uint8_t GRIError(Inverter_Status_Msg_Three *msgGriThree)
+{
+    return msgGriThree->fault_map != 0x00;
 }
