@@ -68,6 +68,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             //Error handling and leaving error state
             if ((errorFlagBitsCan || msgAcu->Precharge_Error == 0b1) && globalStatus.TractiveSystemVoltage >= 60)
             {
+                HAL_GPIO_WritePin(SOFTWARE_OK_GPIO_Port, SOFTWARE_OK_Pin, GPIO_PIN_RESET);
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
             else if(errorFlagBitsCan || msgAcu->Precharge_Error == 0b1){
