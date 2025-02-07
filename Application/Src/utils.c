@@ -18,7 +18,8 @@ uint8_t get2Bits(uint8_t number, uint8_t indexFromRight)
     return (number >> (7 - indexFromRight)) & 0x03; // 0b11
 }
 
-uint8_t getBits(uint8_t number, uint8_t indexFromRight, uint8_t length){
+uint8_t getBits(uint8_t number, uint8_t indexFromRight, uint8_t length)
+{
     return (number >> (7 - indexFromRight)) & (length);
 }
 
@@ -42,4 +43,9 @@ uint8_t ACUError(ACU_Status_MsgTwo *acuMsgTwo)
 uint8_t GRIError(Inverter_Status_Msg_Three *msgGriThree)
 {
     return msgGriThree->fault_map != 0x00;
+}
+
+uint8_t ACUWarning(ACU_Status_MsgTwo *acuMsgTwo)
+{
+    return getBits(acuMsgTwo->Error_Warning_Bits, 5, 3) != 0x00;
 }
