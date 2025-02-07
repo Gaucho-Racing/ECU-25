@@ -145,17 +145,6 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             Gr_Inverter_Status_Msg* msgGri = (Gr_Inverter_Status_Msg*)data;
-            globalStatus.inverters[0].ACCurrent = msgGri->AC_current;
-            globalStatus.inverters[0].Temp = findTernaryMax(msgGri->U_MOSFET_temperature, msgGri->V_MOSFET_temperature, msgGri->W_MOSFET_temperature);
-            globalStatus.inverters[0].RPM = msgGri->Motor_RPM;
-            globalStatus.inverters[1] = globalStatus.inverters[0];
-            globalStatus.inverters[2] = globalStatus.inverters[1];
-            globalStatus.inverters[3] = globalStatus.inverters[2];
-
-            globalStatus.RLWheelRPM = globalStatus.inverters[0].RPM;
-            globalStatus.RRWheelRPM = globalStatus.inverters[1].RPM;
-            globalStatus.FLWheelRPM = globalStatus.inverters[2].RPM;
-            globalStatus.FRWheelRPM = globalStatus.inverters[3].RPM;
 
             globalStatus.VehicleSpeed = (globalStatus.RRWheelRPM + globalStatus.RLWheelRPM) * 3.141592653589 * 8 / 3.55 / 1056.0;  // Probably fix this...
 

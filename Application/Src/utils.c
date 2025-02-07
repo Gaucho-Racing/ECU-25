@@ -2,6 +2,7 @@
 #include "utils.h"
 #include "main.h"
 #include "stateMachine.h"
+#include "CANdler.h"
 
 uint32_t millis(void) {
     return HAL_GetTick() * (1000/TICK_FREQ);
@@ -28,3 +29,5 @@ void setSoftwareLatch(uint8_t close)
         HAL_GPIO_WritePin(SOFTWARE_OK_GPIO_Port, SOFTWARE_OK_Pin, GPIO_PIN_RESET);
     }
 }
+
+uint8_t getNumErrors()

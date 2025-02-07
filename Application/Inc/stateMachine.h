@@ -31,11 +31,6 @@ typedef union {
         uint16_t FLWheelRPM;
         uint16_t RRWheelRPM;
         uint16_t RLWheelRPM;
-        struct {
-            int16_t ACCurrent;
-            uint16_t Temp;
-            uint16_t RPM;
-        } inverters[4];
     };
 
     struct {
