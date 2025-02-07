@@ -122,7 +122,7 @@ void ts_discharge_off(StatusLump *status)
         dischargeTickMillis = HAL_GetTick();
     }
 
-    if ((HAL_GetTick() - dischargeTickMillis)/1000 > 5 /*time spent discharging > 5 seconds*/) // Magic number :)
+    if ((HAL_GetTick() - dischargeTickMillis)/1000 > 5) // Magic number :)
     {
         status->ECUState = ERRORSTATE;  // This sends us to ERRORSTATE with powered TS? Yes, ERRORSTATE will send it back if voltage >= 60
     }
