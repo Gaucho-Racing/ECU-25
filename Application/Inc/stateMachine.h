@@ -17,32 +17,33 @@ typedef enum {
     ERRORSTATE
 } State;
 
-typedef struct {
-    uint8_t ECUState;
-    uint8_t StatusBits[3];
-    uint8_t PowerLevelTorqueMap;
-    uint8_t MaxCellTemp;
-    uint8_t AccumulatorStateOfCharge;
-    uint8_t GLVStateOfCharge;
-    uint16_t TractiveSystemVoltage;
-    uint16_t VehicleSpeed;
-    uint16_t FRWheelRPM;
-    uint16_t FLWheelRPM;
-    uint16_t RRWheelRPM;
-    uint16_t RLWheelRPM;
+typedef union {
     struct {
-        int16_t ACCurrent;
-        uint16_t Temp;
-        uint16_t RPM;
-    } inverters[4];
-} StatusLump;
+        uint8_t ECUState;
+        uint8_t StatusBits[3];
+        uint8_t PowerLevelTorqueMap;
+        uint8_t MaxCellTemp;
+        uint8_t AccumulatorStateOfCharge;
+        uint8_t GLVStateOfCharge;
+        uint16_t TractiveSystemVoltage;
+        uint16_t VehicleSpeed;
+        uint16_t FRWheelRPM;
+        uint16_t FLWheelRPM;
+        uint16_t RRWheelRPM;
+        uint16_t RLWheelRPM;
+        struct {
+            int16_t ACCurrent;
+            uint16_t Temp;
+            uint16_t RPM;
+        } inverters[4];
+    };
 
-union StatusGotLumpy {
-    StatusLump stateAll;
-    uint64_t first;
-    uint64_t second;
-    uint32_t thrid;
-};
+    struct {
+        uint64_t first;
+        uint64_t second;
+        uint32_t thrid;
+    };
+} StatusLump;
 
 typedef struct {
     uint8_t encoderBits;

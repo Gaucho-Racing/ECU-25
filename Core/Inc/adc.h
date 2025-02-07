@@ -47,7 +47,7 @@ void MX_ADC2_Init(void);
 void MX_ADC3_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-typedef enum{
+typedef enum {
   BSE_SIGNAL
 };
 
