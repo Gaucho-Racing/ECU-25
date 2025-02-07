@@ -20,7 +20,7 @@ uint8_t get2Bits(uint8_t number, uint8_t indexFromRight)
 
 uint8_t getBits(uint8_t number, uint8_t indexFromRight, uint8_t length)
 {
-    return (number >> (7 - indexFromRight)) & (length);
+    return (number >> (7 - indexFromRight)) & (pow(length, 2) - 1);
 }
 
 void setSoftwareLatch(uint8_t close)
@@ -48,4 +48,13 @@ uint8_t GRIError(Inverter_Status_Msg_Three *msgGriThree)
 uint8_t ACUWarning(ACU_Status_MsgTwo *acuMsgTwo)
 {
     return getBits(acuMsgTwo->Error_Warning_Bits, 5, 3);
+}
+
+// Let me know if I should make this not recursive lol
+uint8_t pow(uint8_t base, uint8_t exp)
+{
+    if(exp <= 0){
+        return 1;
+    }
+    return base * pow(base, exp);
 }

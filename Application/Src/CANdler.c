@@ -107,7 +107,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             // If it is precharging with IR- closed and then IR+ goes closed as well, precharge is complete (success confirmation)
             // IR+ -> 1 is precharge success confirmation
-            if((getBit(acuMsgTwo->IR_State_Software_Latch_Bits, 0) == 0x01) && (getBit(acuMsgTwo->IR_State_Software_Latch_Bits, 1) == 0x01) && (globalStatus.ECUState == PRECHARGING))
+            if((getBits(acuMsgTwo->IR_State_Software_Latch_Bits, 0, 2) == 0b11) && (globalStatus.ECUState == PRECHARGING))
             {
                 globalStatus.ECUState = PRECHARGE_COMPLETE;
             }
@@ -119,7 +119,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             //If ACU software latch ever opens IR- ever opens while IR+ is closed, something has gone wrong
-            if(getBit(acuMsgTwo->IR_State_Software_Latch_Bits, 2) == 0x0 || (getBit(acuMsgTwo->IR_State_Software_Latch_Bits, 1) == 0x1 && getBit(acuMsgTwo->IR_State_Software_Latch_Bits, 0) == 0x0))
+            if(getBit(acuMsgTwo->IR_State_Software_Latch_Bits, 2) == 0x0 || getBits(acuMsgTwo->IR_State_Software_Latch_Bits, 0, 2) == 0b10)
             {
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
