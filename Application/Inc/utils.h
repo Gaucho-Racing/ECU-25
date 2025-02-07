@@ -8,7 +8,7 @@
 uint32_t millis(void);
 uint8_t getBit(uint8_t number, uint8_t indexFromRight);
 uint8_t get2Bits(uint8_t number, uint8_t indexFromRight);
-uint8_t getBits(uint8_t number, uint8_t indexFromRight, uint8_t length)
+uint8_t getBits(uint8_t number, uint8_t indexFromRight, uint8_t length);
 void setSoftwareLatch(uint8_t close);
 uint8_t ACUError(ACU_Status_MsgTwo *acuMsgTwo);
 uint8_t GRIError(Inverter_Status_Msg_Three *msgGriThree);
