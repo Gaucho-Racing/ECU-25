@@ -59,6 +59,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             break;
         case MSG_ACU_STATUS_2:
+        //___________________________________________________________________________________
             if (length != 8) {
                 numberOfBadMessages++;
                 return;

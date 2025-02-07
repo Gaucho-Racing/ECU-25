@@ -30,4 +30,4 @@ void setSoftwareLatch(uint8_t close)
     }
 }
 
-uint8_t ACUError
+uint8_t ACUError(ACU_Status_MsgTwo *acuMsgTwo)
