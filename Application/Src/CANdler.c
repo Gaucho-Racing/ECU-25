@@ -35,7 +35,8 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             break;
         case MSG_PING:
             if (length != 4) {
-                /* BAD MESSAGE? */
+                numberOfBadMessages++;
+                return;
             } else {
                 numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
@@ -101,6 +102,9 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             {
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
+
+            //If ACU software latch ever opens IR- ever opens while IR+ is closed, something has gone wrong
+            if(getBit(msgAcu->IR_State_Software_Latch_Bits, 1) == 0b0 || )
             break;
 
         case MSG_LV_DC_DC_STATUS:
@@ -199,6 +203,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             
             break;
 
+        // not done - refer to lines 774,884, 904 from VDM-24 (main.cpp)
         case MSG_DASH_CONFIG:
             if (length != 7) {
                 numberOfBadMessages++;
@@ -207,6 +212,9 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             else {
                 numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
+            
+
+            break;
 
         case MSG_FAN_STATUS:
             if (length != 5) {
