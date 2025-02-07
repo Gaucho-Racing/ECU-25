@@ -225,18 +225,16 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             break;
 
         case MSG_STEERING_STATUS:
-            if (length != 2) {
+            if (length != 4) {
                 numberOfBadMessages++;
                 return;
             } else {
                 numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
             
-
-            steerSettings.buttonFlags |= data[0];
-            steerSettings.buttonFlags &= data[1];
-
-            // steering stauts msg parsing
-
+            steerSettings.currentEncoder = data[0];
+            steerSettings.torqueMapEncoder = data[1];
+            steerSettings.regenEncoder = data[2];
+            steerSettings.buttonFlags ^= data[3];
     }
 }

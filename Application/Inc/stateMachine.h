@@ -41,7 +41,9 @@ typedef union {
 } StatusLump;
 
 typedef struct {
-    uint8_t encoderBits;
+    uint8_t currentEncoder;
+    uint8_t torqueMapEncoder;
+    uint8_t regenEncoder;
     uint8_t buttonFlags;
 } SteerSettings;
 
