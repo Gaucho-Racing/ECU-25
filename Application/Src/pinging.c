@@ -7,6 +7,8 @@
 #include "fdcan.h"
 #include "msgIDs.h"
 #include "grIDs.h"
+#include "utils.h"
+#include "main.h"
 
 
 const uint8_t pingIDs[] = {GR_ACU,
@@ -29,7 +31,7 @@ void pingSchedule(void)
 {
     static bool hasPinged = false;
 
-    if(HAL_GetTick() % (PINGTIMEOUT*100) >= (PINGTIMEOUT*100)/2) {
+    if(millis() % PINGTIMEOUT >= PINGTIMEOUT/2) {
         hasPinged = false;
         return;
     }
@@ -40,7 +42,7 @@ void pingSchedule(void)
     // check for timed out pings
     for(int i = 0; i < PINGCOUNT; i++) {
         if(!pingHasReturned[i]) {
-            pingTimes[i] = PINGTIMEOUT*100;
+            pingTimes[i] = PINGTIMEOUT*(TICK_FREQ/1000);
 
             *globalStatus.StatusBits &= ~(1 << i);  // Plz double check
         } else {

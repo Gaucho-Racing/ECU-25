@@ -5,18 +5,10 @@
 #include "msgIDs.h"
 #include "pinging.h"
 #include "adc.h"
+#include "utils.h"
 
 uint8_t errorFlagBitsCan = 0;
 
-uint8_t getBit(uint8_t number, uint8_t indexFromRight)
-{
-    return (number >> (7 - indexFromRight)) & 0b1;
-}
-
-uint8_t get2Bits(uint8_t number, uint8_t indexFromRight)
-{
-    return (number >> (7 - indexFromRight)) & 0b11;
-}
 
 uint16_t findTernaryMax(const uint16_t a, const uint16_t b, const uint16_t c)
 {
@@ -92,18 +84,21 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             // If IR- ever becomes 0 while not in GLV_ON or PRECHARGE_ENGAGED, that is a precharge cancellation and it must start discharging.
-            if(getBit(msgAcu->IR_State_Software_Latch_Bits, 0) == 0b0 && globalStatus.ECUState != GLV_ON && globalStatus.ECUState != PRECHARGE_ENGAGED){
+            if(getBit(msgAcu->IR_State_Software_Latch_Bits, 0) == 0b0 && globalStatus.ECUState != GLV_ON && globalStatus.ECUState != PRECHARGE_ENGAGED)
+            {
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
 
             // If it is precharging with IR- closed and then IR+ goes closed as well, precharge is complete (success confirmation)
             // IR+ -> 1 is precharge success confirmation
-            if(getBit(msgAcu->IR_State_Software_Latch_Bits, 0) == 0b1 && getBit(msgAcu->IR_State_Software_Latch_Bits, 1) == 0b1 && globalStatus.ECUState == PRECHARGING){
+            if(getBit(msgAcu->IR_State_Software_Latch_Bits, 0) == 0b1 && getBit(msgAcu->IR_State_Software_Latch_Bits, 1) == 0b1 && globalStatus.ECUState == PRECHARGING)
+            {
                 globalStatus.ECUState = PRECHARGE_COMPLETE;
             }
 
             //If IR+ ever opens on or after the precharging complete state, start discharging
-            if(getBit(msgAcu->IR_State_Software_Latch_Bits, 1) == 0b0 && globalStatus.ECUState != GLV_ON && globalStatus.ECUState != PRECHARGE_ENGAGED && globalStatus>ECUState != PRECHARGING){
+            if(getBit(msgAcu->IR_State_Software_Latch_Bits, 1) == 0b0 && globalStatus.ECUState != GLV_ON && globalStatus.ECUState != PRECHARGE_ENGAGED && globalStatus.ECUState != PRECHARGING)
+            {
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
             break;

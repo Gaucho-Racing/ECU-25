@@ -1,0 +1,15 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  Debug_Script_Build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup environemnt
+      run: sudo apt-get install -y --no-install-suggests --no-install-recommends gcc-arm-none-eabi ninja-build
+    - name: Compile program
+      run: cmake --preset Debug

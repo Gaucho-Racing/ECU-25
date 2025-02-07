@@ -28,6 +28,8 @@ Download "Required Stuff" and add to your PATH.
 See [git wiki page](https://wiki.gauchoracing.com/books/onboarding/page/git) for a primer on `git`.
 
 # Debugging
+[![Build](https://github.com/Gaucho-Racing/ECU-25/actions/workflows/build.yml/badge.svg)](https://github.com/Gaucho-Racing/ECU-25/actions/workflows/build.yml)
+
 Chances are something will not work right the first try, likely one of the tools wasn't added to your PATH correctly.
 
 Run each of the tools independently:

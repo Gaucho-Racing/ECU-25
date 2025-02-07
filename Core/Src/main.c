@@ -28,6 +28,7 @@
 #include "stateMachine.h"
 #include "pinging.h"
 #include "msgIDs.h"
+#include "utils.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -104,15 +105,15 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   // 10us ticks
-  HAL_SetTickFreq(100000);
+  HAL_SetTickFreq(TICK_FREQ);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    /* USER CODE END WHILE */
     infiniteLoopContents();
+    /* USER CODE END WHILE */
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

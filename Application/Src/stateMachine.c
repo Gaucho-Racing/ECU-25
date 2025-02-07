@@ -3,6 +3,7 @@
 #include "stateMachine.h"
 #include "driving.h"
 #include "main.h"
+#include "utils.h"
 
 StatusLump globalStatus = {
     .ECUState = GLV_ON,
@@ -10,7 +11,7 @@ StatusLump globalStatus = {
 };
 
 uint8_t numberOfBadMessages = 0;
-uint32_t dischargeTickMillis = 0;
+int32_t dischargeStartMillis = -1;
 
 SteerSettings steerSettings = {0};
 
@@ -23,7 +24,7 @@ void stateMachineTick(void)
     }
 
     if(globalStatus.ECUState != TS_DISCHARGE_OFF){
-        dischargeTickMillis = 0;
+        dischargeStartMillis = -1;
     }
 
     switch(globalStatus.ECUState) {
@@ -108,6 +109,7 @@ void precharging(StatusLump *status)
 
 void precharge_complete(StatusLump *status)
 {
+
     // If front, rear, and rtd, then go to DRIVE_STANDBY
     if (analogRead(BRAKE_F_SIGNAL_GPIO_Port, BRAKE_F_SIGNAL_Pin) && analogRead(BRAKE_R_SIGNAL_GPIO_Port, BRAKE_R_SIGNAL_Pin) && HAL_GPIO_ReadPin(RTD_CONTROL_GPIO_Port, RTD_CONTROL_Pin))
     {
@@ -118,11 +120,12 @@ void precharge_complete(StatusLump *status)
 
 void ts_discharge_off(StatusLump *status)
 {
-    if(dischargeTickMillis == 0){
-        dischargeTickMillis = HAL_GetTick();
-    }
 
-    if ((HAL_GetTick() - dischargeTickMillis)/1000 > 5) // Magic number :)
+    if(dischargeStartMillis == -1){
+        dischargeStartMillis = millis();
+    }
+    
+    if ((millis() - dischargeStartMillis) > 5000) // Magic number :)
     {
         status->ECUState = ERRORSTATE;  // This sends us to ERRORSTATE with powered TS? Yes, ERRORSTATE will send it back if voltage >= 60
     }
