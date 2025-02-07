@@ -14,7 +14,7 @@ uint8_t getBit(uint8_t number, uint8_t indexFromRight)
 
 uint8_t get2Bits(uint8_t number, uint8_t indexFromRight)
 {
-    return (number >> (7 - indexFromRight)) & 0x03;
+    return (number >> (7 - indexFromRight)) & 0x03; // 0b11
 }
 
 void setSoftwareLatch(uint8_t close)
