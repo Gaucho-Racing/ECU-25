@@ -39,7 +39,7 @@ typedef struct {
 
 typedef struct {
 
-} ACU_St
+} ACU_Status_MsgThree;
 
 typedef struct {
      uint8_t Input_Voltage;
