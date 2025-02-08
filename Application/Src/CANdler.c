@@ -221,8 +221,10 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             bool ams_led = getBit(*data, 4);
             bool imd_led = getBit(*data, 5);
 
-            if(ts_active && globalStatus.ECUState == GLV_ON){
-                globalStatus.ECUState = PRECHARGE_ENGAGED;
+            if(globalStatus.ECUState == GLV_ON){
+                if(ts_active){
+                    globalStatus.ECUState = PRECHARGE_ENGAGED;
+                }
             }
             
             else if (ts_off && globalStatus.ECUState == PRECHARGE_ENGAGED){

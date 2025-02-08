@@ -6,7 +6,7 @@
 
 #define MSG_DEBUG 0x000
 #define MSG_PING 0x001
-#define MSG_ECU_STATUS_1 0x002
+#define MSG_ECU_STATUS_1 0x002 // Seems to be off by one starting here according to spreadsheet
 #define MSG_ECU_STATUS_2 0x003
 #define MSG_ECU_STATUS_3 0x004
 #define MSG_ECU_CONFIG 0x005
