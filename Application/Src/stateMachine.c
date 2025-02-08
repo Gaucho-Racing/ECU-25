@@ -115,11 +115,22 @@ void precharge_complete(StatusLump *status)
 {
 
     // If front, rear, and rtd, then go to DRIVE_STANDBY
+    // Account for noise in brake signal??
     if (analogRead(BRAKE_F_SIGNAL_GPIO_Port, BRAKE_F_SIGNAL_Pin, 0) && analogRead(BRAKE_R_SIGNAL_GPIO_Port, BRAKE_R_SIGNAL_Pin, 0) && HAL_GPIO_ReadPin(RTD_CONTROL_GPIO_Port, RTD_CONTROL_Pin))
     {
         status->ECUState = DRIVE_STANDBY;
     }
     // TS ACTIVE, ACU shutdown, errors handled in CANdler.c
+}
+
+void drive_standby(StatusLump *status)
+{
+    // If rtd off, go back to precharge complete
+    if(!HAL_GPIO_ReadPin(RTD_CONTROL_GPIO_Port, RTD_CONTROL_Pin))
+    {
+        status->ECUState = PRECHARGE_COMPLETE;
+    }
+    // torque stuff waiting for vdm
 }
 
 void ts_discharge_off(StatusLump *status)
