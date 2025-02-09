@@ -56,7 +56,7 @@ void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, LED_TEST_Pin|BRAKE_LIGHT_Pin|TSSI_G_CONTROL_Pin|TSSI_R_CONTROL_Pin
-                          |RTD_CONTROL_Pin|AUX_CONTROL_Pin|SOFTWARE_OK_Pin, GPIO_PIN_RESET);
+                          |RTD_CONTROL_Pin|AUX_CONTROL_Pin|SOFTWARE_OK_CONTROL_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : PC13 PC14 PC15 PC4
                            PC5 PC6 PC7 PC8
@@ -89,9 +89,9 @@ void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pins : LED_TEST_Pin BRAKE_LIGHT_Pin TSSI_G_CONTROL_Pin TSSI_R_CONTROL_Pin
-                           RTD_CONTROL_Pin AUX_CONTROL_Pin SOFTWARE_OK_Pin */
+                           RTD_CONTROL_Pin AUX_CONTROL_Pin SOFTWARE_OK_CONTROL_Pin */
   GPIO_InitStruct.Pin = LED_TEST_Pin|BRAKE_LIGHT_Pin|TSSI_G_CONTROL_Pin|TSSI_R_CONTROL_Pin
-                          |RTD_CONTROL_Pin|AUX_CONTROL_Pin|SOFTWARE_OK_Pin;
+                          |RTD_CONTROL_Pin|AUX_CONTROL_Pin|SOFTWARE_OK_CONTROL_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

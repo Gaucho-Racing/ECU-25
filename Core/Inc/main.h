@@ -91,8 +91,8 @@ void Error_Handler(void);
 #define RTD_CONTROL_GPIO_Port GPIOB
 #define AUX_CONTROL_Pin GPIO_PIN_8
 #define AUX_CONTROL_GPIO_Port GPIOB
-#define SOFTWARE_OK_Pin GPIO_PIN_9
-#define SOFTWARE_OK_GPIO_Port GPIOB
+#define SOFTWARE_OK_CONTROL_Pin GPIO_PIN_9
+#define SOFTWARE_OK_CONTROL_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 
