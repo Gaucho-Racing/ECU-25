@@ -38,17 +38,31 @@ extern ADC_HandleTypeDef hadc2;
 
 /* USER CODE BEGIN Private defines */
 
+#define ADC_MAX 0x0FFF
+
 /* USER CODE END Private defines */
 
 void MX_ADC1_Init(void);
 void MX_ADC2_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-// typedef enum {
-//   BSE_SIGNAL
-// };
+typedef enum {
+// ADC1
+    AUX_SIGNAL = 0,
+    BSPD_SIGNAL,
+    APPS1_SIGNAL,
+    APPS2_SIGNAL,
+    BRAKE_R_SIGNAL,
+    BRAKE_F_SIGNAL,
+// ADC2
+    IMD_SENSE,
+    AMS_SENSE,
+    BSE_SIGNAL,
+    BSPD_SENSE,
+    STEERING_ANGLE,
+} AnalogSignal;
 
-uint32_t analogRead(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, uint32_t *maxValue /* out parameter for maximum value of read */); 
+uint16_t analogRead(AnalogSignal signal); 
 
 /* USER CODE END Prototypes */
 

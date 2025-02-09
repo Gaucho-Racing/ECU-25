@@ -21,26 +21,17 @@
 #include "adc.h"
 
 /* USER CODE BEGIN 0 */
-uint32_t analogRead(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, uint32_t *maxValue) {
-    ADC_ChannelConfTypeDef sConfig = {0};
-    uint32_t channel;
+struct {
+    uint16_t adc1buf[6];
+    uint16_t adc2buf[5];
+} adcBuffers;
 
-    if (GPIOx == GPIOA) {
-      switch (GPIO_Pin) {
-        case GPIO_PIN_0:
-        case GPIO_PIN_1:
-      }
-    } else if (GPIOx == GPIOB) {
-
-    } else if (GPIOx == GPIOC) {
-
+uint16_t analogRead(AnalogSignal signal) {
+    if(signal >= 11) {
+        Error_Handler();
+        return -1;
     }
-
-
-    HAL_ADC_Start(&hadc1);
-    HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-    uint32_t raw = HAL_ADC_GetValue(&hadc1);
-    return raw;
+    return ((uint16_t *)&adcBuffers)[signal];
 }
 /* USER CODE END 0 */
 
@@ -154,6 +145,8 @@ void MX_ADC1_Init(void)
   }
   /* USER CODE BEGIN ADC1_Init 2 */
 
+  HAL_ADC_Start_DMA(&hadc1, (uint32_t *)adcBuffers.adc1buf, 6);
+
   /* USER CODE END ADC1_Init 2 */
 
 }
@@ -243,6 +236,8 @@ void MX_ADC2_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN ADC2_Init 2 */
+
+  HAL_ADC_Start_DMA(&hadc1, (uint32_t *)adcBuffers.adc2buf, 5);
 
   /* USER CODE END ADC2_Init 2 */
 

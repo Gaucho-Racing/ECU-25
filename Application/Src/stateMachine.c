@@ -116,7 +116,7 @@ void precharge_complete(StatusLump *status)
 
     // If front, rear, and rtd, then go to DRIVE_STANDBY
     // Account for noise in brake signal??
-    if (analogRead(BRAKE_F_SIGNAL_GPIO_Port, BRAKE_F_SIGNAL_Pin, 0) && analogRead(BRAKE_R_SIGNAL_GPIO_Port, BRAKE_R_SIGNAL_Pin, 0) && HAL_GPIO_ReadPin(RTD_CONTROL_GPIO_Port, RTD_CONTROL_Pin))
+    if (analogRead(BRAKE_F_SIGNAL) && analogRead(BRAKE_R_SIGNAL) && HAL_GPIO_ReadPin(RTD_CONTROL_GPIO_Port, RTD_CONTROL_Pin))
     {
         status->ECUState = DRIVE_STANDBY;
     }
