@@ -26,7 +26,7 @@
 #include <stdint.h>
 
 FDCAN_TxHeaderTypeDef TxHeader = {
-    .IdType = FDCAN_STANDARD_ID,
+    .IdType = FDCAN_EXTENDED_ID,
     .TxFrameType = FDCAN_DATA_FRAME,
     .ErrorStateIndicator = FDCAN_ESI_ACTIVE, // honestly this might be a value you have to read from a node
                                              // FDCAN_ESI_ACTIVE is just a state that assumes there are minimal errors
@@ -139,7 +139,7 @@ void MX_FDCAN1_Init(void)
   // hardware filter
   FDCAN_FilterTypeDef fdcan1_filter;
 
-  fdcan1_filter.IdType = FDCAN_STANDARD_ID;
+  fdcan1_filter.IdType = FDCAN_EXTENDED_ID;
   fdcan1_filter.FilterIndex = 0;
   fdcan1_filter.FilterType = FDCAN_FILTER_MASK;
   fdcan1_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
@@ -203,7 +203,7 @@ void MX_FDCAN2_Init(void)
   // hardware filter
   FDCAN_FilterTypeDef fdcan2_filter;
 
-  fdcan2_filter.IdType = FDCAN_STANDARD_ID;
+  fdcan2_filter.IdType = FDCAN_EXTENDED_ID;
   fdcan2_filter.FilterIndex = 0;
   fdcan2_filter.FilterType = FDCAN_FILTER_MASK;
   fdcan2_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO1;
