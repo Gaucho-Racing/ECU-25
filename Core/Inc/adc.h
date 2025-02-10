@@ -62,6 +62,7 @@ typedef enum {
     STEERING_ANGLE,
 } AnalogSignal;
 
+// returns a number from 0 to ADC_MAX (inclusive)
 uint16_t analogRead(AnalogSignal signal); 
 
 /* USER CODE END Prototypes */
