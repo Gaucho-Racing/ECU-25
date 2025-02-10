@@ -20,13 +20,13 @@ uint8_t getBits(uint8_t number, uint8_t indexFromLeft, uint8_t length)
 
 void setSoftwareLatch(uint8_t close)
 {
-    if (close != 0 && !HAL_GPIO_ReadPin(SOFTWARE_OK_GPIO_Port, SOFTWARE_OK_Pin))
+    if (close != 0 && !HAL_GPIO_ReadPin(SOFTWARE_OK_CONTROL_GPIO_Port, SOFTWARE_OK_CONTROL_Pin))
     {
-        HAL_GPIO_WritePin(SOFTWARE_OK_GPIO_Port, SOFTWARE_OK_Pin, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(SOFTWARE_OK_CONTROL_GPIO_Port, SOFTWARE_OK_CONTROL_Pin, GPIO_PIN_SET);
     }
-    else if (HAL_GPIO_ReadPin(SOFTWARE_OK_GPIO_Port, SOFTWARE_OK_Pin))
+    else if (HAL_GPIO_ReadPin(SOFTWARE_OK_CONTROL_GPIO_Port, SOFTWARE_OK_CONTROL_Pin))
     {
-        HAL_GPIO_WritePin(SOFTWARE_OK_GPIO_Port, SOFTWARE_OK_Pin, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(SOFTWARE_OK_CONTROL_GPIO_Port, SOFTWARE_OK_CONTROL_Pin, GPIO_PIN_RESET);
     }
 }
 
