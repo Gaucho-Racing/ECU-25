@@ -64,5 +64,4 @@ void respondToPing(uint8_t destID, uint32_t timestamp) {
             return;
         }
     }
-    Error_Handler();
 }
