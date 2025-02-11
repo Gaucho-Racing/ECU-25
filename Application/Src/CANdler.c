@@ -231,29 +231,21 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             // Isn't rtd a port? Why is rtd_on and rtd_off needed here?
-            bool ts_active = getBit(*data, 0);
-            bool ts_off = getBit(*data, 1);
-            bool rtd_on = getBit(*data, 2);
-            bool rtd_off = getBit(*data, 3);
-            bool ams_led = getBit(*data, 4);
-            bool imd_led = getBit(*data, 5);
+            Dash_Status_Msg dashStatusMsg = (Dash_Status_Msg*)data;
 
-            UNUSED(rtd_on);
-            UNUSED(rtd_off);
-            UNUSED(ams_led);
-            UNUSED(imd_led);
+            UNUSED(dashStatusMsg);
 
             if(globalStatus.ECUState == GLV_ON){
-                if(ts_active){
+                if(/*ts_active*/){
                     globalStatus.ECUState = PRECHARGE_ENGAGED;
                 }
             }
             
-            else if (ts_off && globalStatus.ECUState == PRECHARGE_ENGAGED){
+            else if (/*ts_off &&*/ globalStatus.ECUState == PRECHARGE_ENGAGED){
                 globalStatus.ECUState = GLV_ON;
             }
             // If it is not in GLV_ON, PRECHARGE_ENGAGED or ERRORSTATE, if ts_off is ever true it must go to discharge
-            else if (ts_off && globalStatus.ECUState != ERRORSTATE){
+            else if (/*ts_off &&*/ globalStatus.ECUState != ERRORSTATE){
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
             
