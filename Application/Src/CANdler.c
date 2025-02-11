@@ -24,7 +24,18 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
     (void)timestamp;
 
     switch(msgID) {
-        case MSG_DEBUG:
+        case MSG_DEBUG_2_0:
+            if (length > 8) {
+                numberOfBadMessages++;
+                return;
+            } else {
+                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
+            }
+
+            char* debug2String = (char*)data;
+
+            break;
+        case MSG_DEBUG_FD:
             if (length > 64) {
                 numberOfBadMessages++;
                 return;
@@ -32,7 +43,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
 
-            char* string = (char*)data;
+            char* debugFdString = (char*)data;
 
             break;
         case MSG_PING:
