@@ -82,7 +82,7 @@ typedef struct {
 typedef struct {
     uint8_t Led_Map;
     int8_t TsButtonData;
-    int8_t RtdButtonData;
+    int8_t RTDButtonData;
 } Dash_Status_Msg;
 
 extern uint8_t errorFlagBitsCan;
