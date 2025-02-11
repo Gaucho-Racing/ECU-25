@@ -232,24 +232,28 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             Dash_Status_Msg *dashStatusMsg = (Dash_Status_Msg*)data;
             bool ts_on == dashStatusMsg->TSButtonData < 0;
-            bool rtd_pressed = dashStatusMsg->RTDButtonData
+            bool rtd_pressed = dashStatusMsg->RTDButtonData < 0;
 
-            UNUSED(dashStatusMsg);
+            HAL_GPIO_WritePin(RTD_CONTROL_GPIO_Port, RTD_CONTROL_Pin, rtd_pressed);
 
             if(globalStatus.ECUState == GLV_ON){
-                if(/*ts_active*/){
+                if(ts_on){
                     globalStatus.ECUState = PRECHARGE_ENGAGED;
                 }
             }
             
-            else if (/*ts_off &&*/ globalStatus.ECUState == PRECHARGE_ENGAGED){
+            else if (!ts_on && globalStatus.ECUState == PRECHARGE_ENGAGED){
                 globalStatus.ECUState = GLV_ON;
             }
             // If it is not in GLV_ON, PRECHARGE_ENGAGED or ERRORSTATE, if ts_off is ever true it must go to discharge
-            else if (/*ts_off &&*/ globalStatus.ECUState != ERRORSTATE){
+            else if (!ts_on && globalStatus.ECUState != ERRORSTATE){
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
             
+            else if(globalStatus.ECUState == PRECHARGE_COMPLETE && rtd_pressed && analogRead(BRAKE_F_SIGNAL) && analogRead(BRAKE_R_SIGNAL)){
+                globalStatus.ECUState = DRIVE_STANDBY;
+            }
+
             break;
 
         // not done - refer to lines 774,884, 904 from VDM-24 (main.cpp)
