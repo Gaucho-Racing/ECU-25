@@ -232,9 +232,9 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             Dash_Status_Msg *dashStatusMsg = (Dash_Status_Msg*)data;
             bool ts_on = dashStatusMsg->TSButtonData < 0;
-            bool rtd_pressed = dashStatusMsg->RTDButtonData < 0;
+            bool rtd = dashStatusMsg->RTDButtonData < 0;
 
-            HAL_GPIO_WritePin(RTD_CONTROL_GPIO_Port, RTD_CONTROL_Pin, rtd_pressed);
+            HAL_GPIO_WritePin(RTD_CONTROL_GPIO_Port, RTD_CONTROL_Pin, rtd);
 
             if(globalStatus.ECUState == GLV_ON){
                 if(ts_on){
@@ -250,8 +250,12 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
             
-            else if(globalStatus.ECUState == PRECHARGE_COMPLETE && rtd_pressed && analogRead(BRAKE_F_SIGNAL) && analogRead(BRAKE_R_SIGNAL)){
+            else if(globalStatus.ECUState == PRECHARGE_COMPLETE && rtd && analogRead(BRAKE_F_SIGNAL) && analogRead(BRAKE_R_SIGNAL)){
                 globalStatus.ECUState = DRIVE_STANDBY;
+            }
+
+            else if(globalStatus.ECUState == DRIVE_STANDBY && !rtd){
+                globalStatus.ECUState = PRECHARGE_COMPLETE;
             }
 
             break;
