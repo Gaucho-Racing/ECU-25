@@ -21,7 +21,7 @@ uint16_t findTernaryMax(const uint16_t a, const uint16_t b, const uint16_t c)
 }
 
 void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t length, uint32_t timestamp) {
-    (void)timestamp;
+    UNUSED(timestamp);
 
     switch(msgID) {
         case MSG_DEBUG_2_0:
@@ -33,6 +33,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             char* debug2String = (char*)data;
+            UNUSED(debug2String);
 
             break;
         case MSG_DEBUG_FD:
@@ -44,6 +45,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             char* debugFdString = (char*)data;
+            UNUSED(debugFdString);
 
             break;
         case MSG_PING:
@@ -146,6 +148,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             ACU_Status_MsgThree* acuMsgThree = (ACU_Status_MsgThree*)data;
+            UNUSED(acuMsgThree);
 
             break;
 
@@ -158,6 +161,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             Msg_Lv_Dc_Dc_Status* msgLv = (Msg_Lv_Dc_Dc_Status*)data;
+            UNUSED(msgLv);
             
             break;
         case MSG_INVERTER_STATUS_1:
@@ -169,6 +173,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             Inverter_Status_Msg_One* msgGriOne = (Inverter_Status_Msg_One*)data;
+            UNUSED(msgGriOne);
 
             break;
         case MSG_INVERTER_STATUS_2:
@@ -180,6 +185,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             Inverter_Status_Msg_Two* msgGriTwo = (Inverter_Status_Msg_Two*)data;
+            UNUSED(msgGriTwo);
 
             break;
         case MSG_INVERTER_STATUS_3:
@@ -269,6 +275,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             Fan_Status_Msg* msgFan = (Fan_Status_Msg*)data;
+            UNUSED(msgFan);
 
             break;
 
@@ -280,9 +287,6 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
             
-            steerSettings.currentEncoder = data[0];
-            steerSettings.torqueMapEncoder = data[1];
-            steerSettings.regenEncoder = data[2];
-            steerSettings.buttonFlags ^= data[3];
+            steerSettings = *(SteerSettings*)data;
     }
 }
