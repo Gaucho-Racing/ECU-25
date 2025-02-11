@@ -5,7 +5,7 @@
 #define MSGIDS_H
 
 #define MSG_DEBUG_2_0 0x000
-#define MSG_DEBUG_FD 0x001
+#define MSG_DEBUG 0x001
 #define MSG_PING 0x002
 #define MSG_ECU_STATUS_1 0x003
 #define MSG_ECU_STATUS_2 0x004
