@@ -1,0 +1,39 @@
+#include <stdint.h>
+#include <stdbool.h>
+
+#ifndef INVERTER_H
+    #define INVERTER_H
+
+    long getERPM();
+    float getDuty();
+    int getVoltIn();
+    float getACCurrent();
+    float getDCCurrent();
+    float getInvTemp();
+    float getMotorTemp();
+    uint8_t getFaults();
+    float getCurrentD();
+    float getCurrentQ();
+    uint8_t getThrottleIn();
+    uint8_t getBrakeIn();
+    bool getD1();
+    bool getD2();
+    bool getD3();
+    bool getD4();
+    bool getDO1();
+    bool getDO2();
+    bool getDO3();
+    bool getDO4();
+    bool getDriveEnable();
+    bool getCapTempLim();
+    bool getDCCurrentLim();
+    bool getDriveEnableLim();
+    bool getIgbtAccelTempLim();
+    bool getIgbtTempLim();
+    bool getVoltInLim();
+    bool getMotorAccelTempLim();
+    bool getMotorTempLim();
+    bool getRPMMinLimit();
+    bool getRPMMaxLimit();
+    bool getPowerLimit();
+#endif
