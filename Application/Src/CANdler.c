@@ -231,7 +231,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             Dash_Status_Msg *dashStatusMsg = (Dash_Status_Msg*)data;
-            bool ts_on == dashStatusMsg->TSButtonData < 0;
+            bool ts_on = dashStatusMsg->TSButtonData < 0;
             bool rtd_pressed = dashStatusMsg->RTDButtonData < 0;
 
             HAL_GPIO_WritePin(RTD_CONTROL_GPIO_Port, RTD_CONTROL_Pin, rtd_pressed);
