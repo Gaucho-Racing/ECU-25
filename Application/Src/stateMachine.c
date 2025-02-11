@@ -8,7 +8,8 @@
 
 StatusLump globalStatus = {
     .ECUState = GLV_ON,
-    .StatusBits = {0}
+    .StatusBits = {0},
+    .PowerLevelTorqueMap = 15
 };
 
 uint8_t numberOfBadMessages = 0;
@@ -74,9 +75,9 @@ void glv_on(StatusLump *status)
         status->ECUState = TS_DISCHARGE_OFF;
     }
 
-    // Close software latch, should be error free at this point
+    // Close software latch, should be error free at this point Also reset power level
     setSoftwareLatch(1);
-
+    global.PowerLevelTorqueMap &= 0xF0;
     // TS on handled in CANdler.c::handleCANMessage, under case MSG_DASH_STATUS
 }
 
