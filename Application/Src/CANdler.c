@@ -231,7 +231,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             // Isn't rtd a port? Why is rtd_on and rtd_off needed here?
-            Dash_Status_Msg dashStatusMsg = (Dash_Status_Msg*)data;
+            Dash_Status_Msg* dashStatusMsg = (Dash_Status_Msg*)data;
 
             UNUSED(dashStatusMsg);
 
