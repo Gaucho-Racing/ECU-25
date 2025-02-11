@@ -61,11 +61,7 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void infiniteLoopContents(void)
-{
-  stateMachineTick();
-  pingSchedule();
-}
+
 /* USER CODE END 0 */
 
 /**
@@ -113,7 +109,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    infiniteLoopContents();
+    stateMachineTick();
+    pingSchedule();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -208,14 +205,15 @@ void Error_Handler(void)
     // Setup interrupts
   __enable_irq();
 
-  // Send debug message
-  writeMessage(1, MSG_DEBUG, GR_ALL, (uint8_t*)"ECU Internal Failure", 21);
+  // Tick so we can power down
   stateMachineTick();
-  stateMachineTick();
+  stateMachineTick(); // Just in case
 
-  while(1)  // Same as in main()
+  while(1)  // Debug messages
   {
-    writeMessage(1, MSG_DEBUG, GR_ALL, (uint8_t*)"ECU Internal Failure", 21);
+    writeMessage(1, MSG_DEBUG_2_0, GR_ALL, (uint8_t*)"ECU Internal Failure", 21);
+    HAL_Delay(250);
+    writeMessage(1, MSG_DEBUG_FD, GR_ALL, (uint8_t*)"ECUFail", 8);
     HAL_Delay(250);
   }
 

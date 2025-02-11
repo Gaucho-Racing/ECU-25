@@ -6,9 +6,9 @@
 void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t length, uint32_t timestamp);
 
 typedef struct {
-    uint8_t Accumulator_Voltage;    // should be uint16_t according to spreadsheet? 
-    uint8_t TS_Voltage;             // uint16_t? 
-    uint8_t Accumulator_Current;    // uint16_t? 
+    uint16_t Accumulator_Voltage;
+    uint16_t TS_Voltage;
+    uint16_t Accumulator_Current;
     uint8_t Accumulator_SOC;
     uint8_t GLV_SOC;
 } ACU_Status_MsgOne;
@@ -25,10 +25,10 @@ typedef struct {
 } ACU_Status_MsgTwo;
 
 typedef struct {
-    uint8_t HV_Input_Voltage;
-    uint8_t HV_Output_Voltage;
-    uint8_t HV_Input_Current;
-    uint8_t HV_Output_Current;
+    uint16_t HV_Input_Voltage;
+    uint16_t HV_Output_Voltage;
+    uint16_t HV_Input_Current;
+    uint16_t HV_Output_Current;
 } ACU_Status_MsgThree;
 
 typedef struct {
@@ -41,7 +41,7 @@ typedef struct {
 typedef struct {
     uint16_t AC_current;
     uint16_t DC_current;
-    uint16_t DC_voltage;
+    uint16_t Motor_Rpm;
 } Inverter_Status_Msg_One;
 
 typedef struct {
@@ -63,8 +63,7 @@ typedef struct {
 } Fan_Status_Msg;
 
 typedef struct {
-    uint8_t BMS_LED;        // data type for bms_led and imd_led are just 'b' on spreadsheet, not sure how to define that
-    uint8_t IMD_LED;
+    uint8_t DASH_LED;
     uint8_t Button_LED_1_R;
     uint8_t Button_LED_1_G;
     uint8_t Button_LED_1_B;
@@ -72,6 +71,19 @@ typedef struct {
     uint8_t Button_LED_2_G;
     uint8_t Button_LED_2_B;
 } Dash_Config_Msg;
+
+typedef struct {
+    uint8_t Current_Encoder;
+    uint8_t Torque_Map_Encoder;
+    uint8_t regen;
+    uint8_t buttonMap;
+} Steering_Status_Msg;
+
+typedef struct {
+    uint8_t Led_Map;
+    uint8_t TsButtonData;
+    uint8_t RtdButtonData;
+} Dash_Status_Msg;
 
 extern uint8_t errorFlagBitsCan;
 

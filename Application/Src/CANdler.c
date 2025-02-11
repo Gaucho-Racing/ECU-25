@@ -21,10 +21,22 @@ uint16_t findTernaryMax(const uint16_t a, const uint16_t b, const uint16_t c)
 }
 
 void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t length, uint32_t timestamp) {
-    (void)timestamp;
+    UNUSED(timestamp);
 
     switch(msgID) {
-        case MSG_DEBUG:
+        case MSG_DEBUG_2_0:
+            if (length > 8) {
+                numberOfBadMessages++;
+                return;
+            } else {
+                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
+            }
+
+            char* debug2String = (char*)data;
+            UNUSED(debug2String);
+
+            break;
+        case MSG_DEBUG_FD:
             if (length > 64) {
                 numberOfBadMessages++;
                 return;
@@ -32,7 +44,8 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
 
-            char* string = (char*)data;
+            char* debugFdString = (char*)data;
+            UNUSED(debugFdString);
 
             break;
         case MSG_PING:
@@ -135,6 +148,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             ACU_Status_MsgThree* acuMsgThree = (ACU_Status_MsgThree*)data;
+            UNUSED(acuMsgThree);
 
             break;
 
@@ -147,6 +161,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             Msg_Lv_Dc_Dc_Status* msgLv = (Msg_Lv_Dc_Dc_Status*)data;
+            UNUSED(msgLv);
             
             break;
         case MSG_INVERTER_STATUS_1:
@@ -158,6 +173,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             Inverter_Status_Msg_One* msgGriOne = (Inverter_Status_Msg_One*)data;
+            UNUSED(msgGriOne);
 
             break;
         case MSG_INVERTER_STATUS_2:
@@ -169,6 +185,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             Inverter_Status_Msg_Two* msgGriTwo = (Inverter_Status_Msg_Two*)data;
+            UNUSED(msgGriTwo);
 
             break;
         case MSG_INVERTER_STATUS_3:
@@ -213,25 +230,21 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
 
-            
-            bool ts_active = getBit(*data, 0);
-            bool ts_off = getBit(*data, 1);
-            bool rtd_on = getBit(*data, 2);
-            bool rtd_off = getBit(*data, 3);
-            bool ams_led = getBit(*data, 4);
-            bool imd_led = getBit(*data, 5);
+            Dash_Status_Msg dashStatusMsg = (Dash_Status_Msg*)data;
+
+            UNUSED(dashStatusMsg);
 
             if(globalStatus.ECUState == GLV_ON){
-                if(ts_active){
+                if(/*ts_active*/){
                     globalStatus.ECUState = PRECHARGE_ENGAGED;
                 }
             }
             
-            else if (ts_off && globalStatus.ECUState == PRECHARGE_ENGAGED){
+            else if (/*ts_off &&*/ globalStatus.ECUState == PRECHARGE_ENGAGED){
                 globalStatus.ECUState = GLV_ON;
             }
             // If it is not in GLV_ON, PRECHARGE_ENGAGED or ERRORSTATE, if ts_off is ever true it must go to discharge
-            else if (ts_off && globalStatus.ECUState != ERRORSTATE){
+            else if (/*ts_off &&*/ globalStatus.ECUState != ERRORSTATE){
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
             
@@ -258,6 +271,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             Fan_Status_Msg* msgFan = (Fan_Status_Msg*)data;
+            UNUSED(msgFan);
 
             break;
 
@@ -269,9 +283,6 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
             
-            steerSettings.currentEncoder = data[0];
-            steerSettings.torqueMapEncoder = data[1];
-            steerSettings.regenEncoder = data[2];
-            steerSettings.buttonFlags ^= data[3];
+            steerSettings = *(SteerSettings*)data;
     }
 }

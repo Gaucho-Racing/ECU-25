@@ -101,6 +101,7 @@ void precharge_engaged(StatusLump *status)
 
 void precharging(StatusLump *status)
 {
+    UNUSED(status);
     //max voltage is 600, 580 is about when it will be done
     // This might be unnecessary, we already check for success confirmation in CAN
     /*
