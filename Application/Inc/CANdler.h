@@ -81,7 +81,7 @@ typedef struct {
 
 typedef struct {
     uint8_t Led_Map;
-    int8_t TsButtonData;
+    int8_t TSButtonData;
     int8_t RtdButtonData;
 } Dash_Status_Msg;
 
