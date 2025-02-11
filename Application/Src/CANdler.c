@@ -5,6 +5,8 @@
 #include "msgIDs.h"
 #include "pinging.h"
 #include "adc.h"
+#include "fdcan.h"
+#include "grIDs.h"
 #include "utils.h"
 
 uint8_t errorFlagBitsCan = 0;
@@ -93,12 +95,18 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 errorFlagBitsCan -= 1;
             }
 
+            if (ACUWarning(acuMsgTwo))
+            {
+                writeMessage(1, MSG_DEBUG_2_0, GR_ALL, (uint8_t*)"UndrVol", 8); // Until they figure out how they want to talk to us...
+            }
+
             //Error handling and leaving error state
             if ((errorFlagBitsCan || acuMsgTwo->Precharge_Error == 0x01) && globalStatus.TractiveSystemVoltage >= 60)
             {
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
-            else if(errorFlagBitsCan || acuMsgTwo->Precharge_Error == 0x01){
+            else if(errorFlagBitsCan || acuMsgTwo->Precharge_Error == 0x01)
+            {
                 globalStatus.ECUState = ERRORSTATE;
             }
             else if (globalStatus.ECUState == ERRORSTATE || (globalStatus.ECUState == TS_DISCHARGE_OFF && globalStatus.TractiveSystemVoltage < 60))
