@@ -61,11 +61,7 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void infiniteLoopContents(void)
-{
-  stateMachineTick();
-  pingSchedule();
-}
+
 /* USER CODE END 0 */
 
 /**
@@ -113,7 +109,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    infiniteLoopContents();
+    stateMachineTick();
+    pingSchedule();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -211,7 +208,7 @@ void Error_Handler(void)
   // Send debug message
   writeMessage(1, MSG_DEBUG, GR_ALL, (uint8_t*)"ECU Internal Failure", 21);
   stateMachineTick();
-  stateMachineTick();
+  stateMachineTick(); // Just in case
 
   while(1)  // Same as in main()
   {
