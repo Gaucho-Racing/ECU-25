@@ -77,12 +77,7 @@ void glv_on(StatusLump *status)
     // Close software latch, should be error free at this point
     setSoftwareLatch(1);
 
-    // When the grounded low voltage system is turned on
-    // the microcontroller has power, but the motor controller is not enabled.
-    // This is the second state that the car will enter after the ECU Flash is complete.
-    // Here it waits for the TS ACTIVE button to be pressed.
-
-    // GLV handled in CANdler.c::handleCANMessage, under case MSG_DASH_STATUS
+    // TS on handled in CANdler.c::handleCANMessage, under case MSG_DASH_STATUS
 }
 
 void precharge_engaged(StatusLump *status)
@@ -94,33 +89,21 @@ void precharge_engaged(StatusLump *status)
     }
     // ACU confirmation is IR-, handled in CANdler.c
     //TS ACTIVE botton disabled --> GLV_ON is handled in CANdler.c
-    //if (true /*TS ACTIVE button disabled*/)
-    //   status->ECUState = GLV_ON;
     
 }
 
 void precharging(StatusLump *status)
 {
     UNUSED(status);
-    //max voltage is 600, 580 is about when it will be done
-    // This might be unnecessary, we already check for success confirmation in CAN
-    /*
-    if (status->TractiveSystemVoltage > 580)
-        status->ECUState = PRECHARGE_COMPLETE;
-    */
+
     //TS ACTIVE button disabled || ACU precharge cancellation --> TS_DISCHARGE_OFF is handled in CANdler.c
     // line 66, 176
 }
 
 void precharge_complete(StatusLump *status)
 {
-
-    // If front, rear, and rtd, then go to DRIVE_STANDBY
-    // Account for noise in brake signal??
-    if (analogRead(BRAKE_F_SIGNAL) && analogRead(BRAKE_R_SIGNAL) && HAL_GPIO_ReadPin(RTD_CONTROL_GPIO_Port, RTD_CONTROL_Pin))
-    {
-        status->ECUState = DRIVE_STANDBY;
-    }
+    UNUSED(status);
+    // If front, rear, and rtd, then go to DRIVE_STANDBY handled in CAN
     // TS ACTIVE, ACU shutdown, errors handled in CANdler.c
 }
 
@@ -135,7 +118,7 @@ void ts_discharge_off(StatusLump *status)
     
     if ((millis() - dischargeStartMillis) > 5000) // Magic number :)
     {
-        status->ECUState = ERRORSTATE;  // This sends us to ERRORSTATE with powered TS? Yes, ERRORSTATE will send it back if voltage >= 60
+        status->ECUState = ERRORSTATE;  // ERRORSTATE will send it back if voltage >= 60
     }
     // Other stuff handled in can
 }
