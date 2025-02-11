@@ -2,6 +2,9 @@
 #include <stdbool.h>
 #include "utils.h"
 
+// I am so sorry...
+// https://github.com/Gaucho-Racing/VDM-24/blob/main/src/Nodes.h
+
 uint8_t data[5][8];
 
 long getERPM() {return(((long)data[0][0] << 24) + ((long)data[0][1] << 16) + ((long)data[0][2] << 8) + data[0][3]);} //rpm/pole pairs
