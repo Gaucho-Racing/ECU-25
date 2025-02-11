@@ -210,10 +210,13 @@ void Error_Handler(void)
 
   // Send debug message
   writeMessage(1, MSG_DEBUG, GR_ALL, (uint8_t*)"ECU Internal Failure", 21);
+  stateMachineTick();
+  stateMachineTick();
 
   while(1)  // Same as in main()
   {
-    infiniteLoopContents();
+    writeMessage(1, MSG_DEBUG, GR_ALL, (uint8_t*)"ECU Internal Failure", 21);
+    HAL_Delay(250);
   }
 
   // NVIC_SystemReset();  // Reset everything, cannot use as TS might be connected

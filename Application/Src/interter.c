@@ -1,6 +1,8 @@
 #include <stdint.h>
 #include <stdbool.h>
+
 #include "utils.h"
+#include "inverter.h"
 
 // I am so sorry...
 // https://github.com/Gaucho-Racing/VDM-24/blob/main/src/Nodes.h
