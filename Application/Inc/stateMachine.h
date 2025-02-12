@@ -49,8 +49,8 @@ typedef struct {
 
 extern SteerSettings steerSettings;
 
-extern StatusLump globalStatus;
-extern uint8_t numberOfBadMessages;
+extern volatile StatusLump globalStatus;
+extern volatile uint8_t numberOfBadMessages;
 
 /*
 General low voltage on
@@ -59,37 +59,37 @@ When the grounded low voltage system is turned on, the microcontroller has power
 but the motor controller is not enabled. This is the second state that the car will enter
 after the ECU Flash is complete. Here it waits for the TS ACTIVE button to be pressed.
 */
-void glv_on(StatusLump *status);
+void glv_on(void);
 
 /*
 Precharge engaged
 */
-void precharge_engaged(StatusLump *status);
+void precharge_engaged(void);
 
 /*
 Precharging
 */
-void precharging(StatusLump *status);
+void precharging(void);
 
 /*
 Precharge complete
 */
-void precharge_complete(StatusLump *status);
+void precharge_complete(void);
 
 /*
 Shutting down, ts discharge off
 */
-void ts_discharge_off(StatusLump *status);
+void ts_discharge_off(void);
 
 /*
 Set new stuff, reflash tune
 */
-void reflash_tune(StatusLump *status);
+void reflash_tune(void);
 
 /*
 Error state, error
 */
-void error(StatusLump *status);
+void error(void);
 
 /*
 CALL ME! Pass in the state and the info and it will automatically tick
