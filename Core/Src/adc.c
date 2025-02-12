@@ -145,7 +145,9 @@ void MX_ADC1_Init(void)
   }
   /* USER CODE BEGIN ADC1_Init 2 */
 
-  HAL_ADC_Start_DMA(&hadc1, (uint32_t *)adcBuffers.adc1buf, 6);
+  if(HAL_ADC_Start_DMA(&hadc1, (uint32_t *)adcBuffers.adc1buf, 6) != HAL_OK) {
+    Error_Handler();
+  }
 
   /* USER CODE END ADC1_Init 2 */
 
@@ -237,7 +239,9 @@ void MX_ADC2_Init(void)
   }
   /* USER CODE BEGIN ADC2_Init 2 */
 
-  HAL_ADC_Start_DMA(&hadc1, (uint32_t *)adcBuffers.adc2buf, 5);
+  if(HAL_ADC_Start_DMA(&hadc2, (uint32_t *)adcBuffers.adc2buf, 5) != HAL_OK) {
+    Error_Handler();
+  }
 
   /* USER CODE END ADC2_Init 2 */
 
