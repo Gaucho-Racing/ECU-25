@@ -47,7 +47,7 @@ typedef struct {
     uint8_t buttonFlags;
 } SteerSettings;
 
-extern SteerSettings steerSettings;
+extern volatile SteerSettings steerSettings;
 
 extern volatile StatusLump globalStatus;
 extern volatile uint8_t numberOfBadMessages;
