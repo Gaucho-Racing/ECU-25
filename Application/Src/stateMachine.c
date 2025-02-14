@@ -70,9 +70,9 @@ void stateMachineTick(void)
 
     if (millis() - lastECUMessageSent > 250)    // How often to spam ECU Status in milliseconds
     {
-        writeMessage(1, MSG_ECU_STATUS_1, GR_ALL, globalStatus.first, 8);
-        writeMessage(1, MSG_ECU_STATUS_2, GR_ALL, globalStatus.second, 8);
-        writeMessage(1, MSG_ECU_STATUS_3, GR_ALL, globalStatus.third, 4);
+        writeMessage(1, MSG_ECU_STATUS_1, GR_ALL, (uint8_t*)globalStatus.ecuStatusMsgOne, 8);
+        writeMessage(1, MSG_ECU_STATUS_2, GR_ALL, (uint8_t*)globalStatus.ecuStatusMsgTwo, 8);
+        writeMessage(1, MSG_ECU_STATUS_3, GR_ALL, (uint8_t*)globalStatus.ecuStatusMsgThree, 4);
         lastECUMessageSent = millis();
     }
 }

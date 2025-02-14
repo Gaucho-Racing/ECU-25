@@ -34,9 +34,9 @@ typedef union {
     };
 
     struct {
-        uint64_t first;
-        uint64_t second;
-        uint32_t third;
+        uint8_t ecuStatusMsgOne[8];
+        uint8_t ecuStatusMsgTwo[8];
+        uint8_t ecuStatusMsgThree[4];
     };
 } StatusLump;
 
