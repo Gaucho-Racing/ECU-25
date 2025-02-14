@@ -95,4 +95,4 @@ CALL ME! Pass in the state and the info and it will automatically tick
 */
 void stateMachineTick(void);
 
-#endif // STATEMACHIE_H
+#endif // STATEMACHINE_H
