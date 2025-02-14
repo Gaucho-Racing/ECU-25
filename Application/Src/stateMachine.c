@@ -9,13 +9,13 @@
 volatile StatusLump globalStatus = {
     .ECUState = GLV_ON,
     .StatusBits = {0},
-    .PowerLevelTorqueMap = 15
+    .PowerLevelTorqueMap = 0xFF
 };
 
 volatile uint8_t numberOfBadMessages = 0;
 int32_t dischargeStartMillis = -1;
 
-volatile SteerSettings globalSteerSettings = {0};
+volatile SteerSettings *globalSteerSettings = {0};
 
 void stateMachineTick(void)
 {
