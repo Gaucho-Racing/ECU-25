@@ -9,7 +9,7 @@
 #include "grIDs.h"
 #include "utils.h"
 
-uint8_t errorFlagBitsCan = 0;
+uint8_t errorFlagBitsCan = 0;   // Only R/W inside of interrupts
 
 uint16_t findTernaryMax(const uint16_t a, const uint16_t b, const uint16_t c)
 {

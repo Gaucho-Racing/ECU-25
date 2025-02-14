@@ -74,6 +74,4 @@ typedef struct {
     int8_t RTDButtonData;
 } Dash_Status_Msg;
 
-extern uint8_t errorFlagBitsCan;
-
 #endif // CANDLER_H

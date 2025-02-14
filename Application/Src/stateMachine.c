@@ -12,12 +12,17 @@
 volatile StatusLump globalStatus = {
     .ECUState = GLV_ON,
     .StatusBits = {0},
-    .PowerLevelTorqueMap = 0xFF
+    .PowerLevelTorqueMap = 0xFF,
+    .MaxCellTemp = 0x0,
+    .AccumulatorStateOfCharge = 0x0,
+    .GLVStateOfCharge = 0xFF
 };
 
 volatile uint8_t numberOfBadMessages = 0;
 int32_t dischargeStartMillis = -1;
-uint32_t lastECUMessageSent = 0;
+uint16_t lastECUStatusMsgTick = 0;
+
+static const uint16_t howOftenToSpamECUStatusMsgs = 2500;
 
 void stateMachineTick(void)
 {
@@ -68,12 +73,13 @@ void stateMachineTick(void)
         break;
     }
 
-    if (millis() - lastECUMessageSent > 250)    // How often to spam ECU Status in milliseconds
+    if (HAL_GetTick() - lastECUStatusMsgTick > howOftenToSpamECUStatusMsgs)
     {
-        writeMessage(1, MSG_ECU_STATUS_1, GR_ALL, globalStatus.ecuStatusMsgOne, 8);
-        writeMessage(1, MSG_ECU_STATUS_2, GR_ALL, globalStatus.ecuStatusMsgTwo, 8);
-        writeMessage(1, MSG_ECU_STATUS_3, GR_ALL, globalStatus.ecuStatusMsgThree, 4);
-        lastECUMessageSent = millis();
+        writeMessage(1, MSG_ECU_STATUS_1, GR_ALL, globalStatus.ECUStatusMsgOne, 8);
+        writeMessage(1, MSG_ECU_STATUS_2, GR_ALL, globalStatus.ECUStatusMsgTwo, 8);
+        writeMessage(1, MSG_ECU_STATUS_3, GR_ALL, globalStatus.ECUStatusMsgThree, 4);
+
+        lastECUStatusMsgTick = HAL_GetTick();
     }
 }
 
