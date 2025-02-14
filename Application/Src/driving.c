@@ -1,8 +1,10 @@
 #include <stdbool.h>
+#include <math.h>
 
 #include "stateMachine.h"
 #include "driving.h"
 #include "main.h"
+#include "adc.h"
 
 void drive_standby(void)
 {
@@ -37,9 +39,9 @@ void drive_active_power(void)
 {
     // LOTS OF https://github.com/Gaucho-Racing/VDM-24/blob/9ee4839ee6e5ce32a51602fe23723db5d23b1eaf/src/main.cpp#L1214
     float throttle1 = (float)analogRead(APPS1_SIGNAL)/ADC_MAX;
-    float throttle1 = (float)analogRead(APPS1_SIGNAL)/ADC_MAX;
+    float throttle2 = (float)analogRead(APPS2_SIGNAL)/ADC_MAX;
 
-    if (false /*Accelerator gradient plausibility violation*/)    // SEND WARNING TO DASH
+    if (abs(throttle1 - throttle2) > 0.1)    // SEND WARNING TO DASH
         globalStatus.ECUState = DRIVE_STANDBY;
     if (false /*Brake over threshold*/ && false /*Throttle engaged*/)
         globalStatus.ECUState = DRIVE_STANDBY;

@@ -11,7 +11,6 @@
 
 uint8_t errorFlagBitsCan = 0;
 
-
 uint16_t findTernaryMax(const uint16_t a, const uint16_t b, const uint16_t c)
 {
     if (a > b && a > c)
@@ -303,7 +302,9 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             Steering_Status_Msg* msgSteer = (Steering_Status_Msg*)data;
-            
-            globalStatus.PowerLevelTorqueMap = msgSteer->Current_TorqueMap_Encoder;
+
+            globalStatus.PowerLevelTorqueMap = msgSteer->Current_Torque_Map_Encoder;
+
+            // Handle buttons / regen here
     }
 }
