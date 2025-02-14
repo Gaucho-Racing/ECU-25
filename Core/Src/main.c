@@ -178,10 +178,8 @@ void SystemClock_Config(void)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-  // Stop interrupts
   __disable_irq();
 
-  // Determine exit state
   if (globalStatus.TractiveSystemVoltage >= 60)
   {
     globalStatus.ECUState = TS_DISCHARGE_OFF;
@@ -191,33 +189,27 @@ void Error_Handler(void)
     globalStatus.ECUState = ERRORSTATE;
   }
 
-  // Stop CAN
   HAL_FDCAN_DeInit(&hfdcan1);
   HAL_FDCAN_DeInit(&hfdcan2);
 
-  // Wait 3 ms
   HAL_Delay(3);
 
-  // Start everything again
   HAL_FDCAN_Init(&hfdcan1);
   HAL_FDCAN_Init(&hfdcan2);
 
-    // Setup interrupts
   __enable_irq();
 
   // Tick so we can power down
   stateMachineTick();
   stateMachineTick(); // Just in case
 
-  while(1)  // Debug messages
+  while(1)
   {
     writeMessage(1, MSG_DEBUG_FD, GR_ALL, (uint8_t*)"ECU Internal Failure", 21);
     HAL_Delay(250);
     writeMessage(1, MSG_DEBUG_2_0, GR_ALL, (uint8_t*)"ECUFail", 8);
     HAL_Delay(250);
   }
-
-  // NVIC_SystemReset();  // Reset everything, cannot use as TS might be connected
 
   /* USER CODE END Error_Handler_Debug */
 }
