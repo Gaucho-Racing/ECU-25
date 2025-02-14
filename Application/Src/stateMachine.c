@@ -15,8 +15,6 @@ volatile StatusLump globalStatus = {
 volatile uint8_t numberOfBadMessages = 0;
 int32_t dischargeStartMillis = -1;
 
-volatile SteerSettings *globalSteerSettings = {0};
-
 void stateMachineTick(void)
 {
     if (numberOfBadMessages >= 3)   // Magic value, 3 is bad arbitrarily (prime)

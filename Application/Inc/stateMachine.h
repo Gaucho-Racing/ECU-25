@@ -40,14 +40,6 @@ typedef union {
     };
 } StatusLump;
 
-typedef struct {
-    uint8_t torqueMapCurrentEncoder;
-    uint8_t regenEncoder;
-    uint8_t buttonFlags;
-} SteerSettings;
-
-extern volatile SteerSettings *globalSteerSettings;
-
 extern volatile StatusLump globalStatus;
 extern volatile uint8_t numberOfBadMessages;
 

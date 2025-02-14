@@ -73,8 +73,7 @@ typedef struct {
 } Dash_Config_Msg;
 
 typedef struct {
-    uint8_t Current_Encoder;
-    uint8_t Torque_Map_Encoder;
+    uint8_t Current_TorqueMap_Encoder;
     uint8_t regen;
     uint8_t buttonMap;
 } Steering_Status_Msg;
