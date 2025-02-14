@@ -259,7 +259,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             {
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
-            else if(globalStatus.ECUState == PRECHARGE_COMPLETE && rtd && analogRead(BRAKE_F_SIGNAL) && analogRead(BRAKE_R_SIGNAL))
+            else if(globalStatus.ECUState == PRECHARGE_COMPLETE && rtd && analogRead(BRAKE_F_SIGNAL) > 100 && analogRead(BRAKE_R_SIGNAL) > 100)
             {
                 globalStatus.ECUState = DRIVE_STANDBY;
             }
