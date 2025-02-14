@@ -5,7 +5,7 @@
 #include "CANdler.h"
 
 uint32_t millis(void) {
-    return HAL_GetTick() * (1000/TICK_FREQ);
+    return HAL_GetTick() * (1000 / TICK_FREQ);
 }
 
 uint8_t getBit(uint8_t number, uint8_t indexFromLeft)
