@@ -41,14 +41,18 @@ void drive_active_power(void)
     float throttle1 = (float)analogRead(APPS1_SIGNAL)/ADC_MAX;
     float throttle2 = (float)analogRead(APPS2_SIGNAL)/ADC_MAX;
 
-    if (abs(throttle1 - throttle2) > 0.1){
+    if (fabs(throttle1 - throttle2) > 0.1) {
         globalStatus.ECUState = DRIVE_STANDBY;
         return;
     }    // SEND WARNING TO DASH
-    if (analogRead(BSE_SIGNAL) && false /*Throttle engaged*/)
+    if (analogRead(BSE_SIGNAL) > ADC_MAX/10 && false /*Throttle engaged*/) {
         globalStatus.ECUState = DRIVE_STANDBY;
-    if (false /*TS ACTIVE button disabled*/ || false /*ACU shutdown*/ || false /*Critical error*/)
+        return;
+    }
+    if (false /*TS ACTIVE button disabled*/ || false /*ACU shutdown*/ || false /*Critical error*/) {
         globalStatus.ECUState = TS_DISCHARGE_OFF;
+        return;
+    }
 }
 
 void drive_active_regen(void)

@@ -44,9 +44,9 @@ void pingSchedule(void)
         if(!pingHasReturned[i]) {
             pingTimes[i] = PINGTIMEOUT*(TICK_FREQ/1000);
 
-            globalStatus.StatusBits &= ~(1 << i);  // Plz double check
+            *(globalStatus.StatusBits) &= ~(1 << i);  // Set i-th bit to 0
         } else {
-            globalStatus.StatusBits |= (1 << i);   // Plz double check
+            *(globalStatus.StatusBits) |= (1 << i);   // Set i-th bit to 1
         }
 
         pingHasReturned[i] = false;

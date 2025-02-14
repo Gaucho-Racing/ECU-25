@@ -96,7 +96,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             if (ACUWarning(acuMsgTwo))
             {
-                globalStatus.PowerLevelTorqueMap = (globalStatus.PowerLevelTorqueMap << 4 >> 4) & 0x80;
+                globalStatus.PowerLevelTorqueMap = (globalStatus.PowerLevelTorqueMap << 4 >> 4) | 0x80;
                 writeMessage(1, MSG_DEBUG_2_0, GR_ALL, (uint8_t*)"UndrVol", 8); // Until they figure out how they want to talk to us...
             }
 
@@ -250,23 +250,19 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 {
                     globalStatus.ECUState = PRECHARGE_ENGAGED;
                 }
-            }
-            
+            }            
             else if (!ts_on && globalStatus.ECUState == PRECHARGE_ENGAGED)
             {
                 globalStatus.ECUState = GLV_ON;
             }
-            // If it is not in GLV_ON, PRECHARGE_ENGAGED or ERRORSTATE, if ts_off is ever true it must go to discharge
-            else if (!ts_on && globalStatus.ECUState != ERRORSTATE)
+            else if (!ts_on && globalStatus.ECUState != ERRORSTATE) // If it is not in GLV_ON, PRECHARGE_ENGAGED or ERRORSTATE, if ts_off is ever true it must go to discharge
             {
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
-            
             else if(globalStatus.ECUState == PRECHARGE_COMPLETE && rtd && analogRead(BRAKE_F_SIGNAL) && analogRead(BRAKE_R_SIGNAL))
             {
                 globalStatus.ECUState = DRIVE_STANDBY;
             }
-
             else if(globalStatus.ECUState == DRIVE_STANDBY && !rtd)
             {
                 globalStatus.ECUState = PRECHARGE_COMPLETE;
@@ -296,7 +292,6 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             Steering_Status_Msg* msgSteer = (Steering_Status_Msg*)data;
-
             globalStatus.PowerLevelTorqueMap = msgSteer->Current_Torque_Map_Encoder;
 
             // Handle buttons / regen here
