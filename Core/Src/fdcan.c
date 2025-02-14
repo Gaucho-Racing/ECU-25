@@ -52,8 +52,8 @@ void writeMessage(uint8_t bus, uint16_t msgID, uint8_t destID, uint8_t data[], u
             return;
     }
 
-
-    if(HAL_FDCAN_AddMessageToTxFifoQ(handle, &TxHeader, data) != HAL_OK) {
+    if(HAL_FDCAN_AddMessageToTxFifoQ(handle, &TxHeader, data) != HAL_OK)
+    {
         Error_Handler();
     }
 }

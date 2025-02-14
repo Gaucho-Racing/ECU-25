@@ -244,25 +244,31 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             HAL_GPIO_WritePin(RTD_CONTROL_GPIO_Port, RTD_CONTROL_Pin, rtd);
 
-            if(globalStatus.ECUState == GLV_ON){
-                if(ts_on){
+            if (globalStatus.ECUState == GLV_ON)
+            {
+                if(ts_on)
+                {
                     globalStatus.ECUState = PRECHARGE_ENGAGED;
                 }
             }
             
-            else if (!ts_on && globalStatus.ECUState == PRECHARGE_ENGAGED){
+            else if (!ts_on && globalStatus.ECUState == PRECHARGE_ENGAGED)
+            {
                 globalStatus.ECUState = GLV_ON;
             }
             // If it is not in GLV_ON, PRECHARGE_ENGAGED or ERRORSTATE, if ts_off is ever true it must go to discharge
-            else if (!ts_on && globalStatus.ECUState != ERRORSTATE){
+            else if (!ts_on && globalStatus.ECUState != ERRORSTATE)
+            {
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
             
-            else if(globalStatus.ECUState == PRECHARGE_COMPLETE && rtd && analogRead(BRAKE_F_SIGNAL) && analogRead(BRAKE_R_SIGNAL)){
+            else if(globalStatus.ECUState == PRECHARGE_COMPLETE && rtd && analogRead(BRAKE_F_SIGNAL) && analogRead(BRAKE_R_SIGNAL))
+            {
                 globalStatus.ECUState = DRIVE_STANDBY;
             }
 
-            else if(globalStatus.ECUState == DRIVE_STANDBY && !rtd){
+            else if(globalStatus.ECUState == DRIVE_STANDBY && !rtd)
+            {
                 globalStatus.ECUState = PRECHARGE_COMPLETE;
             }
 
@@ -277,6 +283,8 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             else {
                 numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
+
+            //TODO: Whatever should go here???
             
             break;
 

@@ -75,7 +75,7 @@ void glv_on(void)
 
     // Close software latch, should be error free at this point Also reset power level
     setSoftwareLatch(1);
-    globalStatus.PowerLevelTorqueMap &= 0xF0;
+    globalStatus.PowerLevelTorqueMap = 0xFF;
     // TS on handled in CANdler.c::handleCANMessage, under case MSG_DASH_STATUS
 }
 
