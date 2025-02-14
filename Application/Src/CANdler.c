@@ -303,6 +303,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
             
             globalSteerSettings = *(SteerSettings*)data;
+
             globalStatus.PowerLevelTorqueMap = globalSteerSettings.torqueMapCurrentEncoder;
     }
 }
