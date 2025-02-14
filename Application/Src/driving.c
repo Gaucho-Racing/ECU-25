@@ -49,6 +49,7 @@ void drive_active_power(void)
         globalStatus.ECUState = DRIVE_STANDBY;
         return;
     }
+    // Following lines are handled in CAN
     if (false /*TS ACTIVE button disabled*/ || false /*ACU shutdown*/ || false /*Critical error*/) {
         globalStatus.ECUState = TS_DISCHARGE_OFF;
         return;
