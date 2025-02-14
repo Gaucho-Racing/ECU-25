@@ -15,7 +15,6 @@ StatusLump globalStatus = {
 uint8_t numberOfBadMessages = 0;
 int32_t dischargeStartMillis = -1;
 
-SteerSettings steerSettings = {0};
 
 void stateMachineTick(void)
 {

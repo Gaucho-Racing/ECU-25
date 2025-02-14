@@ -302,6 +302,8 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
             
-            steerSettings = *(SteerSettings*)data;
+            globalSteerSettings = *(SteerSettings*)data;
+
+            globalStatus.PowerLevelTorqueMap = steerSettings.torqueMapCurrentEncoder;
     }
 }

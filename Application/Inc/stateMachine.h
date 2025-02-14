@@ -41,16 +41,16 @@ typedef union {
 } StatusLump;
 
 typedef struct {
-    uint8_t currentEncoder;
-    uint8_t torqueMapEncoder;
+    uint8_t torqueMapCurrentEncoder;
     uint8_t regenEncoder;
     uint8_t buttonFlags;
 } SteerSettings;
 
-extern SteerSettings steerSettings;
+extern SteerSettings globalSteerSettings;
 
 extern StatusLump globalStatus;
 extern uint8_t numberOfBadMessages;
+extern SteerSettings steerSettings = {0};
 
 /*
 General low voltage on
