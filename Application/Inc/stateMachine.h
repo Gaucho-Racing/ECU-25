@@ -36,7 +36,7 @@ typedef union {
     struct {
         uint64_t first;
         uint64_t second;
-        uint32_t thrid;
+        uint32_t third;
     };
 } StatusLump;
 
