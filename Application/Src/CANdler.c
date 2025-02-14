@@ -97,7 +97,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             if (ACUWarning(acuMsgTwo))
             {
                 globalStatus.PowerLevelTorqueMap = (globalStatus.PowerLevelTorqueMap << 4 >> 4) | (1 << 7);
-                writeMessage(1, MSG_DEBUG_2_0, GR_ALL, (uint8_t*)"UndrVol", 8); // Until they figure out how they want to talk to us...
+                writeMessage(1, MSG_DEBUG_2_0, GR_ALL, (uint8_t*)"UnderVol", 8); // Until they figure out how they want to talk to us...
             }
 
             //Error handling and leaving error state
