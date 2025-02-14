@@ -5,6 +5,9 @@
 #include "main.h"
 #include "utils.h"
 #include "adc.h"
+#include "fdcan.h"
+#include "msgIDs.h"
+#include "grIDs.h"
 
 volatile StatusLump globalStatus = {
     .ECUState = GLV_ON,
@@ -14,6 +17,7 @@ volatile StatusLump globalStatus = {
 
 volatile uint8_t numberOfBadMessages = 0;
 int32_t dischargeStartMillis = -1;
+uint32_t lastECUMessageSent = 0;
 
 void stateMachineTick(void)
 {
@@ -62,6 +66,14 @@ void stateMachineTick(void)
         default:
             error();
         break;
+    }
+
+    if (millis() - lastECUMessageSent > 250)    // How often to spam ECU Status in milliseconds
+    {
+        writeMessage(1, MSG_ECU_STATUS_1, GR_ALL, globalStatus.first, 8);
+        writeMessage(1, MSG_ECU_STATUS_2, GR_ALL, globalStatus.second, 8);
+        writeMessage(1, MSG_ECU_STATUS_3, GR_ALL, globalStatus.third, 4);
+        lastECUMessageSent = millis();
     }
 }
 
