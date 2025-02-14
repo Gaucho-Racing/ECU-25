@@ -274,20 +274,6 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             break;
 
-        // not done - refer to lines 774,884, 904 from VDM-24 (main.cpp)
-        case MSG_DASH_CONFIG:
-            if (length != 7) {
-                numberOfBadMessages++;
-                return;
-            }
-            else {
-                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
-            }
-
-            //TODO: Whatever should go here???
-            
-            break;
-
         case MSG_FAN_STATUS:
             if (length != 5) {
                 numberOfBadMessages++;

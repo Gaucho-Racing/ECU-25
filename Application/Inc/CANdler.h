@@ -63,16 +63,6 @@ typedef struct {
 } Fan_Status_Msg;
 
 typedef struct {
-    uint8_t DASH_LED;
-    uint8_t Button_LED_1_R;
-    uint8_t Button_LED_1_G;
-    uint8_t Button_LED_1_B;
-    uint8_t Button_LED_2_R;
-    uint8_t Button_LED_2_G;
-    uint8_t Button_LED_2_B;
-} Dash_Config_Msg;
-
-typedef struct {
     uint8_t Current_Torque_Map_Encoder;
     uint8_t regen;
     uint8_t buttonMap;
