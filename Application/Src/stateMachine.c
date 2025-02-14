@@ -75,9 +75,9 @@ void stateMachineTick(void)
 
     if (HAL_GetTick() - lastECUStatusMsgTick > howOftenToSpamECUStatusMsgs)
     {
-        writeMessage(1, MSG_ECU_STATUS_1, GR_ALL, globalStatus.ECUStatusMsgOne, 8);
-        writeMessage(1, MSG_ECU_STATUS_2, GR_ALL, globalStatus.ECUStatusMsgTwo, 8);
-        writeMessage(1, MSG_ECU_STATUS_3, GR_ALL, globalStatus.ECUStatusMsgThree, 4);
+        writeMessage(1, MSG_ECU_STATUS_1, GR_ALL, (uint8_t*)globalStatus.ECUStatusMsgOne, 8);
+        writeMessage(1, MSG_ECU_STATUS_2, GR_ALL, (uint8_t*)globalStatus.ECUStatusMsgTwo, 8);
+        writeMessage(1, MSG_ECU_STATUS_3, GR_ALL, (uint8_t*)globalStatus.ECUStatusMsgThree, 4);
 
         lastECUStatusMsgTick = HAL_GetTick();
     }
