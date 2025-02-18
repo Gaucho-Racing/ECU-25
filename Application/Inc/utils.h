@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include "CANdler.h"
 
-#define TICK_FREQ 100000 // overflow after 12 hrs runtime teehee
+#define TICK_FREQ 1000
 
 uint32_t millis(void);
 
