@@ -89,4 +89,5 @@ add_custom_target(
     DEPENDS ${CMAKE_SOURCE_DIR}/CSV-25/MSG-ID.csv
     COMMENT "Updating GR ID and MSG ID header files from CSVs"
     VERBATIM
+    USES_TERMINAL
 )
