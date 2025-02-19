@@ -15,5 +15,7 @@ then
     sleep 2
 else
     echo "CSV-25 repository not found!"
-    exit 1;
+    exit 1
 fi
+
+exit 0
