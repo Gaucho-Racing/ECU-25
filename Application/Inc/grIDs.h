@@ -1,16 +1,19 @@
 // Auto-generated header file
 // Define GR IDs
 
-#ifndef GRIDS_H
-#define GRIDS_H
+#ifndef APPLICATION_INC_GRIDS_H
+#define APPLICATION_INC_GRIDS_H
 
+#define GR_DTI_INVERTER 0x00
+#define GR_ENERGY_METER 0x00
+#define GR_CHARGER 0x00
+#define GR_IMD 0x00
 #define GR_DEBUGGER 0x01
 #define GR_ECU 0x02
 #define GR_ACU 0x03
 #define GR_TCM 0x04
 #define GR_DASH_PANEL 0x05
 #define GR_STEERING_WHEEL 0x06
-#define GR_DTI_INVERTER 0x07
 #define GR_GR_INVERTER_1 0x08
 #define GR_GR_INVERTER_2 0x09
 #define GR_GR_INVERTER_3 0x0A
@@ -47,4 +50,4 @@
 #define GR_LV_DC_DC 0x29
 #define GR_ALL 0xFF
 
-#endif // GRIDS_H
+#endif // APPLICATION_INC_GRIDS_H
