@@ -11,7 +11,7 @@ then
 
 	OCDPID=$!
 	sleep 1
-	ps -p $OCDPID > /dev/null 2>&1
+	ps -p $OCDPID > /dev/null 2>&1	# Exits program on failure to find PID
 
 	arm-none-eabi-gdb --symbols=ECU-25.elf --eval-command="target extended-remote :3333"
 	kill $OCDPID
