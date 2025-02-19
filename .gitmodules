@@ -1,0 +1,3 @@
+[submodule "CSV-25"]
+	path = CSV-25
+	url = ../CSV-25.git
