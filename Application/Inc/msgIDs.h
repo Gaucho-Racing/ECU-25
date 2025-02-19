@@ -1,8 +1,8 @@
 // Auto-generated header file
 // Define message IDs
 
-#ifndef MSGIDS_H
-#define MSGIDS_H
+#ifndef APPLICATION_INC_MSGIDS_H
+#define APPLICATION_INC_MSGIDS_H
 
 #define MSG_DEBUG_2_0 0x000
 #define MSG_DEBUG_FD 0x001
@@ -48,4 +48,4 @@
 #define MSG_TCM_STATUS 0x029
 #define MSG_TCM_RESOURCE_UTILIZATION 0x02A
 
-#endif // MSGIDS_H
+#endif // APPLICATION_INC_MSGIDS_H
