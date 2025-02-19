@@ -76,3 +76,17 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
     stm32cubemx
     # Add user defined libraries
 )
+
+# Add CSV-25 integration
+add_dependencies(${CMAKE_PROJECT_NAME} executeCSV25)
+add_custom_target(
+    executeCSV25
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMAND ${CMAKE_SOURCE_DIR}/executeCSV.sh
+    DEPENDS ${CMAKE_SOURCE_DIR}/CSV-25/grCSVtoH.py
+    DEPENDS ${CMAKE_SOURCE_DIR}/CSV-25/GR-ID.csv
+    DEPENDS ${CMAKE_SOURCE_DIR}/CSV-25/msgCSVtoH.py
+    DEPENDS ${CMAKE_SOURCE_DIR}/CSV-25/MSG-ID.csv
+    COMMENT "Updating GR ID and MSG ID header files from CSVs"
+    VERBATIM
+)
