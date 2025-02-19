@@ -89,6 +89,7 @@ void glv_on(void)
     if(globalStatus.TractiveSystemVoltage >= 60)
     {
         globalStatus.ECUState = TS_DISCHARGE_OFF;
+        return;
     }
 
     // Close software latch, should be error free at this point Also reset power level
