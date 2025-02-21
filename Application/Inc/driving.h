@@ -1,7 +1,8 @@
+#include <stdbool.h>
+#include "stateMachine.h"
+
 #ifndef DRIVING_H
 #define DRIVING_H
-
-#include "stateMachine.h"
 
 #define APPS_DEADZONE 0.05
 #define BSE_DEADZONE 0.05
