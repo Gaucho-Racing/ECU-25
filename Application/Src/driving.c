@@ -15,7 +15,7 @@ volatile InverterLump globalInverterSettings = {0};
 
 volatile int32_t lastInverterPingMillis = -1;
 
-inline float mVehicleSpeedMPH(void)
+float mVehicleSpeedMPH(void)
 {
     return ((getERPM() / MOTOR_POLE_PAIRS) * 2 * M_PI * WHEEL_RADIUS_IN) / (GEAR_RATIO * 1056.0);
 }
