@@ -34,7 +34,7 @@ void sendInverterCommand(void)
 
 void sendBseAppsViolationMessage(void)
 {
-    uint8_t errorMap = 1;
+    uint8_t errorMap = 0x01;
     writeMessage(1, MSG_DASH_WARNING_FLAGS, GR_DASH_PANEL, &errorMap, 1);
 }
 
