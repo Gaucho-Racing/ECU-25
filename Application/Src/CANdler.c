@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <stdint.h>
 
 #include "CANdler.h"
 #include "stateMachine.h"
@@ -9,7 +10,10 @@
 #include "grIDs.h"
 #include "utils.h"
 
-uint8_t errorFlagBitsCan = 0;   // Only R/W inside of interrupts
+volatile uint8_t errorFlagBitsCan = 0;   // Only R/W inside of interrupts
+
+volatile uint8_t globalSteeringStatusRegen = 0;
+volatile uint8_t globalSteeringStatusButtonMap = 0;
 
 uint16_t findTernaryMax(const uint16_t a, const uint16_t b, const uint16_t c)
 {
@@ -294,10 +298,9 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             Steering_Status_Msg* msgSteer = (Steering_Status_Msg*)data;
             globalStatus.PowerLevelTorqueMap = msgSteer->Current_Torque_Map_Encoder;
 
-            if (globalStatus.ECUState == DRIVE_ACTIVE_REGEN && msgSteer->regen == 0)
-            {
-                globalStatus.ECUState = DRIVE_ACTIVE_IDLE;
-            }
+            /* Do not write to these values elsewhere! */
+            globalSteeringStatusRegen = msgSteer->regen;
+            globalSteeringStatusButtonMap = msgSteer->buttonMap;
 
             // Handle buttons / regen here
     }

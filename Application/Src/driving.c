@@ -10,7 +10,7 @@
 #include "msgIDs.h"
 #include "utils.h"
 
-bool BSE_APPS_violation = false;
+volatile bool BSE_APPS_violation = false;
 volatile InverterLump globalInverterSettings = {0};
 
 inline float mVehicleSpeedMPH()
@@ -36,7 +36,11 @@ void drive_standby(void)
 {
     controlInverters(1);
 
-    if (!BSE_APPS_violation && (float)analogRead(APPS1_SIGNAL)/ADC_MAX >= APPS_DEADZONE) // Valid torque request
+    if (BSE_APPS_violation)
+    {
+        // TODO: SEND WARNING TO DASH HERE (BUT ONLY OCCASIONALLY)
+    }
+    else if (!BSE_APPS_violation && (float)analogRead(APPS1_SIGNAL)/ADC_MAX >= APPS_DEADZONE) // Valid torque request
     {
         globalStatus.ECUState = DRIVE_ACTIVE_POWER;
     }
@@ -45,33 +49,34 @@ void drive_standby(void)
 void drive_active_idle(void)
 {
     controlInverters(1);
-    // LOTS OF https://github.com/Gaucho-Racing/VDM-24/blob/9ee4839ee6e5ce32a51602fe23723db5d23b1eaf/src/main.cpp#L1214
+
     float throttle1 = (float)analogRead(APPS1_SIGNAL)/ADC_MAX;
 
-    if (throttle1 >= APPS_DEADZONE)
+    if (BSE_APPS_violation)
+    {  
+        globalStatus.ECUState = DRIVE_STANDBY;
+    }
+    else if (throttle1 >= APPS_DEADZONE)
     {
         globalStatus.ECUState = DRIVE_ACTIVE_POWER;
     }
-    else if (!BSE_APPS_violation && throttle1 < APPS_DEADZONE && mVehicleSpeedMPH() > REGEN_MPH && true /*regen config here*/)
+    else if (throttle1 < APPS_DEADZONE && mVehicleSpeedMPH() > REGEN_MPH && globalSteeringStatusRegen > 0)
     {
         globalStatus.ECUState = DRIVE_ACTIVE_REGEN;
-    }
-    else if (BSE_APPS_violation)
-    {  
-        //TODO SEND WARNING TO DASH HERE
-        globalStatus.ECUState = DRIVE_STANDBY;
     }
 }
 
 void drive_active_power(void)
 {
-    // LOTS OF https://github.com/Gaucho-Racing/VDM-24/blob/9ee4839ee6e5ce32a51602fe23723db5d23b1eaf/src/main.cpp#L1214
-    float throttle1 = (float)analogRead(APPS1_SIGNAL)/ADC_MAX;
-    float throttle2 = (float)analogRead(APPS2_SIGNAL)/ADC_MAX;
-    float brake = (float)analogRead(BSE_SIGNAL)/ADC_MAX;
+    float throttle1 = (float)analogRead(APPS1_SIGNAL) / ADC_MAX;
+    float throttle2 = (float)analogRead(APPS2_SIGNAL) / ADC_MAX;
+    float brake = (float)analogRead(BSE_SIGNAL) / ADC_MAX;
 
-
-    if(throttle1 < APPS_DEADZONE)
+    if (BSE_APPS_violation)
+    {
+        globalStatus.ECUState = DRIVE_STANDBY;
+    }
+    else if(throttle1 < APPS_DEADZONE)
     {
         globalStatus.ECUState = DRIVE_STANDBY;
     }
@@ -89,21 +94,18 @@ void drive_active_power(void)
 
 void drive_active_regen(void)
 {
-    // LOTS OF https://github.com/Gaucho-Racing/VDM-24/blob/9ee4839ee6e5ce32a51602fe23723db5d23b1eaf/src/main.cpp#L1214
-    // Some math in https://github.com/Gaucho-Racing/VDM-24/blob/9ee4839ee6e5ce32a51602fe23723db5d23b1eaf/src/main.cpp#L1253
-
     if (BSE_APPS_violation)
     {
         globalStatus.ECUState = DRIVE_STANDBY;
     }
-    if ((float)analogRead(APPS1_SIGNAL)/ADC_MAX >= APPS_DEADZONE && )
+    else if ((float)analogRead(APPS1_SIGNAL)/ADC_MAX >= APPS_DEADZONE)
     {
         globalStatus.ECUState = DRIVE_ACTIVE_POWER;
     }
-    else if(mVehicleSpeedMPH() < REGEN_MPH && true /*regen config here*/)
-    else if (false /*Settings say no regen braking*/)
+    else if(mVehicleSpeedMPH() < REGEN_MPH || globalSteeringStatusRegen == 0)
     {
         globalStatus.ECUState = DRIVE_ACTIVE_IDLE;
     }
+
     sendInverterCommand();
 }
