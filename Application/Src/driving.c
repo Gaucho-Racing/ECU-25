@@ -25,10 +25,10 @@ void sendInverterCommand(void)
     if(millis() - lastInverterPingMillis >= 50) // Must send every 100 ms
     {
         lastInverterPingMillis = millis();
-        writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_1, (uint8_t*)(globalInverterSettings.firstMsg), 7);
-        writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_2, (uint8_t*)(globalInverterSettings.secondMsg), 7);
-        writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_3, (uint8_t*)(globalInverterSettings.thirdMsg), 7);
-//      writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_4, (uint8_t*)(globalInverterSettings.fourthMsg), 7);   // Enable iff fourth motor/inverter
+        writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_1, &globalInverterSettings.firstMsg, 7);
+        writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_2, &globalInverterSettings.secondMsg, 7);
+        writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_3, &globalInverterSettings.thirdMsg, 7);
+//      writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_4, &globalInverterSettings.fourthMsg, 7);   // Enable iff fourth motor/inverter
     }
 }
 
