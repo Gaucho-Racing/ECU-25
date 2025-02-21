@@ -9,7 +9,7 @@
 #include "fdcan.h"
 #include "msgIDs.h"
 #include "utils.h"
-
+a
 volatile bool BSE_APPS_violation = false;
 volatile InverterLump globalInverterSettings = {0};
 
@@ -76,15 +76,16 @@ void drive_active_power(void)
     {
         globalStatus.ECUState = DRIVE_STANDBY;
     }
+    else if (brake >= BSE_DEADZONE && throttle1 >= 0.25)
+    {
+        globalStatus.ECUState = DRIVE_STANDBY;
+        BSE_APPS_violation = true;
+    }
     else if(throttle1 < APPS_DEADZONE)
     {
         globalStatus.ECUState = DRIVE_STANDBY;
     }
     else if (fabs(throttle1 - throttle2) > 0.1)
-    {
-        globalStatus.ECUState = DRIVE_STANDBY;
-    }
-    else if (brake >= BSE_DEADZONE && throttle1 >= 0.25)
     {
         globalStatus.ECUState = DRIVE_STANDBY;
     }

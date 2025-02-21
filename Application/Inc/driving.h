@@ -32,6 +32,7 @@ typedef union {
 } InverterLump;
 
 extern volatile InverterLump globalInverterSettings;
+extern volatile bool BSE_APPS_violation;
 
 /*
 Send the inverter command message to control the inverters based off of the globalInverterSettings
