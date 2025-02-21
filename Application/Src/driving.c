@@ -9,7 +9,10 @@
 
 bool BSE_APPS_violation = false;
 
-inline float mVehicleSpeedMPH(){return ((getERPM()/MOTOR_POLE_PAIRS)*2*PI*WHEEL_RADIUS_IN)/(GEAR_RATIO*1056.0);}
+inline float mVehicleSpeedMPH()
+{
+    return ((getERPM() / MOTOR_POLE_PAIRS) * 2 * M_PI * WHEEL_RADIUS_IN) / (GEAR_RATIO * 1056.0);
+}
 
 void drive_standby(void)
 {
