@@ -9,18 +9,18 @@
 #include "fdcan.h"
 #include "msgIDs.h"
 #include "utils.h"
-a
+
 volatile bool BSE_APPS_violation = false;
 volatile InverterLump globalInverterSettings = {0};
 
-inline float mVehicleSpeedMPH()
+volatile int32_t lastInverterPingMillis = -1;
+
+inline float mVehicleSpeedMPH(void)
 {
     return ((getERPM() / MOTOR_POLE_PAIRS) * 2 * M_PI * WHEEL_RADIUS_IN) / (GEAR_RATIO * 1056.0);
 }
 
-int32_t lastInverterPingMillis = -1;
-
-void sendInverterCommand()
+void sendInverterCommand(void)
 {
     if(millis() - lastInverterPingMillis >= 50) // Must send every 100 ms
     {
@@ -32,15 +32,17 @@ void sendInverterCommand()
     }
 }
 
+void sendBseAppsViolationMessage(void)
+{
+    // SEND WARNING TO DASH :)
+    // PENDING WHAT FORMAT THEY WANT
+}
+
 void drive_standby(void)
 {
     controlInverters(1);
 
-    if (BSE_APPS_violation)
-    {
-        // TODO: SEND WARNING TO DASH HERE (BUT ONLY OCCASIONALLY)
-    }
-    else if (!BSE_APPS_violation && (float)analogRead(APPS1_SIGNAL)/ADC_MAX >= APPS_DEADZONE) // Valid torque request
+    if (!BSE_APPS_violation && (float)analogRead(APPS1_SIGNAL)/ADC_MAX >= APPS_DEADZONE)
     {
         globalStatus.ECUState = DRIVE_ACTIVE_POWER;
     }
@@ -55,6 +57,7 @@ void drive_active_idle(void)
     if (BSE_APPS_violation)
     {  
         globalStatus.ECUState = DRIVE_STANDBY;
+        sendBseAppsViolationMessage();
     }
     else if (throttle1 >= APPS_DEADZONE)
     {
@@ -75,6 +78,7 @@ void drive_active_power(void)
     if (BSE_APPS_violation)
     {
         globalStatus.ECUState = DRIVE_STANDBY;
+        sendBseAppsViolationMessage();
     }
     else if (brake >= BSE_DEADZONE && throttle1 >= 0.25)
     {
@@ -98,6 +102,7 @@ void drive_active_regen(void)
     if (BSE_APPS_violation)
     {
         globalStatus.ECUState = DRIVE_STANDBY;
+        sendBseAppsViolationMessage();
     }
     else if ((float)analogRead(APPS1_SIGNAL)/ADC_MAX >= APPS_DEADZONE)
     {
