@@ -34,9 +34,8 @@ void sendInverterCommand(void)
 
 void sendBseAppsViolationMessage(void)
 {
-    writeM
-    // SEND WARNING TO DASH :)
-    // PENDING WHAT FORMAT THEY WANT
+    uint8_t errorMap = 1;
+    writeMessage(1, MSG_DASH_WARNING_FLAGS, GR_DASH_PANEL, &errorMap, 1);
 }
 
 void drive_standby(void)
