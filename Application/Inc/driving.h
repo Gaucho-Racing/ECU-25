@@ -34,7 +34,7 @@ typedef union {
 extern volatile InverterLump globalInverterSettings;
 
 /*
-Send the inverter command message to enable the inverter
+Send the inverter command message to control the inverters based off of the globalInverterSettings
 */
 void sendInverterCommand();
 

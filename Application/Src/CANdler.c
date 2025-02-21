@@ -294,6 +294,11 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             Steering_Status_Msg* msgSteer = (Steering_Status_Msg*)data;
             globalStatus.PowerLevelTorqueMap = msgSteer->Current_Torque_Map_Encoder;
 
+            if (globalStatus.ECUState == DRIVE_ACTIVE_REGEN && msgSteer->regen == 0)
+            {
+                globalStatus.ECUState = DRIVE_ACTIVE_IDLE;
+            }
+
             // Handle buttons / regen here
     }
 }
