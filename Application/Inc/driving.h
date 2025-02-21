@@ -11,6 +11,20 @@
 #define MOTOR_POLE_PAIRS 10.0
 #define WHEEL_RADIUS_IN 8.0 // inches
 
+typedef struct {
+    uint16_t Set_AC_Current;
+    uint16_t Set_DC_Current;
+    uint16_t RPM_Limit;
+    uint8_t Drive_Enable;   // Must be 1 to enable inverter
+} InverterSettings;
+
+InverterSettings globalInverterSettings[4] = {0};
+
+/*
+Send the inverter command message to enable the inverter
+*/
+void sendInverterCommand(void);
+
 /*
 Ready to go, drive standby
 */

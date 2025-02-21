@@ -6,21 +6,29 @@
 #include "main.h"
 #include "adc.h"
 #include "inverter.h"
+#include "fdcan.h"
+#include "msgIDs.h"
 
 bool BSE_APPS_violation = false;
 
 inline float mVehicleSpeedMPH(){return ((getERPM()/MOTOR_POLE_PAIRS)*2*PI*WHEEL_RADIUS_IN)/(GEAR_RATIO*1056.0);}
 
+int32_t lastInverterPingMillis = -1;
+
+void sendInverterCommand(void)
+{
+    if(millis() - lastInverterPingMillis >= 100)
+    {
+        lastInverterPingMillis = millis();
+        writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_1, (uint8_t*)(globalInverterSettings[0]), 7);
+        writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_2, (uint8_t*)(globalInverterSettings[1]), 7);
+        writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_3, (uint8_t*)(globalInverterSettings[2]), 7);
+        writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_4, (uint8_t*)(globalInverterSettings[3]), 7);
+    }
+}
+
 void drive_standby(void)
 {
-/*
-    // If not rtd, then go back to precharge_complete
-    if (!HAL_GPIO_ReadPin(RTD_CONTROL_GPIO_Port, RTD_CONTROL_Pin))
-        globalStatus.ECUState = PRECHARGE_COMPLETE;
-    if(false Valid torque request || false APPS stuff)
-        globalStatus.ECUState = DRIVE_ACTIVE_IDLE;
-    // TS ACTIVE, ACU shutdown, errors handled in CANdler.c
-*/
     // If rtd off, go back to precharge complete handled in CAN
     
     // torque stuff waiting for vdm
@@ -79,6 +87,7 @@ void drive_active_regen(void)
         globalStatus.ECUState = DRIVE_ACTIVE_POWER;
     if (false /*Settings say no regen braking*/)
         globalStatus.ECUState = DRIVE_ACTIVE_IDLE;
+    // Following is handled already
     if (false /*TS ACTIVE button disabled*/ || false /*ACU shutdown*/ || false /*Critical error*/)
        globalStatus.ECUState = TS_DISCHARGE_OFF;
 }
