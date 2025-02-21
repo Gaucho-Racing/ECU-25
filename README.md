@@ -1,3 +1,13 @@
+# Important Update
+To build:
+```
+git submodule init
+git submodule update
+cmake --preset Debug
+cd build/Debug
+ninja
+```
+
 # State Machine
 ![GR25 State Machine](/GR25StateMachine.png)
 # Required Stuff
