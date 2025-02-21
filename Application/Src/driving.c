@@ -34,6 +34,7 @@ void sendInverterCommand(void)
 
 void sendBseAppsViolationMessage(void)
 {
+    writeM
     // SEND WARNING TO DASH :)
     // PENDING WHAT FORMAT THEY WANT
 }
