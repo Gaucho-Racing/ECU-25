@@ -3,6 +3,7 @@
 #include "main.h"
 #include "stateMachine.h"
 #include "CANdler.h"
+#include "driving.h"
 
 uint32_t millis(void) {
     return HAL_GetTick() * (1000 / TICK_FREQ);
@@ -45,4 +46,13 @@ uint8_t ACUWarning(ACU_Status_MsgTwo *acuMsgTwo)
 {
     // Double check later
     return getBits(acuMsgTwo->Error_Warning_Bits, 5, 3);
+}
+
+void controlInverters(uint8_t driveEnable)
+{
+    globalInverterSettings.inverter[0] = (InverterSettings){0, 0, 0, driveEnable};
+    globalInverterSettings.inverter[1] = (InverterSettings){0, 0, 0, driveEnable};
+    globalInverterSettings.inverter[2] = (InverterSettings){0, 0, 0, driveEnable};
+//  globalInverterSettings.inverter[3] = (InverterSettings){0, 0, 0, driveEnable};  // Enable iff fourth motor/inverter
+    sendInverterCommand();
 }

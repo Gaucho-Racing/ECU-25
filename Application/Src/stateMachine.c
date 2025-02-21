@@ -22,7 +22,7 @@ volatile uint8_t numberOfBadMessages = 0;
 int32_t dischargeStartMillis = -1;
 uint16_t lastECUStatusMsgTick = 0;
 
-static const uint16_t howOftenToSpamECUStatusMsgs = 2500;
+static const uint16_t howOftenToSpamECUStatusMsgs = 250;
 
 void stateMachineTick(void)
 {
@@ -127,6 +127,7 @@ void precharge_complete(void)
 void ts_discharge_off(void)
 {
     setSoftwareLatch(0);
+    controlInverters(0);
 
     if(dischargeStartMillis == -1){
         dischargeStartMillis = millis();
@@ -152,14 +153,13 @@ void reflash_tune(void)
 
 void error(void)
 {
-    // DISCHARGE IF TS VOLTAGE >= 60 for some reason
-    
     setSoftwareLatch(0);
+    controlInverters(0);
 
     if(globalStatus.TractiveSystemVoltage >= 60)
     {
         globalStatus.ECUState = TS_DISCHARGE_OFF;
     }
-    
-    /* Only error resolved when MSG_ACU AND GRI says we are good -> Handled in CANdler*/
+
+    /* Only error resolved when MSG_ACU AND GRI says we are good -> Handled in CANdler */
 }

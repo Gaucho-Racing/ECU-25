@@ -8,8 +8,10 @@
 #include "inverter.h"
 #include "fdcan.h"
 #include "msgIDs.h"
+#include "utils.h"
 
 bool BSE_APPS_violation = false;
+volatile InverterLump globalInverterSettings = {0};
 
 inline float mVehicleSpeedMPH()
 {
@@ -18,27 +20,31 @@ inline float mVehicleSpeedMPH()
 
 int32_t lastInverterPingMillis = -1;
 
-void sendInverterCommand(void)
+void sendInverterCommand()
 {
-    if(millis() - lastInverterPingMillis >= 100)
+    if(millis() - lastInverterPingMillis >= 50) // Must send every 100 ms
     {
         lastInverterPingMillis = millis();
-        writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_1, (uint8_t*)(globalInverterSettings[0]), 7);
-        writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_2, (uint8_t*)(globalInverterSettings[1]), 7);
-        writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_3, (uint8_t*)(globalInverterSettings[2]), 7);
-        writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_4, (uint8_t*)(globalInverterSettings[3]), 7);
+        writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_1, (uint8_t*)(globalInverterSettings.firstMsg), 7);
+        writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_2, (uint8_t*)(globalInverterSettings.secondMsg), 7);
+        writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_3, (uint8_t*)(globalInverterSettings.thirdMsg), 7);
+//      writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_4, (uint8_t*)(globalInverterSettings.fourthMsg), 7);   // Enable iff fourth motor/inverter
     }
 }
 
 void drive_standby(void)
 {
+    controlInverters(1);
+//  globalInverterSettings.inverter[3] = (InverterSettings){0, 0, 0, 1};    // Enable iff fourth motor/inverter
     // If rtd off, go back to precharge complete handled in CAN
     
     // torque stuff waiting for vdm
+    sendInverterCommand(false);
 }
 
 void drive_active_idle(void)
 {
+    controlInverters(1);
     // LOTS OF https://github.com/Gaucho-Racing/VDM-24/blob/9ee4839ee6e5ce32a51602fe23723db5d23b1eaf/src/main.cpp#L1214
     float throttle1 = (float)analogRead(APPS1_SIGNAL)/ADC_MAX;
 
@@ -54,6 +60,8 @@ void drive_active_idle(void)
        globalStatus.ECUState = DRIVE_STANDBY;
        return;
     }
+    
+    sendInverterCommand(false);
 }
 
 void drive_active_power(void)
@@ -77,7 +85,7 @@ void drive_active_power(void)
         return;
     }
 
-    
+    sendInverterCommand(false);
 }
 
 void drive_active_regen(void)
@@ -93,4 +101,6 @@ void drive_active_regen(void)
     // Following is handled already
     if (false /*TS ACTIVE button disabled*/ || false /*ACU shutdown*/ || false /*Critical error*/)
        globalStatus.ECUState = TS_DISCHARGE_OFF;
+    
+    sendInverterCommand(false);
 }

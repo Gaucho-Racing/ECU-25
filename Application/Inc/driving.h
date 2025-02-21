@@ -18,12 +18,25 @@ typedef struct {
     uint8_t Drive_Enable;   // Must be 1 to enable inverter
 } InverterSettings;
 
-InverterSettings globalInverterSettings[4] = {0};
+typedef union {
+    struct {
+        InverterSettings inverter[4];
+    };
+
+    struct {
+        uint8_t firstMsg;
+        uint8_t secondMsg;
+        uint8_t thirdMsg;
+        uint8_t fourthMsg;
+    };
+} InverterLump;
+
+extern volatile InverterLump globalInverterSettings;
 
 /*
 Send the inverter command message to enable the inverter
 */
-void sendInverterCommand(void);
+void sendInverterCommand();
 
 /*
 Ready to go, drive standby
