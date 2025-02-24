@@ -29,13 +29,9 @@ static bool pingHasReturned[PINGCOUNT] = {false};
 
 void pingSchedule(void)
 {
-    static bool hasPinged = false;
+    static uint32_t nextPingTime = 0;
 
-    if(millis() % PINGTIMEOUT >= PINGTIMEOUT/2) {
-        hasPinged = false;
-        return;
-    }
-    if(hasPinged == true) {
+    if(millis() < nextPingTime) {
         return;
     }
 
@@ -54,6 +50,8 @@ void pingSchedule(void)
 
     uint32_t tick = HAL_GetTick();
     writeMessage(1, MSG_PING, GR_ALL, (uint8_t *)&tick, sizeof(uint32_t));
+
+    nextPingTime += PINGTIMEOUT;
 }
 
 void respondToPing(uint8_t destID, uint32_t timestamp) {
