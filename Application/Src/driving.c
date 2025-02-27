@@ -11,26 +11,12 @@
 #include "utils.h"
 
 volatile bool BSE_APPS_violation = false;
-volatile InverterLump globalInverterSettings = {0};
-
-volatile int32_t lastInverterPingMillis = -1;
 
 float mVehicleSpeedMPH(void)
 {
     return ((getERPM() / MOTOR_POLE_PAIRS) * 2 * M_PI * WHEEL_RADIUS_IN) / (GEAR_RATIO * 1056.0);
 }
 
-void sendInverterCommand(void)
-{
-    if(millis() - lastInverterPingMillis >= 50) // Must send every 100 ms
-    {
-        lastInverterPingMillis = millis();
-        writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_1, (uint8_t*)&globalInverterSettings.firstMsg, 7);
-        writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_2, (uint8_t*)&globalInverterSettings.secondMsg, 7);
-        writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_3, (uint8_t*)&globalInverterSettings.thirdMsg, 7);
-//      writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_4, (uint8_t*)&globalInverterSettings.fourthMsg, 7);
-    }
-}
 
 void sendBseAppsViolationMessage(void)
 {

@@ -13,7 +13,6 @@ uint8_t getBits(uint8_t number, uint8_t indexFromLeft, uint8_t length);
 
 void setSoftwareLatch(uint8_t close);
 
-void controlInverters(uint8_t driveEnable);
 
 uint8_t ACUError(ACU_Status_MsgTwo *acuMsgTwo);
 uint8_t GRIError(Inverter_Status_Msg_Three *msgGriThree);

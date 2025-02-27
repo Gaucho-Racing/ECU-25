@@ -12,27 +12,6 @@
 #define MOTOR_POLE_PAIRS 10.0
 #define WHEEL_RADIUS_IN 8.0 // inches
 
-typedef struct {
-    uint16_t Set_AC_Current;
-    uint16_t Set_DC_Current;
-    uint16_t RPM_Limit;
-    uint8_t Drive_Enable;   // Must be 1 to enable inverter
-} InverterSettings;
-
-typedef union {
-    struct {
-        InverterSettings inverter[4];
-    };
-
-    struct {
-        uint8_t firstMsg;
-        uint8_t secondMsg;
-        uint8_t thirdMsg;
-        uint8_t fourthMsg;
-    };
-} InverterLump;
-
-extern volatile InverterLump globalInverterSettings;
 extern volatile bool BSE_APPS_violation;
 
 /*

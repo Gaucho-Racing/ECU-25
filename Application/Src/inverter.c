@@ -3,6 +3,33 @@
 
 #include "utils.h"
 #include "inverter.h"
+#include "fdcan.h"
+#include "msgIDs.h"
+
+volatile InverterSettings globalInverterSettings[4] = {0};
+
+volatile int32_t lastInverterPingMillis = -1;
+
+void sendInverterCommand(void)
+{
+    if(millis() - lastInverterPingMillis >= 50) // Must send every 100 ms
+    {
+        lastInverterPingMillis = millis();
+        writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_1, (uint8_t*)&globalInverterSettings[0], 7);
+        writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_2, (uint8_t*)&globalInverterSettings[1], 7);
+        writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_3, (uint8_t*)&globalInverterSettings[2], 7);
+//      writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_4, (uint8_t*)&globalInverterSettings[3], 7);
+    }
+}
+
+void controlInverters(uint8_t driveEnable)
+{
+    globalInverterSettings[0] = (InverterSettings){0, 0, 0, driveEnable};
+    globalInverterSettings[1] = (InverterSettings){0, 0, 0, driveEnable};
+    globalInverterSettings[2] = (InverterSettings){0, 0, 0, driveEnable};
+//  globalInverterSettings[3] = (InverterSettings){0, 0, 0, driveEnable};  // Enable iff fourth motor/inverter
+    sendInverterCommand();
+}
 
 // I am so sorry...
 // https://github.com/Gaucho-Racing/VDM-24/blob/main/src/Nodes.h

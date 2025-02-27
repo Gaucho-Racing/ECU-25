@@ -3,6 +3,15 @@
 
 #ifndef INVERTER_H
     #define INVERTER_H
+    typedef struct {
+        uint16_t Set_AC_Current;
+        uint16_t Set_DC_Current;
+        uint16_t RPM_Limit;
+        uint8_t Drive_Enable;   // Must be 1 to enable inverter
+    } InverterSettings;
+
+    extern volatile InverterSettings globalInverterSettings[4];
+    void controlInverters(uint8_t driveEnable);
 
     long getERPM(void);
     float getDuty(void);

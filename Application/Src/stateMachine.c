@@ -2,6 +2,7 @@
 #include "stm32g4xx_hal.h"
 #include "stateMachine.h"
 #include "driving.h"
+#include "inverter.h"
 #include "main.h"
 #include "utils.h"
 #include "adc.h"
