@@ -119,7 +119,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
             
             // IR- -> 1 = ACU Precharge Confirmation
-            if((globalStatus.ECUState == PRECHARGE_ENGAGED) && (getBit(acuMsgTwo->Precharge_Errror_IR_State_Software_Latch_Bits, 1) == 0x1))
+            if((globalStatus.ECUState == PRECHARGE_ENGAGED) && (getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 1) == 0x1))
             {
                 globalStatus.ECUState = PRECHARGING;
             }
