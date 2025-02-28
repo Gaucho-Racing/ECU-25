@@ -23,8 +23,7 @@ typedef struct {
     uint8_t Min_Cell_Voltage;
     uint8_t Max_Cell_Temp;
     uint8_t Error_Warning_Bits;
-    uint8_t Precharge_Error;
-    uint8_t IR_State_Software_Latch_Bits;
+    uint8_t Precharge_Errror_IR_State_Software_Latch_Bits;  // All in one!
 } ACU_Status_MsgTwo;
 
 typedef struct {
