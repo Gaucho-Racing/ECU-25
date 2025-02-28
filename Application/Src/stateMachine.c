@@ -1,4 +1,5 @@
 #include <stdbool.h>
+
 #include "stm32g4xx_hal.h"
 #include "stateMachine.h"
 #include "driving.h"
