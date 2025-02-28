@@ -247,7 +247,24 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             bool rtd = dashStatusMsg->RTDButtonData < 0;
 
             HAL_GPIO_WritePin(RTD_CONTROL_GPIO_Port, RTD_CONTROL_Pin, rtd);
-
+/*
+            switch(globalStatus.ECUState){
+                case GLV_ON:
+                    if(ts_on){
+                        globalStatus.ECUState = PRECHARGE_ENGAGED;
+                    }
+                    break;
+                case PRECHARGE_ENGAGED:
+                    if(!ts_on){
+                        globalStatus.ECUState = GLV_ON;
+                    }
+                    break;
+                case DRIVE_STANDBY:
+                    if(!rtd){
+                        globalStatus.ECUState = PRECHARGE
+                    }
+            }
+*/
             if (globalStatus.ECUState == GLV_ON)
             {
                 if(ts_on)
