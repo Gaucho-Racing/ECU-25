@@ -105,11 +105,11 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             //Error handling and leaving error state
-            if ((errorFlagBitsCan || getBit(acuMsgTwo->Precharge_Errror_IR_State_Software_Latch_Bits, 0) == 0x1) && globalStatus.TractiveSystemVoltage >= 60)
+            if ((errorFlagBitsCan || getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 0) == 0x1) && globalStatus.TractiveSystemVoltage >= 60)
             {
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
-            else if(errorFlagBitsCan || getBit(acuMsgTwo->Precharge_Errror_IR_State_Software_Latch_Bits, 0) == 0x1)
+            else if(errorFlagBitsCan || getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 0) == 0x1)
             {
                 globalStatus.ECUState = ERRORSTATE;
             }
