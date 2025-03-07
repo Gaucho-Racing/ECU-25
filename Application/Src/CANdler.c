@@ -104,6 +104,8 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 writeMessage(1, MSG_DEBUG_2_0, GR_ALL, (uint8_t*)"UnderVol", 8); // Until they figure out how they want to talk to us...
             }
 
+
+
             //Error handling and leaving error state
             if ((errorFlagBitsCan || getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 0) == 0x1) && globalStatus.TractiveSystemVoltage >= 60)
             {
@@ -118,6 +120,32 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 globalStatus.ECUState = GLV_ON;
             }
             
+
+
+            switch(globalStatus.ECUState){
+                case GLV_ON:
+                    break;
+                case PRECHARGE_ENGAGED:
+                    if(getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 1) == 0x1){
+                        globalStatus.ECUState = PRECHARGING;
+                    }
+                    break;
+                case PRECHARGING:
+                    if(getBits(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 0, 4) == 0x07){
+                        globalStatus.ECUState = PRECHARGE_COMPLETE;
+                    }
+                    //don't add a break here
+                default:
+                    if(getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 1) == 0x0 || getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 2) == 0x00 && globalStatus.ECUState != PRECHARGING){
+                        globalStatus.ECUState = TS_DISCHARGE_OFF;
+                    }
+            }
+            //If ACU software latch ever opens or IR- ever opens while IR+ is closed, something has gone wrong
+            if(getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 3) == 0x00 || getBits(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 1, 2) == 0x01)
+            {
+                globalStatus.ECUState = TS_DISCHARGE_OFF;
+            }
+/*
             // IR- -> 1 = ACU Precharge Confirmation
             if((globalStatus.ECUState == PRECHARGE_ENGAGED) && (getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 1) == 0x1))
             {
@@ -125,30 +153,30 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             // If IR- ever becomes 0 while not in GLV_ON or PRECHARGE_ENGAGED, that is a precharge cancellation and it must start discharging.
-            if(getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 0) == 0x0 && (globalStatus.ECUState != GLV_ON) && (globalStatus.ECUState != PRECHARGE_ENGAGED))
+            if(getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 1) == 0x0 && (globalStatus.ECUState != GLV_ON) && (globalStatus.ECUState != PRECHARGE_ENGAGED))
             {
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
 
-            // If it is precharging with IR- closed and then IR+ goes closed as well, precharge is complete (success confirmation)
+            // If it is precharging with IR- closed and then IR+ goes closed as well without precharge error, precharge is complete (success confirmation)
             // IR+ -> 1 is precharge success confirmation
-            if((getBits(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 1, 3) == 0x3) && (globalStatus.ECUState == PRECHARGING))
+            if((getBits(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 0, 4) == 0x07) && (globalStatus.ECUState == PRECHARGING))
             {
                 globalStatus.ECUState = PRECHARGE_COMPLETE;
             }
 
             //If IR+ ever opens on or after the precharging complete state, start discharging
-            if(getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 2) == 0x0 && globalStatus.ECUState != GLV_ON && globalStatus.ECUState != PRECHARGE_ENGAGED && globalStatus.ECUState != PRECHARGING)
+            if(getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 2) == 0x00 && globalStatus.ECUState != GLV_ON && globalStatus.ECUState != PRECHARGE_ENGAGED && globalStatus.ECUState != PRECHARGING)
             {
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
 
-            //If ACU software latch ever opens IR- ever opens while IR+ is closed, something has gone wrong
-            if(getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 3) == 0x0 || getBits(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 1, 3) == 0x2)
+            //If ACU software latch ever opens or IR- ever opens while IR+ is closed, something has gone wrong
+            if(getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 3) == 0x00 || getBits(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 1, 2) == 0x01)
             {
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
-
+*/
             // USE ACUWarning(acuMsgTwo) HERE FOR DASH WARNINGS
             break;
         case MSG_ACU_STATUS_3:
@@ -247,7 +275,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             bool rtd = dashStatusMsg->RTDButtonData < 0;
 
             HAL_GPIO_WritePin(RTD_CONTROL_GPIO_Port, RTD_CONTROL_Pin, rtd);
-/*
+
             switch(globalStatus.ECUState){
                 case GLV_ON:
                     if(ts_on){
@@ -261,10 +289,20 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                     break;
                 case DRIVE_STANDBY:
                     if(!rtd){
-                        globalStatus.ECUState = PRECHARGE
+                        globalStatus.ECUState = PRECHARGE_COMPLETE;
+                    }
+                    //don't add a break here
+                case PRECHARGE_COMPLETE:
+                    if(rtd && analogRead(BRAKE_F_SIGNAL) > 100 && analogRead(BRAKE_R_SIGNAL) > 100){
+                        globalStatus.ECUState = DRIVE_STANDBY;
+                    }
+                    //don't add a break here
+                default:
+                    if(!ts_on){
+                        globalStatus.ECUState = TS_DISCHARGE_OFF;
                     }
             }
-*/
+/*
             if (globalStatus.ECUState == GLV_ON)
             {
                 if(ts_on)
@@ -288,7 +326,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             {
                 globalStatus.ECUState = PRECHARGE_COMPLETE;
             }
-
+*/
             break;
 
         case MSG_FAN_STATUS:
