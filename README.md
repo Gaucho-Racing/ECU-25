@@ -2,7 +2,7 @@
 To get the submodule added correctly, run:
 ```
 git submodule init
-git submodule update
+git submodule update --remote
 cmake --preset Debug
 cd build/Debug
 ninja
