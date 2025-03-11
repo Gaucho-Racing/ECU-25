@@ -330,7 +330,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             break;
 
         case MSG_FAN_STATUS:
-            if (length != 5) {
+            if (length != 4) {
                 numberOfBadMessages++;
                 return;
             } else {
