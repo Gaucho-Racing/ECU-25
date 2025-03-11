@@ -79,7 +79,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             break;
         case MSG_ACU_STATUS_2:
-            if (length != 8) {
+            if (length != 7) {
                 numberOfBadMessages++;
                 return;
             } else {
@@ -193,7 +193,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             break;
 
         case MSG_DC_DC_STATUS:
-            if (length != 8) {
+            if (length != 7) {
                 numberOfBadMessages++;
                 return;
             } else {
@@ -229,7 +229,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             break;
         case MSG_INVERTER_STATUS_3:
-            if (length != 3) {
+            if (length != 2) {
                 numberOfBadMessages++;
                 return;
             } else {
@@ -263,7 +263,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             break;
         case MSG_DASH_STATUS:
-            if (length != 1) {
+            if (length != 3) {
                 numberOfBadMessages++;
                 return;
             } else {
