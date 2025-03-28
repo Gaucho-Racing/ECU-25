@@ -93,7 +93,7 @@
 
     Complicated. Refer to the actual code for the best understanding.
 
-    Once TSV is higher than 60 volts and we leave drive state for any reason.
+    Once TSV is higher than TS_VOLTAGE_OFF_LIMIT volts and we leave drive state for any reason.
     Discharges the TS so that HV systems can be safe iff there are no errors.
     Can be errorful or standardly running when this state is reached.
 
@@ -116,7 +116,7 @@
 
     Complicated. Refer to the actual code for the best understanding.
 
-    Attempts to send to discharge if TSV > 60 volts.
+    Attempts to send to discharge if TSV > TS_VOLTAGE_OFF_LIMIT volts.
 
     Pretty much holds state until errors resolved.
     */

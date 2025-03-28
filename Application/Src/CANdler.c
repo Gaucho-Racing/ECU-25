@@ -88,7 +88,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             ACU_Status_MsgTwo* acuMsgTwo = (ACU_Status_MsgTwo*)data;
             globalStatus.MaxCellTemp = acuMsgTwo->Max_Cell_Temp;
 
-            //errorFlagBitsCan logic
+            // errorFlagBitsCan logic
             if (ACUError(acuMsgTwo) && (errorFlagBitsCan == 0 || errorFlagBitsCan == 2))
             {
                 errorFlagBitsCan += 1;
@@ -105,7 +105,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             //Error handling and leaving error state
-            if ((errorFlagBitsCan || getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 0) == 0x1) && globalStatus.TractiveSystemVoltage >= 60)
+            if ((errorFlagBitsCan || getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 0) == 0x1) && globalStatus.TractiveSystemVoltage >= TS_VOLTAGE_OFF_LIMIT)
             {
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
@@ -113,7 +113,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             {
                 globalStatus.ECUState = ERRORSTATE;
             }
-            else if (globalStatus.ECUState == ERRORSTATE || (globalStatus.ECUState == TS_DISCHARGE_OFF && globalStatus.TractiveSystemVoltage < 60))
+            else if (globalStatus.ECUState == ERRORSTATE || (globalStatus.ECUState == TS_DISCHARGE_OFF && globalStatus.TractiveSystemVoltage < TS_VOLTAGE_OFF_LIMIT))
             {
                 globalStatus.ECUState = GLV_ON;
             }
@@ -229,7 +229,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 errorFlagBitsCan -= 2;
             }
 
-            if (errorFlagBitsCan && globalStatus.TractiveSystemVoltage >= 60)
+            if (errorFlagBitsCan && globalStatus.TractiveSystemVoltage >= TS_VOLTAGE_OFF_LIMIT)
             {
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
@@ -237,7 +237,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             {
                 globalStatus.ECUState = ERRORSTATE;
             }
-            else if (globalStatus.ECUState == ERRORSTATE || (globalStatus.ECUState == TS_DISCHARGE_OFF && globalStatus.TractiveSystemVoltage < 60))
+            else if (globalStatus.ECUState == ERRORSTATE || (globalStatus.ECUState == TS_DISCHARGE_OFF && globalStatus.TractiveSystemVoltage < TS_VOLTAGE_OFF_LIMIT))
             {
                 globalStatus.ECUState = GLV_ON;
             }

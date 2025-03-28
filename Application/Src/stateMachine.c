@@ -136,9 +136,9 @@ void ts_discharge_off(void)
         dischargeStartMillis = millis();
     }
     
-    if ((millis() - dischargeStartMillis) > HOW_LONG_TSDISCHARGE_UNTIL_ERROR_MS) // Magic number :)
+    if ((millis() - dischargeStartMillis) > HOW_LONG_TSDISCHARGE_UNTIL_ERROR_MS)
     {
-        globalStatus.ECUState = ERRORSTATE;  // ERRORSTATE will send it back if voltage >= 60
+        globalStatus.ECUState = ERRORSTATE;  // ERRORSTATE will send it back if voltage >= TS_VOLTAGE_OFF_LIMIT
     }
 }
 
