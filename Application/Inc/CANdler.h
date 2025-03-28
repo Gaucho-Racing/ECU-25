@@ -39,42 +39,15 @@
     } ACU_Status_MsgTwo;
 
     typedef struct {
-        uint16_t HV_Input_Voltage;
-        uint16_t HV_Output_Voltage;
-        uint16_t HV_Input_Current;
-        uint16_t HV_Output_Current;
-    } ACU_Status_MsgThree;
-
-    typedef struct {
-         uint8_t Input_Voltage;
-         uint8_t Output_Voltage;
-         uint8_t Input_Current;
-         uint8_t Output_Current;
-    } Msg_Lv_Dc_Dc_Status;
-
-    typedef struct {
         uint16_t AC_current;
         uint16_t DC_current;
         uint16_t Motor_Rpm;
     } Inverter_Status_Msg_One;
 
     typedef struct {
-        uint8_t U_MOSFET_temperature;
-        uint8_t V_MOSFET_temperature;
-        uint8_t W_MOSFET_temperature;
-    } Inverter_Status_Msg_Two;
-
-    typedef struct {
         uint8_t Motor_temperature;
         uint8_t fault_map;
     } Inverter_Status_Msg_Three;
-
-    typedef struct {
-        uint16_t Fan_Speed;
-        uint8_t Input_Voltage;
-        uint8_t Output_Voltage;
-        uint8_t Current;
-    } Fan_Status_Msg;
 
     typedef struct {
         uint8_t Current_Torque_Map_Encoder;
