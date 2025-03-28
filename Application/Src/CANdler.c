@@ -272,6 +272,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                     }
 
                     break;
+
                 case PRECHARGE_ENGAGED:
                     if (!ts_on)
                     {
@@ -279,6 +280,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                     }
 
                     break;
+
                 case DRIVE_STANDBY:
                     if (!rtd)
                     {
@@ -286,6 +288,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                     }
 
                     break;
+
                 case PRECHARGE_COMPLETE:
                     if (rtd && analogRead(BRAKE_F_SIGNAL) > 100 && analogRead(BRAKE_R_SIGNAL) > 100)
                     {
@@ -293,6 +296,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                     }
 
                     break;
+
                 default:
                     if (!ts_on)
                     {
