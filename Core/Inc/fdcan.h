@@ -47,6 +47,17 @@ void MX_FDCAN1_Init(void);
 void MX_FDCAN2_Init(void);
 
 /* USER CODE BEGIN Prototypes */
+/**
+Write Message
+
+@param bus Bus to send on
+@param msgID Message ID of what is being sent
+@param destID Destination ID of where to send to
+@param data[] Array of bytes to send
+@param len Length of data array
+
+Adds a message to the HAL internal FIFO transmission queue to send when hardware allows.
+*/
 void writeMessage(uint8_t bus, uint16_t msgID, uint8_t destID, uint8_t data[], uint32_t len);
 /* USER CODE END Prototypes */
 
