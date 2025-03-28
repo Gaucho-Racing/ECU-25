@@ -15,6 +15,7 @@
     void sendInverterCommand(void);
 
     // FIXME Must implement lots of state-caching
+    uint8_t data[5][8];
 
     long getERPM(void);
     float getDuty(void);
