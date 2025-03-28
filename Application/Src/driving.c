@@ -70,7 +70,7 @@ void drive_active_power(void)
         globalStatus.ECUState = DRIVE_STANDBY;
         BSE_APPS_violation = true;
     }
-    else if(throttle1 < APPS_DEADZONE)
+    else if (throttle1 < APPS_DEADZONE)
     {
         globalStatus.ECUState = DRIVE_STANDBY;
     }
@@ -93,7 +93,7 @@ void drive_active_regen(void)
     {
         globalStatus.ECUState = DRIVE_ACTIVE_POWER;
     }
-    else if(vehicleSpeedMPH() < REGEN_MPH || globalSteeringStatusRegen == 0)
+    else if (vehicleSpeedMPH() < REGEN_MPH || globalSteeringStatusRegen == 0)
     {
         globalStatus.ECUState = DRIVE_ACTIVE_IDLE;
     }

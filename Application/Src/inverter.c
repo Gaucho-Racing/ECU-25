@@ -19,7 +19,7 @@ volatile int32_t lastInverterPingMillis = -1;
 
 void sendInverterCommand(void)
 {
-    if(millis() - lastInverterPingMillis >= 50) // Must send every 100 ms
+    if (millis() - lastInverterPingMillis >= 50) // Must send every 100 ms
     {
         lastInverterPingMillis = millis();
         writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_1, (uint8_t*)&globalInverterSettings[0], 7);

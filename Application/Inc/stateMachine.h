@@ -3,6 +3,8 @@
 #ifndef STATEMACHINE_H
     #define STATEMACHINE_H
 
+    #define HOW_LONG_TSDISCHARGE_UNTIL_ERROR_MS 5000
+
     typedef enum {
         GLV_ON = 1,
         PRECHARGE_ENGAGED = 2,

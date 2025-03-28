@@ -12,7 +12,8 @@ GPIO_PinState ledState;
 int ledArray[] = {15, 14, 13, 12, 11, 10, 9, 8};
 uint32_t count;
 
-int main() {
+int main()
+{
 
     HAL_Init();
     SystemClock_Config();
@@ -24,13 +25,15 @@ int main() {
     led.Speed = GPIO_SPEED_FREQ_LOW;
     HAL_GPIO_Init(GPIOC, &led);
     count = 1;
-    while (1) {
+    while (1)
+    {
         ledControl();
     }
 
     return 0;
 }
 
-void ledControl() {
+void ledControl()
+{
     
 }

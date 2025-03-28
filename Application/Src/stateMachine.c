@@ -34,11 +34,13 @@ void stateMachineTick(void)
         Error_Handler();
     }
 
-    if(globalStatus.ECUState != TS_DISCHARGE_OFF){
+    if (globalStatus.ECUState != TS_DISCHARGE_OFF)
+    {
         dischargeStartMillis = -1;
     }
 
-    switch(globalStatus.ECUState) {
+    switch(globalStatus.ECUState)
+    {
         case GLV_ON:
             glv_on();
             break;
@@ -88,7 +90,7 @@ void stateMachineTick(void)
 void glv_on(void)
 {
     // For safety
-    if(globalStatus.TractiveSystemVoltage >= 60)
+    if (globalStatus.TractiveSystemVoltage >= 60)
     {
         globalStatus.ECUState = TS_DISCHARGE_OFF;
         return;
@@ -96,14 +98,14 @@ void glv_on(void)
 
     // Close software latch, should be error free at this point Also reset power level
     setSoftwareLatch(1);
-    globalStatus.PowerLevelTorqueMap = 0xFF;
+    globalStatus.PowerLevelTorqueMap = 0xFF;    // TODO Confirm this should not be 0x00
     // TS on handled in CANdler.c::handleCANMessage, under case MSG_DASH_STATUS
 }
 
 void precharge_engaged(void)
 {
     // For safety
-    if(globalStatus.TractiveSystemVoltage >= 60)
+    if (globalStatus.TractiveSystemVoltage >= 60)
     {
         globalStatus.ECUState = TS_DISCHARGE_OFF;
     }
@@ -131,11 +133,12 @@ void ts_discharge_off(void)
     setSoftwareLatch(0);
     controlInverters(0);
 
-    if(dischargeStartMillis == -1){
+    if (dischargeStartMillis == -1)
+    {
         dischargeStartMillis = millis();
     }
     
-    if ((millis() - dischargeStartMillis) > 5000) // Magic number :)
+    if ((millis() - dischargeStartMillis) > HOW_LONG_TSDISCHARGE_UNTIL_ERROR_MS) // Magic number :)
     {
         globalStatus.ECUState = ERRORSTATE;  // ERRORSTATE will send it back if voltage >= 60
     }
@@ -158,7 +161,7 @@ void error(void)
     setSoftwareLatch(0);
     controlInverters(0);
 
-    if(globalStatus.TractiveSystemVoltage >= 60)
+    if (globalStatus.TractiveSystemVoltage >= 60)
     {
         globalStatus.ECUState = TS_DISCHARGE_OFF;
     }

@@ -33,17 +33,22 @@ void pingSchedule(void)
 {
     static uint32_t nextPingTime = 0;
 
-    if(millis() < nextPingTime) {
+    if (millis() < nextPingTime)
+    {
         return;
     }
 
     // check for timed out pings
-    for(int i = 0; i < PINGCOUNT; i++) {
-        if(!pingHasReturned[i]) {
+    for (int i = 0; i < PINGCOUNT; i++)
+    {
+        if (!pingHasReturned[i])
+        {
             pingTimes[i] = PINGTIMEOUT*(TICK_FREQ/1000);
 
             *(globalStatus.StatusBits) &= ~(1 << i);  // Set i-th bit to 0
-        } else {
+        }
+        else
+        {
             *(globalStatus.StatusBits) |= (1 << i);   // Set i-th bit to 1
         }
 
@@ -56,9 +61,12 @@ void pingSchedule(void)
     nextPingTime += PINGTIMEOUT;
 }
 
-void respondToPing(uint8_t destID, uint32_t timestamp) {
-    for(int i = 0; i < PINGCOUNT; i++) {
-        if(destID == pingIDs[i]){
+void respondToPing(uint8_t destID, uint32_t timestamp)
+{
+    for (int i = 0; i < PINGCOUNT; i++)
+    {
+        if (destID == pingIDs[i])
+        {
             pingTimes[i] = HAL_GetTick() - timestamp;
             pingHasReturned[i] = true;
             return;
