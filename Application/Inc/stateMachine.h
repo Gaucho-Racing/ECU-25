@@ -17,7 +17,7 @@
         DRIVE_ACTIVE_REGEN = 8,
         TS_DISCHARGE_OFF = 9,
         REFLASH_TUNE = 10,
-        ERRORSTATE = 11
+        ERRORSTATE = 11,
     } State;
 
     typedef union {
