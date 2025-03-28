@@ -1,42 +1,64 @@
 #include <stdbool.h>
+
 #include "stateMachine.h"
 
 #ifndef DRIVING_H
-#define DRIVING_H
+    #define DRIVING_H
 
-#define APPS_DEADZONE 0.05
-#define BSE_DEADZONE 0.05
-#define REGEN_MPH 5
+    #define APPS_DEADZONE 0.05
+    #define BSE_DEADZONE 0.05
+    #define REGEN_MPH 5
 
-#define GEAR_RATIO 3.55
-#define MOTOR_POLE_PAIRS 10.0
-#define WHEEL_RADIUS_IN 8.0 // inches
+    #define GEAR_RATIO 3.55
+    #define MOTOR_POLE_PAIRS 10.0
+    #define WHEEL_RADIUS_IN 8.0 // inches
 
-extern volatile bool BSE_APPS_violation;
+    #define POWERLEVEL_TORQUEMAP_RESET 0xFF
 
-/*
-Send the inverter command message to control the inverters based off of the globalInverterSettings
-*/
-void sendInverterCommand(void);
+    extern volatile bool BSE_APPS_violation;
 
-/*
-Ready to go, drive standby
-*/
-void drive_standby(void);
+    /**
+    Vehicle Speed in MPH
 
-/*
-Drive active sub state, idle
-*/
-void drive_active_idle(void);
+    Valid once message `DTI Data 1` has been recieved.
+    */
+   float vehicleSpeedMPH(void);
 
-/*
-Drive active sub state, power
-*/
-void drive_active_power(void);
+    /**
+    Drive Standby
 
-/*
-Drive active sub state, regen
-*/
-void drive_active_regen(void);
+    Once `PRECHARGE_COMPLETE` and brake depressed and RTD on or noncritical violation.
+
+    Awaits a valid torque request or an error of some form.
+    */
+    void drive_standby(void);
+
+    /**
+    Drive Active - Idle
+
+    Not requesting torque, but still driving.
+    Times out if no action requested.
+
+    Not implemented yet, pending TV.
+    */
+    void drive_active_idle(void);
+
+    /**
+    Drive Active - Power
+
+    Requesting torque, still driving.
+
+    Not implemented yet, pending TV.
+    */
+    void drive_active_power(void);
+
+    /**
+    Drive Active - Regenerative
+
+    Requesting negative torque to slow the car and recharge the battery.
+
+    Not implemented yet, pending TV.
+    */
+    void drive_active_regen(void);
 
 #endif // DRIVING_H

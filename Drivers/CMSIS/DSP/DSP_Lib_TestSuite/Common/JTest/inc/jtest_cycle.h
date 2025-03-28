@@ -65,7 +65,7 @@ extern const char * JTEST_CYCLE_STRF;
     } while (0)
 
 #else
-/* TODO */
+
 #define JTEST_COUNT_CYCLES(fn_call)                     \
     do                                                  \
     {                                                   \

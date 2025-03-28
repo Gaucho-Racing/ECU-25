@@ -35,17 +35,17 @@ FDCAN_TxHeaderTypeDef TxHeader = {
     .MessageMarker = 0 // also change this to a real address if you change fifo control
 };
 
-void writeMessage(uint8_t bus, uint16_t msgID, uint8_t destID, uint8_t data[], uint32_t len) {
+void writeMessage(BusCAN bus, uint16_t msgID, uint8_t destID, uint8_t data[], uint32_t len) {
     TxHeader.Identifier = (LOCAL_GR_ID << 20) | (msgID << 8) | destID;
     TxHeader.DataLength = len;
 
     FDCAN_HandleTypeDef *handle;
-    switch(bus) {
-        case 1:
+    switch(bus) { // TODO Triple check if any other differences exist
+        case PrimaryBusCAN:
             handle = &hfdcan1;
             TxHeader.FDFormat = FDCAN_CLASSIC_CAN;
             break;
-        case 2:
+        case DataBusCAN:
             handle = &hfdcan2;
             TxHeader.FDFormat = FDCAN_FD_CAN;
             break;

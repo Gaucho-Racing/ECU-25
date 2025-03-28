@@ -1,90 +1,137 @@
-#ifndef STATEMACHINE_H
-#define STATEMACHINE_H
-
 #include <stdint.h>
 
-typedef enum {
-    GLV_ON,
-    PRECHARGE_ENGAGED,
-    PRECHARGING,
-    PRECHARGE_COMPLETE,
-    DRIVE_STANDBY,
-    DRIVE_ACTIVE_IDLE,
-    DRIVE_ACTIVE_POWER,
-    DRIVE_ACTIVE_REGEN,
-    TS_DISCHARGE_OFF,
-    REFLASH_TUNE,
-    ERRORSTATE
-} State;
+#ifndef STATEMACHINE_H
+    #define STATEMACHINE_H
 
-typedef union {
-    struct {
-        uint8_t ECUState;
-        uint8_t StatusBits[3];
-        uint8_t PowerLevelTorqueMap;
-        uint8_t MaxCellTemp;
-        uint8_t AccumulatorStateOfCharge;
-        uint8_t GLVStateOfCharge;
-        uint16_t TractiveSystemVoltage;
-        uint16_t VehicleSpeed;
-        uint16_t FRWheelRPM;
-        uint16_t FLWheelRPM;
-        uint16_t RRWheelRPM;
-        uint16_t RLWheelRPM;
-    };
+    #define HOW_LONG_TSDISCHARGE_UNTIL_ERROR_MS 5000
+    #define TS_VOLTAGE_OFF_LIMIT 60
+    #define BAD_MESSAGE_LIMIT 3
+    #define BAD_TIME_Negative1 -1
 
-    struct {
-        uint8_t ECUStatusMsgOne[8];
-        uint8_t ECUStatusMsgTwo[8];
-        uint8_t ECUStatusMsgThree[4];
-    };
-} StatusLump;
+    typedef enum {
+        GLV_ON = (uint8_t)1,
+        PRECHARGE_ENGAGED = (uint8_t)2,
+        PRECHARGING = (uint8_t)3,
+        PRECHARGE_COMPLETE = (uint8_t)4,
+        DRIVE_STANDBY = (uint8_t)5,
+        DRIVE_ACTIVE_IDLE = (uint8_t)6,
+        DRIVE_ACTIVE_POWER = (uint8_t)7,
+        DRIVE_ACTIVE_REGEN = (uint8_t)8,
+        TS_DISCHARGE_OFF = (uint8_t)9,
+        REFLASH_TUNE = (uint8_t)10,
+        ERRORSTATE = (uint8_t)11,
+    } State;
 
-extern volatile StatusLump globalStatus;
-extern volatile uint8_t numberOfBadMessages;
+    typedef union {
+        struct {
+            uint8_t ECUState;
+            uint8_t StatusBits[3];
+            uint8_t PowerLevelTorqueMap;
+            uint8_t MaxCellTemp;
+            uint8_t AccumulatorStateOfCharge;
+            uint8_t GLVStateOfCharge;
+            uint16_t TractiveSystemVoltage;
+            uint16_t VehicleSpeed;
+            uint16_t FRWheelRPM;
+            uint16_t FLWheelRPM;
+            uint16_t RRWheelRPM;
+            uint16_t RLWheelRPM;
+        };
 
-/*
-General low voltage on
+        struct {
+            uint8_t ECUStatusMsgOne[8];
+            uint8_t ECUStatusMsgTwo[8];
+            uint8_t ECUStatusMsgThree[4];
+        };
+    } StatusLump;
 
-When the grounded low voltage system is turned on, the microcontroller has power, 
-but the motor controller is not enabled. This is the second state that the car will enter
-after the ECU Flash is complete. Here it waits for the TS ACTIVE button to be pressed.
-*/
-void glv_on(void);
+    extern volatile StatusLump globalStatus;
+    extern volatile uint8_t numberOfBadMessages;
 
-/*
-Precharge engaged
-*/
-void precharge_engaged(void);
+    /**
+    General Low Voltage - On
 
-/*
-Precharging
-*/
-void precharging(void);
+    Once the GLVMS is set to ON this state is reached de facto.
+    This is the first state reached on the board recieving power.
+    The reciprocal off state is when the board has no power.
+    Should a terrible error occur we may be thrown back here.
 
-/*
-Precharge complete
-*/
-void precharge_complete(void);
+    However, we may configure boot to jump to `REFLASH_TUNE` instead.
+    That is pending development. The other thought is to configure via CAN.
 
-/*
-Shutting down, ts discharge off
-*/
-void ts_discharge_off(void);
+    Pretty much holds state until a CAN message comes in.
+    */
+    void glv_on(void);
 
-/*
-Set new stuff, reflash tune
-*/
-void reflash_tune(void);
+    /**
+    Precharge Engaged
 
-/*
-Error state, error
-*/
-void error(void);
+    Once in `GLV_ON` and the TSMS is set to ON.
 
-/*
-CALL ME! Pass in the state and the info and it will automatically tick
-*/
-void stateMachineTick(void);
+    Pretty much holds state.
+    */
+    void precharge_engaged(void);
+
+    /**
+    Precharging
+
+    Once in `PRECHARGE_ENGAGED` and the ACU gives a precharge confirmation.
+
+    Pretty much holds state.
+    */
+    void precharging(void);
+
+    /**
+    Precharge Complete
+
+    Once in `PRECHARGING` and the ACU gives a precharge success confirmation.
+
+    Pretty much holds state.
+    */
+    void precharge_complete(void);
+
+    /**
+    TD Discharge Off
+
+    Complicated. Refer to the actual code for the best understanding.
+
+    Once TSV is higher than TS_VOLTAGE_OFF_LIMIT volts and we leave drive state for any reason.
+    Discharges the TS so that HV systems can be safe iff there are no errors.
+    Can be errorful or standardly running when this state is reached.
+
+    Tries to reduce the HV TS if it is possible.
+    */
+    void ts_discharge_off(void);
+
+    /**
+    Reflash Tune
+
+    Might read from the SD card on startup and configure some settings.
+    Could backup parameters, change parameters, validate parameters, etc.
+
+    Pending implementation. Passes to `GLV_ON` on success.
+    */
+    void reflash_tune(void);
+
+    /**
+    Error
+
+    Complicated. Refer to the actual code for the best understanding.
+
+    Attempts to send to discharge if TSV > TS_VOLTAGE_OFF_LIMIT volts.
+
+    Pretty much holds state until errors resolved.
+    */
+    void error(void);
+
+    /**
+    State Machine Tick
+
+    Call as often as possible, handles all logic and internal systems.
+    Effectively half of the ECU, works with the interrupt-focused `CANDler.c`.
+
+    Ticks the state machine and calls the appropriate function.
+    */
+    void stateMachineTick(void);
 
 #endif // STATEMACHINE_H

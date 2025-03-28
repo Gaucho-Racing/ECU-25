@@ -10,7 +10,7 @@
 #include "utils.h"
 #include "main.h"
 
-
+// If you change pingIDs you must update PINGCOUNT
 const uint8_t pingIDs[] = {GR_ACU,
                            GR_GR_INVERTER_1,
                            GR_GR_INVERTER_2,
@@ -22,6 +22,8 @@ const uint8_t pingIDs[] = {GR_ACU,
                            GR_FAN_CONTROLLER_4,
                            GR_DASH_PANEL,
                            GR_STEERING_WHEEL};
+// If you change pingIDs you must update PINGCOUNT
+
 uint32_t pingTimes[PINGCOUNT] = {0};
 
 static bool pingHasReturned[PINGCOUNT] = {false};
@@ -31,17 +33,22 @@ void pingSchedule(void)
 {
     static uint32_t nextPingTime = 0;
 
-    if(millis() < nextPingTime) {
+    if (millis() < nextPingTime)
+    {
         return;
     }
 
     // check for timed out pings
-    for(int i = 0; i < PINGCOUNT; i++) {
-        if(!pingHasReturned[i]) {
+    for (int i = 0; i < PINGCOUNT; i++)
+    {
+        if (!pingHasReturned[i])
+        {
             pingTimes[i] = PINGTIMEOUT*(TICK_FREQ/1000);
 
             *(globalStatus.StatusBits) &= ~(1 << i);  // Set i-th bit to 0
-        } else {
+        }
+        else
+        {
             *(globalStatus.StatusBits) |= (1 << i);   // Set i-th bit to 1
         }
 
@@ -49,14 +56,17 @@ void pingSchedule(void)
     }
 
     uint32_t tick = HAL_GetTick();
-    writeMessage(1, MSG_PING, GR_ALL, (uint8_t *)&tick, sizeof(uint32_t));
+    writeMessage(PrimaryBusCAN, MSG_PING, GR_ALL, (uint8_t *)&tick, sizeof(uint32_t));
 
     nextPingTime += PINGTIMEOUT;
 }
 
-void respondToPing(uint8_t destID, uint32_t timestamp) {
-    for(int i = 0; i < PINGCOUNT; i++) {
-        if(destID == pingIDs[i]){
+void respondToPing(uint8_t destID, uint32_t timestamp)
+{
+    for (int i = 0; i < PINGCOUNT; i++)
+    {
+        if (destID == pingIDs[i])
+        {
             pingTimes[i] = HAL_GetTick() - timestamp;
             pingHasReturned[i] = true;
             return;

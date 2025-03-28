@@ -12,21 +12,20 @@
 
 volatile bool BSE_APPS_violation = false;
 
-float mVehicleSpeedMPH(void)
+float vehicleSpeedMPH(void)
 {
-    return ((getERPM() / MOTOR_POLE_PAIRS) * 2 * M_PI * WHEEL_RADIUS_IN) / (GEAR_RATIO * 1056.0);
+    return ((globalInverterData.msgOne.erpm / MOTOR_POLE_PAIRS) * 2 * M_PI * WHEEL_RADIUS_IN) / (GEAR_RATIO * 1056.0);
 }
-
 
 void sendBseAppsViolationMessage(void)
 {
     uint8_t errorMap = 0x01;
-    writeMessage(1, MSG_DASH_WARNING_FLAGS, GR_DASH_PANEL, &errorMap, 1);
+    writeMessage(PrimaryBusCAN, MSG_DASH_WARNING_FLAGS, GR_DASH_PANEL, &errorMap, 1);
 }
 
 void drive_standby(void)
 {
-    controlInverters(1);
+    controlInverters(true);
 
     if (!BSE_APPS_violation && (float)analogRead(APPS1_SIGNAL)/ADC_MAX >= APPS_DEADZONE)
     {
@@ -36,7 +35,7 @@ void drive_standby(void)
 
 void drive_active_idle(void)
 {
-    controlInverters(1);
+    controlInverters(true);
 
     float throttle1 = (float)analogRead(APPS1_SIGNAL)/ADC_MAX;
 
@@ -49,7 +48,7 @@ void drive_active_idle(void)
     {
         globalStatus.ECUState = DRIVE_ACTIVE_POWER;
     }
-    else if (throttle1 < APPS_DEADZONE && mVehicleSpeedMPH() > REGEN_MPH && globalSteeringStatusRegen > 0)
+    else if (throttle1 < APPS_DEADZONE && vehicleSpeedMPH() > REGEN_MPH && globalSteeringStatusRegen > 0)
     {
         globalStatus.ECUState = DRIVE_ACTIVE_REGEN;
     }
@@ -71,7 +70,7 @@ void drive_active_power(void)
         globalStatus.ECUState = DRIVE_STANDBY;
         BSE_APPS_violation = true;
     }
-    else if(throttle1 < APPS_DEADZONE)
+    else if (throttle1 < APPS_DEADZONE)
     {
         globalStatus.ECUState = DRIVE_STANDBY;
     }
@@ -94,7 +93,7 @@ void drive_active_regen(void)
     {
         globalStatus.ECUState = DRIVE_ACTIVE_POWER;
     }
-    else if(mVehicleSpeedMPH() < REGEN_MPH || globalSteeringStatusRegen == 0)
+    else if (vehicleSpeedMPH() < REGEN_MPH || globalSteeringStatusRegen == 0)
     {
         globalStatus.ECUState = DRIVE_ACTIVE_IDLE;
     }
