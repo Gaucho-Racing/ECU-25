@@ -7,18 +7,16 @@ extern volatile uint8_t globalSteeringStatusRegen;
 extern volatile uint8_t globalSteeringStatusButtonMap;
 
 /**
-Handle CAN Message
+Takes in all CAN messages and handles them as they need to be handled.
+The identifiers can represent which bus the packet came in on, if that is needed.
+
+Follows the `CAN ID Assignments` spreadsheet in the Team Drive.
 
 @param msgID Message GR ID
 @param srcID Source GR ID
 @param data Binary data array
 @param length Length of the binary data array
 @param timestamp Timestamp the message triggered the interrupt
-
-Takes in all CAN messages and handles them as they need to be handled.
-The identifiers can represent which bus the packet came in on, if that is needed.
-
-Follows the `CAN ID Assignments` spreadsheet in the Team Drive.
 */
 void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t length, uint32_t timestamp);
 
