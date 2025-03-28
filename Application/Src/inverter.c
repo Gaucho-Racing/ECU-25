@@ -50,8 +50,8 @@ void controlInverters(bool driveEnable)
 // float getInvTemp(void) {return((((uint32_t)inverterData.data[2][0] << 8) + inverterData.data[2][1])/10.0);} //Deg C
 // float getMotorTemp(void) {return((((uint32_t)inverterData.data[2][2] << 8) + inverterData.data[2][3])/10.0);} //Deg C
 // uint8_t getFaults(void) {return inverterData.data[2][4];}
-float getCurrentD(void) {return((((uint32_t)inverterData.data[3][0] << 24) + ((uint32_t)inverterData.data[3][1] << 16) + ((uint32_t)inverterData.data[3][2] << 8) + inverterData.data[3][3])/100.0);}  //FOC current (don't need)
-float getCurrentQ(void) {return((((uint32_t)inverterData.data[3][4] << 24) + ((uint32_t)inverterData.data[3][5] << 16) + ((uint32_t)inverterData.data[3][6] << 8) + inverterData.data[3][7])/100.0);}  //FOC current (don't need)
+// float getCurrentD(void) {return((((uint32_t)inverterData.data[3][0] << 24) + ((uint32_t)inverterData.data[3][1] << 16) + ((uint32_t)inverterData.data[3][2] << 8) + inverterData.data[3][3])/100.0);}  //FOC current (don't need)
+// float getCurrentQ(void) {return((((uint32_t)inverterData.data[3][4] << 24) + ((uint32_t)inverterData.data[3][5] << 16) + ((uint32_t)inverterData.data[3][6] << 8) + inverterData.data[3][7])/100.0);}  //FOC current (don't need)
 uint8_t getThrottleIn(void) {return inverterData.data[4][0];}  //Received throttle signal by the invertor
 uint8_t getBrakeIn(void) {return inverterData.data[4][1];}  //Received brake signal by the invertor
 bool getD1(void) {return ((inverterData.data[4][2] & 0x80) == 0x80);}  //Digital input read
