@@ -1,6 +1,7 @@
 // Testing LED lights on STM32
 
 #include <stdint.h>
+
 #include "stm32g4xx_hal.h"
 
 void SystemClock_Config(void);
@@ -14,7 +15,6 @@ uint32_t count;
 
 int main()
 {
-
     HAL_Init();
     SystemClock_Config();
     MX_GPIO_Init();
@@ -35,5 +35,5 @@ int main()
 
 void ledControl()
 {
-    
+    // This space left completely blank
 }
