@@ -74,3 +74,4 @@ bool getMotorTempLim(void) {return ((inverterData.data[4][4] & 0x01) == 0x01);}/
 bool getRPMMinLimit(void) {return ((inverterData.data[4][5] & 0x80) == 0x80);}//        ^
 bool getRPMMaxLimit(void) {return ((inverterData.data[4][5] & 0x40) == 0x40);}//        ^
 bool getPowerLimit(void) {return ((inverterData.data[4][5] & 0x20) == 0x20);}//         ^
+// FIXME Why are so many of these bools? (Copied from VDM-24 as such)
