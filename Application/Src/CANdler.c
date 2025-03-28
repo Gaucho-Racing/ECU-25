@@ -13,8 +13,7 @@
 #include "grIDs.h"
 #include "utils.h"
 
-volatile uint8_t errorFlagBitsCan = 0;   // Only R/W inside of interrupts
-
+volatile uint8_t errorFlagBitsCan = 0;
 volatile uint8_t globalSteeringStatusRegen = 0;
 volatile uint8_t globalSteeringStatusButtonMap = 0;
 
