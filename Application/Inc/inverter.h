@@ -8,7 +8,7 @@
         uint16_t Set_AC_Current;
         uint16_t Set_DC_Current;
         uint16_t RPM_Limit;
-        uint8_t Drive_Enable;   // Must be 1 to enable inverter
+        uint8_t Drive_Enable;
     } InverterSettings;
 
     extern volatile InverterSettings globalInverterSettings[4];
