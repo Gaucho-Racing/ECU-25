@@ -29,17 +29,17 @@ void sendInverterCommand(void)
     }
 }
 
-void controlInverters(uint8_t driveEnable)
+void controlInverters(bool driveEnable)
 {
-    globalInverterSettings[0] = (InverterSettings){0, 0, 0, driveEnable};
-    globalInverterSettings[1] = (InverterSettings){0, 0, 0, driveEnable};
-    globalInverterSettings[2] = (InverterSettings){0, 0, 0, driveEnable};
-//  globalInverterSettings[3] = (InverterSettings){0, 0, 0, driveEnable};  // Enable iff fourth motor/inverter
+    globalInverterSettings[0] = (InverterSettings){0, 0, 0, (uint8_t)driveEnable};
+    globalInverterSettings[1] = (InverterSettings){0, 0, 0, (uint8_t)driveEnable};
+    globalInverterSettings[2] = (InverterSettings){0, 0, 0, (uint8_t)driveEnable};
+//  globalInverterSettings[3] = (InverterSettings){0, 0, 0, (uint8_t)driveEnable};  // Enable iff fourth motor/inverter
 
     sendInverterCommand();
 }
 
-// See https://github.com/Gaucho-Racing/VDM-24/blob/main/src/Nodes.h for below
+// See https://github.com/Gaucho-Racing/VDM-24/blob/main/src/Nodes.h for all of below
 // There is exactly 1 DTI per https://discord.com/channels/756738476887638107/1256764134872060007/1355067348423540757
 
 uint32_t getERPM(void) {return(((uint32_t)inverterData.data[0][0] << 24) + ((uint32_t)inverterData.data[0][1] << 16) + ((uint32_t)inverterData.data[0][2] << 8) + inverterData.data[0][3]);} //rpm/pole pairs

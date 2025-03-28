@@ -14,7 +14,7 @@ volatile bool BSE_APPS_violation = false;
 
 float vehicleSpeedMPH(void)
 {
-    return ((getERPM() / MOTOR_POLE_PAIRS) * 2 * M_PI * WHEEL_RADIUS_IN) / (GEAR_RATIO * 1056.0);
+    return ((inverterData.msgOne.erpm / MOTOR_POLE_PAIRS) * 2 * M_PI * WHEEL_RADIUS_IN) / (GEAR_RATIO * 1056.0);
 }
 
 void sendBseAppsViolationMessage(void)
@@ -25,7 +25,7 @@ void sendBseAppsViolationMessage(void)
 
 void drive_standby(void)
 {
-    controlInverters(1);
+    controlInverters(true);
 
     if (!BSE_APPS_violation && (float)analogRead(APPS1_SIGNAL)/ADC_MAX >= APPS_DEADZONE)
     {
@@ -35,7 +35,7 @@ void drive_standby(void)
 
 void drive_active_idle(void)
 {
-    controlInverters(1);
+    controlInverters(true);
 
     float throttle1 = (float)analogRead(APPS1_SIGNAL)/ADC_MAX;
 
