@@ -38,6 +38,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             UNUSED(debug2String);
 
             break;
+
         case MSG_DEBUG_FD:
             if (length > 64) {
                 numberOfBadMessages++;
@@ -52,6 +53,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             UNUSED(debugFdString);
 
             break;
+
         case MSG_PING:
             if (length != 4) {
                 numberOfBadMessages++;
@@ -63,6 +65,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             respondToPing(srcID, *(uint32_t*)data);
 
             break;
+
         case MSG_ACU_STATUS_1:
             if (length != 8) {
                 numberOfBadMessages++;
@@ -135,7 +138,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                         globalStatus.ECUState = PRECHARGE_COMPLETE;
                     }
 
-                    __attribute__((fallthrough));
+                    break;  // Was a fallthrough, undo if needed
                 default:
                     if (getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 1) == 0x0 || (getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 2) == 0x00 && globalStatus.ECUState != PRECHARGING))
                     {
@@ -181,7 +184,9 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 */
             // USE ACUWarning(acuMsgTwo) HERE FOR DASH WARNINGS
+
             break;
+
         case MSG_INVERTER_STATUS_1:
             if (length != 6) {
                 numberOfBadMessages++;
@@ -243,6 +248,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             break;
+
         case MSG_DASH_STATUS:
             if (length != 3) {
                 numberOfBadMessages++;
