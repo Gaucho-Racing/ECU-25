@@ -20,6 +20,11 @@
     */
     void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t length, uint32_t timestamp);
 
+    typedef enum {
+        PrimaryBusCAN = (uint8_t)0,
+        DataBusCAN = (uint8_t)1,
+    } BusCAN;
+
     typedef struct {
         uint16_t Accumulator_Voltage;
         uint16_t TS_Voltage;

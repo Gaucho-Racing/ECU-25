@@ -14,10 +14,10 @@
 volatile StatusLump globalStatus = {
     .ECUState = GLV_ON,
     .StatusBits = {0},
-    .PowerLevelTorqueMap = 0xFF,
+    .PowerLevelTorqueMap = POWERLEVEL_TORQUEMAP_RESET,
     .MaxCellTemp = 0x0,
     .AccumulatorStateOfCharge = 0x0,
-    .GLVStateOfCharge = 0xFF
+    .GLVStateOfCharge = 0x0,
 };
 
 volatile uint8_t numberOfBadMessages = 0;
@@ -79,9 +79,9 @@ void stateMachineTick(void)
 
     if (HAL_GetTick() - lastECUStatusMsgTick > howOftenToSpamECUStatusMsgs)
     {
-        writeMessage(1, MSG_ECU_STATUS_1, GR_ALL, (uint8_t*)globalStatus.ECUStatusMsgOne, 8);
-        writeMessage(1, MSG_ECU_STATUS_2, GR_ALL, (uint8_t*)globalStatus.ECUStatusMsgTwo, 8);
-        writeMessage(1, MSG_ECU_STATUS_3, GR_ALL, (uint8_t*)globalStatus.ECUStatusMsgThree, 4);
+        writeMessage(PrimaryBusCAN, MSG_ECU_STATUS_1, GR_ALL, (uint8_t*)globalStatus.ECUStatusMsgOne, 8);
+        writeMessage(PrimaryBusCAN, MSG_ECU_STATUS_2, GR_ALL, (uint8_t*)globalStatus.ECUStatusMsgTwo, 8);
+        writeMessage(PrimaryBusCAN, MSG_ECU_STATUS_3, GR_ALL, (uint8_t*)globalStatus.ECUStatusMsgThree, 4);
 
         lastECUStatusMsgTick = HAL_GetTick();
     }
@@ -90,41 +90,39 @@ void stateMachineTick(void)
 void glv_on(void)
 {
     // For safety
-    if (globalStatus.TractiveSystemVoltage >= 60)
+    if (globalStatus.TractiveSystemVoltage >= TS_VOLTAGE_OFF_LIMIT)
     {
         globalStatus.ECUState = TS_DISCHARGE_OFF;
         return;
     }
 
-    // Close software latch, should be error free at this point Also reset power level
+    // Close software latch, should be error free at this point, also reset power level
     setSoftwareLatch(1);
-    globalStatus.PowerLevelTorqueMap = 0xFF;    // TODO Confirm this should not be 0x00
-    // TS on handled in CANdler.c::handleCANMessage, under case MSG_DASH_STATUS
+    globalStatus.PowerLevelTorqueMap = POWERLEVEL_TORQUEMAP_RESET;
+    // TS on handled in CANdler -> MSG_DASH_STATUS
 }
 
 void precharge_engaged(void)
 {
     // For safety
-    if (globalStatus.TractiveSystemVoltage >= 60)
+    if (globalStatus.TractiveSystemVoltage >= TS_VOLTAGE_OFF_LIMIT)
     {
         globalStatus.ECUState = TS_DISCHARGE_OFF;
     }
-    // ACU confirmation is IR-, handled in CANdler.c
-    //TS ACTIVE botton disabled --> GLV_ON is handled in CANdler.c
-    
+
+    // ACU confirmation is IR-, handled in CANdler
+    //TS ACTIVE botton disabled --> GLV_ON is handled in CANdler
 }
 
 void precharging(void)
 {
-
-    //TS ACTIVE button disabled || ACU precharge cancellation --> TS_DISCHARGE_OFF is handled in CANdler.c
-    // line 66, 176
+    //TS ACTIVE button disabled || ACU precharge cancellation --> TS_DISCHARGE_OFF is handled in CANdler line 66, 176
 }
 
 void precharge_complete(void)
 {
-    // If front, rear, and rtd, then go to DRIVE_STANDBY handled in CAN
-    // TS ACTIVE, ACU shutdown, errors handled in CANdler.c
+    // If front, rear, and rtd, then go to DRIVE_STANDBY handled in CANdler
+    // TS ACTIVE, ACU shutdown, errors handled in CANdler
 }
 
 
@@ -142,18 +140,19 @@ void ts_discharge_off(void)
     {
         globalStatus.ECUState = ERRORSTATE;  // ERRORSTATE will send it back if voltage >= 60
     }
-    // Other stuff handled in can
 }
 
-void reflash_tune(void)
+void reflash_tune(void) // FIXME Currently a stub
 {
-    // READ SD CARD INFORMATION INTO INFO and then
     globalStatus.ECUState = GLV_ON;
+    return;
 
-    if (true /*Flash error*/)
-    {
-        globalStatus.ECUState = ERRORSTATE;
-    }
+    // READ SD CARD INFORMATION INTO INFO
+
+    // if (true /*Flash error*/)
+    // {
+    //     globalStatus.ECUState = ERRORSTATE;
+    // }
 }
 
 void error(void)
@@ -161,7 +160,7 @@ void error(void)
     setSoftwareLatch(0);
     controlInverters(0);
 
-    if (globalStatus.TractiveSystemVoltage >= 60)
+    if (globalStatus.TractiveSystemVoltage >= TS_VOLTAGE_OFF_LIMIT)
     {
         globalStatus.ECUState = TS_DISCHARGE_OFF;
     }

@@ -4,6 +4,7 @@
     #define STATEMACHINE_H
 
     #define HOW_LONG_TSDISCHARGE_UNTIL_ERROR_MS 5000
+    #define TS_VOLTAGE_OFF_LIMIT 60
 
     typedef enum {
         GLV_ON = 1,

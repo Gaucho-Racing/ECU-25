@@ -56,7 +56,7 @@ void pingSchedule(void)
     }
 
     uint32_t tick = HAL_GetTick();
-    writeMessage(1, MSG_PING, GR_ALL, (uint8_t *)&tick, sizeof(uint32_t));
+    writeMessage(PrimaryBusCAN, MSG_PING, GR_ALL, (uint8_t *)&tick, sizeof(uint32_t));
 
     nextPingTime += PINGTIMEOUT;
 }

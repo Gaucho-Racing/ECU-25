@@ -13,6 +13,8 @@
     #define MOTOR_POLE_PAIRS 10.0
     #define WHEEL_RADIUS_IN 8.0 // inches
 
+    #define POWERLEVEL_TORQUEMAP_RESET 0xFF
+
     extern volatile bool BSE_APPS_violation;
 
     /**
