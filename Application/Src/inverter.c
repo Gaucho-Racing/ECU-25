@@ -41,41 +41,81 @@ void controlInverters(bool driveEnable)
 
 /* See https://github.com/Gaucho-Racing/VDM-24/blob/main/src/Nodes.h for all of below */
 
+/**
+DTI Data 5 - Digital Input 1
+
+@returns Bool representing active
+*/
 bool inverter_getDigitalInput1(void)
 {
     return ((inverterData.data[4][2] & 0x80) == 0x80);
 }
 
+/**
+DTI Data 5 - Digital Input 2
+
+@returns Bool representing active
+*/
 bool inverter_getDigitalInput2(void)
 {
     return ((inverterData.data[4][2] & 0x40) == 0x40);
 }
 
+/**
+DTI Data 5 - Digital Input 3
+
+@returns Bool representing active
+*/
 bool inverter_getDigitalInput3(void)
 {
     return ((inverterData.data[4][2] & 0x20) == 0x20);
 }
 
+/**
+DTI Data 5 - Digital Input 4
+
+@returns Bool representing active
+*/
 bool inverter_getDigitalInput4(void)
 {
     return ((inverterData.data[4][2] & 0x10) == 0x10);
 }
 
+/**
+DTI Data 5 - Digital Output 1
+
+@returns Bool representing active
+*/
 bool inverter_getDigitalOutput1(void)
 {
     return ((inverterData.data[4][2] & 0x08) == 0x08);
 }
 
+/**
+DTI Data 5 - Digital Output 2
+
+@returns Bool representing active
+*/
 bool inverter_getDigitalOutput2(void)
 {
     return ((inverterData.data[4][2] & 0x04) == 0x04);
 }
 
+/**
+DTI Data 5 - Digital Output 3
+
+@returns Bool representing active
+*/
 bool inverter_getDigitalOutput3(void)
 {
     return ((inverterData.data[4][2] & 0x02) == 0x02);
 }
 
+/**
+DTI Data 5 - Digital Output 4
+
+@returns Bool representing active
+*/
 bool inverter_getDigitalOutput4(void)
 {
     return ((inverterData.data[4][2] & 0x01) == 0x01);
