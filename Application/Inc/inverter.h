@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdbool.h>
+#include "CANdler.h"
 
 #ifndef INVERTER_H
     #define INVERTER_H
