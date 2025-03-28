@@ -244,7 +244,8 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             Inverter_Status_Msg_Three* msgGriThree = (Inverter_Status_Msg_Three*)data;
 
-            globalStatus.VehicleSpeed = (globalStatus.RRWheelRPM + globalStatus.RLWheelRPM) * 3.141592653589 * 16.0 / 2.0 / 3.55 / 1056.0;  // FIXME The math is copied from VDM-24...
+            // FIXME The math below is copied from VDM-24...
+            globalStatus.VehicleSpeed = (globalStatus.RRWheelRPM + globalStatus.RLWheelRPM) * 3.141592653589 * 16.0 / 2.0 / 3.55 / 1056.0;
 
             if(GRIError(msgGriThree) && (errorFlagBitsCan == 0 || errorFlagBitsCan == 1)){
                 errorFlagBitsCan += 2;
