@@ -10,11 +10,11 @@ volatile DTI_Data inverterData = {
     .msgThree.faultCodes = 0x0A    // Chosen at random for error code
 };
 
-volatile InverterSettings globalInverterSettings[4] = { // Sets each inverter's limit at 1 rpm
+volatile InverterSettings globalInverterSettings[3] = { // Set to 4 iff fourth motor/inverter
     {0, .RPM_Limit = 1, 0},
     {0, .RPM_Limit = 1, 0},
     {0, .RPM_Limit = 1, 0},
-    {0, .RPM_Limit = 1, 0}
+//  {0, .RPM_Limit = 1, 0}, // Enable iff fourth motor/inverter
 };
 
 volatile int32_t lastInverterPingMillis = -1;
@@ -27,7 +27,7 @@ void sendInverterCommand(void)
         writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_1, (uint8_t*)&globalInverterSettings[0], 7);
         writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_2, (uint8_t*)&globalInverterSettings[1], 7);
         writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_3, (uint8_t*)&globalInverterSettings[2], 7);
-//      writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_4, (uint8_t*)&globalInverterSettings[3], 7);
+//      writeMessage(1, MSG_INVERTER_COMMAND, GR_GR_INVERTER_4, (uint8_t*)&globalInverterSettings[3], 7);   // Enable iff fourth motor/inverter
     }
 }
 
@@ -37,10 +37,13 @@ void controlInverters(uint8_t driveEnable)
     globalInverterSettings[1] = (InverterSettings){0, 0, 0, driveEnable};
     globalInverterSettings[2] = (InverterSettings){0, 0, 0, driveEnable};
 //  globalInverterSettings[3] = (InverterSettings){0, 0, 0, driveEnable};  // Enable iff fourth motor/inverter
+
     sendInverterCommand();
 }
 
-// See https://github.com/Gaucho-Racing/VDM-24/blob/main/src/Nodes.h
+// See https://github.com/Gaucho-Racing/VDM-24/blob/main/src/Nodes.h for below
+// Was told to copypasta magic functions, but they are specific to each inverter...
+// FIXME: So what should they return?
 
 long getERPM(void) {return(((long)inverterData.data[0][0] << 24) + ((long)inverterData.data[0][1] << 16) + ((long)inverterData.data[0][2] << 8) + inverterData.data[0][3]);} //rpm/pole pairs
 float getDuty(void) {return((((long)inverterData.data[0][4] << 8) + inverterData.data[0][5])/10);} //i think [0,100]. Related to top speed
