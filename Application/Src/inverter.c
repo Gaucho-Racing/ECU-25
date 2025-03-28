@@ -6,10 +6,16 @@
 #include "fdcan.h"
 #include "msgIDs.h"
 
-// FIXME Probably figure out a better default
-volatile DTI_Data inverterData = {0};
-volatile InverterSettings globalInverterSettings[4] = {0};
-// FIXME Probably figure out a better default
+volatile DTI_Data inverterData = {
+    .msgThree.faultCodes = 0x0A    // Chosen at random for error code
+};
+
+volatile InverterSettings globalInverterSettings[4] = { // Sets each inverter's limit at 1 rpm
+    {0, .RPM_Limit = 1, 0},
+    {0, .RPM_Limit = 1, 0},
+    {0, .RPM_Limit = 1, 0},
+    {0, .RPM_Limit = 1, 0}
+};
 
 volatile int32_t lastInverterPingMillis = -1;
 
