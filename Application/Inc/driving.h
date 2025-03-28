@@ -14,28 +14,40 @@
 
 extern volatile bool BSE_APPS_violation;
 
-/*
-Send the inverter command message to control the inverters based off of the globalInverterSettings
-*/
-void sendInverterCommand(void);
+/**
+Drive Standby
 
-/*
-Ready to go, drive standby
+Once `PRECHARGE_COMPLETE` and brake depressed and RTD on or noncritical violation.
+
+Awaits a valid torque request or an error of some form.
 */
 void drive_standby(void);
 
-/*
-Drive active sub state, idle
+/**
+Drive Active - Idle
+
+Not requesting torque, but still driving.
+Times out if no action requested.
+
+Not implemented yet, pending TV.
 */
 void drive_active_idle(void);
 
-/*
-Drive active sub state, power
+/**
+Drive Active - Power
+
+Requesting torque, still driving.
+
+Not implemented yet, pending TV.
 */
 void drive_active_power(void);
 
-/*
-Drive active sub state, regen
+/**
+Drive Active - Regenerative
+
+Requesting negative torque to slow the car and recharge the battery.
+
+Not implemented yet, pending TV.
 */
 void drive_active_regen(void);
 

@@ -12,6 +12,7 @@
 
     extern volatile InverterSettings globalInverterSettings[4];
     void controlInverters(uint8_t driveEnable);
+    void sendInverterCommand(void);
 
     long getERPM(void);
     float getDuty(void);
