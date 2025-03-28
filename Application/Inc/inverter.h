@@ -51,4 +51,5 @@
     bool getRPMMinLimit(void);
     bool getRPMMaxLimit(void);
     bool getPowerLimit(void);
-#endif
+
+#endif // INVERTER_H

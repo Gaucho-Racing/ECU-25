@@ -128,4 +128,5 @@
     Ticks the state machine and calls the appropriate function.
     */
     void stateMachineTick(void);
+
 #endif // STATEMACHINE_H

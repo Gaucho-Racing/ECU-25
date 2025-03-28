@@ -63,4 +63,5 @@
     @return A byte representing the errorfulness.
     */
     bool ACUWarning(ACU_Status_MsgTwo *acuMsgTwo);
+
 #endif // UTILS_H
