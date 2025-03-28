@@ -10,7 +10,7 @@
 #include "utils.h"
 #include "main.h"
 
-
+// If you change pingIDs you must update PINGCOUNT
 const uint8_t pingIDs[] = {GR_ACU,
                            GR_GR_INVERTER_1,
                            GR_GR_INVERTER_2,
@@ -22,6 +22,8 @@ const uint8_t pingIDs[] = {GR_ACU,
                            GR_FAN_CONTROLLER_4,
                            GR_DASH_PANEL,
                            GR_STEERING_WHEEL};
+// If you change pingIDs you must update PINGCOUNT
+
 uint32_t pingTimes[PINGCOUNT] = {0};
 
 static bool pingHasReturned[PINGCOUNT] = {false};
