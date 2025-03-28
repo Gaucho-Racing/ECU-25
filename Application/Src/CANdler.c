@@ -135,8 +135,8 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                     {
                         globalStatus.ECUState = PRECHARGE_COMPLETE;
                     }
-                    
-                    [[fallthrough]];
+
+                    __attribute__((fallthrough));
                 default:
                     if(getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 1) == 0x0 || (getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 2) == 0x00 && globalStatus.ECUState != PRECHARGING))
                     {
@@ -282,27 +282,36 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             switch(globalStatus.ECUState){
                 case GLV_ON:
-                    if(ts_on){
+                    if(ts_on)
+                    {
                         globalStatus.ECUState = PRECHARGE_ENGAGED;
                     }
+
                     break;
                 case PRECHARGE_ENGAGED:
-                    if(!ts_on){
+                    if(!ts_on)
+                    {
                         globalStatus.ECUState = GLV_ON;
                     }
+
                     break;
                 case DRIVE_STANDBY:
-                    if(!rtd){
+                    if(!rtd)
+                    {
                         globalStatus.ECUState = PRECHARGE_COMPLETE;
                     }
-                    //don't add a break here
+
+                    __attribute__((fallthrough));
                 case PRECHARGE_COMPLETE:
-                    if(rtd && analogRead(BRAKE_F_SIGNAL) > 100 && analogRead(BRAKE_R_SIGNAL) > 100){
+                    if(rtd && analogRead(BRAKE_F_SIGNAL) > 100 && analogRead(BRAKE_R_SIGNAL) > 100)
+                    {
                         globalStatus.ECUState = DRIVE_STANDBY;
                     }
-                    //don't add a break here
+
+                    __attribute__((fallthrough));
                 default:
-                    if(!ts_on){
+                    if(!ts_on)
+                    {
                         globalStatus.ECUState = TS_DISCHARGE_OFF;
                     }
             }
