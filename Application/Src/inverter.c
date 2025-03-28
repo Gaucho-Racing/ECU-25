@@ -45,8 +45,8 @@ void controlInverters(bool driveEnable)
 // uint32_t getERPM(void) {return(((uint32_t)inverterData.data[0][0] << 24) + ((uint32_t)inverterData.data[0][1] << 16) + ((uint32_t)inverterData.data[0][2] << 8) + inverterData.data[0][3]);} //rpm/pole pairs
 // float getDuty(void) {return((((uint32_t)inverterData.data[0][4] << 8) + inverterData.data[0][5])/10);} //i think [0,100]. Related to top speed
 // uint32_t getVoltIn(void) {return(((uint32_t)inverterData.data[0][6] << 8) + inverterData.data[0][7]);}
-float getACCurrent(void) {return((float)(((uint16_t)(inverterData.data[1][0]) << 8) + inverterData.data[1][1])/10.0);}
-float getDCCurrent(void) {return(((uint32_t)((uint16_t)(inverterData.data[1][2]) << 8) + inverterData.data[1][3])/10.0);}
+// float getACCurrent(void) {return((float)(((uint16_t)(inverterData.data[1][0]) << 8) + inverterData.data[1][1])/10.0);}
+// float getDCCurrent(void) {return(((uint32_t)((uint16_t)(inverterData.data[1][2]) << 8) + inverterData.data[1][3])/10.0);}
 float getInvTemp(void) {return((((uint32_t)inverterData.data[2][0] << 8) + inverterData.data[2][1])/10.0);} //Deg C
 float getMotorTemp(void) {return((((uint32_t)inverterData.data[2][2] << 8) + inverterData.data[2][3])/10.0);} //Deg C
 uint8_t getFaults(void) {return inverterData.data[2][4];}
