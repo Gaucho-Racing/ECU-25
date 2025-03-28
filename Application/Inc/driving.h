@@ -16,6 +16,13 @@
     extern volatile bool BSE_APPS_violation;
 
     /**
+    Vehicle Speed in MPH
+
+    Valid once message `DTI Data 1` has been recieved.
+    */
+   float vehicleSpeedMPH(void);
+
+    /**
     Drive Standby
 
     Once `PRECHARGE_COMPLETE` and brake depressed and RTD on or noncritical violation.

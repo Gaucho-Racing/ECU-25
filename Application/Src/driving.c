@@ -12,7 +12,7 @@
 
 volatile bool BSE_APPS_violation = false;
 
-float mVehicleSpeedMPH(void)
+float vehicleSpeedMPH(void)
 {
     return ((getERPM() / MOTOR_POLE_PAIRS) * 2 * M_PI * WHEEL_RADIUS_IN) / (GEAR_RATIO * 1056.0);
 }
@@ -48,7 +48,7 @@ void drive_active_idle(void)
     {
         globalStatus.ECUState = DRIVE_ACTIVE_POWER;
     }
-    else if (throttle1 < APPS_DEADZONE && mVehicleSpeedMPH() > REGEN_MPH && globalSteeringStatusRegen > 0)
+    else if (throttle1 < APPS_DEADZONE && vehicleSpeedMPH() > REGEN_MPH && globalSteeringStatusRegen > 0)
     {
         globalStatus.ECUState = DRIVE_ACTIVE_REGEN;
     }
@@ -93,7 +93,7 @@ void drive_active_regen(void)
     {
         globalStatus.ECUState = DRIVE_ACTIVE_POWER;
     }
-    else if(mVehicleSpeedMPH() < REGEN_MPH || globalSteeringStatusRegen == 0)
+    else if(vehicleSpeedMPH() < REGEN_MPH || globalSteeringStatusRegen == 0)
     {
         globalStatus.ECUState = DRIVE_ACTIVE_IDLE;
     }
