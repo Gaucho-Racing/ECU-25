@@ -8,12 +8,7 @@
 
 volatile DTI_Data globalInverterData = {0};
 
-volatile InverterSettings globalInverterSettings[3] = { // Set to 4 iff fourth motor/inverter
-    {0, .RPM_Limit = 1, 0},
-    {0, .RPM_Limit = 1, 0},
-    {0, .RPM_Limit = 1, 0},
-//  {0, .RPM_Limit = 1, 0}, // Enable iff fourth motor/inverter
-};
+volatile InverterSettings globalInverterSettings[3] = {0}; // Set to 4 iff fourth motor/inverter
 
 volatile int32_t lastInverterPingMillis = -1;
 
