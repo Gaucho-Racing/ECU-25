@@ -18,16 +18,6 @@ volatile uint8_t errorFlagBitsCan = 0;   // Only R/W inside of interrupts
 volatile uint8_t globalSteeringStatusRegen = 0;
 volatile uint8_t globalSteeringStatusButtonMap = 0;
 
-uint16_t findTernaryMax(const uint16_t a, const uint16_t b, const uint16_t c)
-{
-    if (a > b && a > c)
-        return a;
-    else if (b > a && b > c)
-        return b;
-    else
-        return c;
-}
-
 void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t length, uint32_t timestamp)
 {
     UNUSED(timestamp);
