@@ -14,10 +14,10 @@
     } InverterSettings;
 
     extern volatile InverterSettings globalInverterSettings[4];
+    extern volatile DTI_Data inverterData;
+
     void controlInverters(uint8_t driveEnable);
     void sendInverterCommand(void);
-
-    extern volatile DTI_Data inverterData;
 
     long getERPM(void);
     float getDuty(void);
