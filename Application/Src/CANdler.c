@@ -125,6 +125,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             {
                 case GLV_ON:
                     break;
+
                 case PRECHARGE_ENGAGED:
                     if (getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 1) == 0x1)
                     {
@@ -132,13 +133,15 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                     }
 
                     break;
+
                 case PRECHARGING:
                     if (getBits(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 0, 4) == 0x07)
                     {
                         globalStatus.ECUState = PRECHARGE_COMPLETE;
                     }
 
-                    break;  // Was a fallthrough, undo if needed
+                    break;
+
                 default:
                     if (getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 1) == 0x0 || (getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 2) == 0x00 && globalStatus.ECUState != PRECHARGING))
                     {
