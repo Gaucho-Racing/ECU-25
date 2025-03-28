@@ -40,19 +40,18 @@ void controlInverters(uint8_t driveEnable)
 }
 
 // See https://github.com/Gaucho-Racing/VDM-24/blob/main/src/Nodes.h for below
-// Was told to copypasta magic functions, but they are specific to each inverter...
-// FIXME: So what should they return?
+// There is exactly 1 DTI per https://discord.com/channels/756738476887638107/1256764134872060007/1355067348423540757
 
-long getERPM(void) {return(((long)inverterData.data[0][0] << 24) + ((long)inverterData.data[0][1] << 16) + ((long)inverterData.data[0][2] << 8) + inverterData.data[0][3]);} //rpm/pole pairs
-float getDuty(void) {return((((long)inverterData.data[0][4] << 8) + inverterData.data[0][5])/10);} //i think [0,100]. Related to top speed
-int getVoltIn(void) {return(((long)inverterData.data[0][6] << 8) + inverterData.data[0][7]);}
+uint32_t getERPM(void) {return(((uint32_t)inverterData.data[0][0] << 24) + ((uint32_t)inverterData.data[0][1] << 16) + ((uint32_t)inverterData.data[0][2] << 8) + inverterData.data[0][3]);} //rpm/pole pairs
+float getDuty(void) {return((((uint32_t)inverterData.data[0][4] << 8) + inverterData.data[0][5])/10);} //i think [0,100]. Related to top speed
+uint32_t getVoltIn(void) {return(((uint32_t)inverterData.data[0][6] << 8) + inverterData.data[0][7]);}
 float getACCurrent(void) {return((float)(((uint16_t)(inverterData.data[1][0]) << 8) + inverterData.data[1][1])/10.0);}
-float getDCCurrent(void) {return(((long)((uint16_t)(inverterData.data[1][2]) << 8) + inverterData.data[1][3])/10.0);}
-float getInvTemp(void) {return((((long)inverterData.data[2][0] << 8) + inverterData.data[2][1])/10.0);} //Deg C
-float getMotorTemp(void) {return((((long)inverterData.data[2][2] << 8) + inverterData.data[2][3])/10.0);} //Deg C
+float getDCCurrent(void) {return(((uint32_t)((uint16_t)(inverterData.data[1][2]) << 8) + inverterData.data[1][3])/10.0);}
+float getInvTemp(void) {return((((uint32_t)inverterData.data[2][0] << 8) + inverterData.data[2][1])/10.0);} //Deg C
+float getMotorTemp(void) {return((((uint32_t)inverterData.data[2][2] << 8) + inverterData.data[2][3])/10.0);} //Deg C
 uint8_t getFaults(void) {return inverterData.data[2][4];}
-float getCurrentD(void) {return((((long)inverterData.data[3][0] << 24) + ((long)inverterData.data[3][1] << 16) + ((long)inverterData.data[3][2] << 8) + inverterData.data[3][3])/100.0);}  //FOC current (don't need)
-float getCurrentQ(void) {return((((long)inverterData.data[3][4] << 24) + ((long)inverterData.data[3][5] << 16) + ((long)inverterData.data[3][6] << 8) + inverterData.data[3][7])/100.0);}  //FOC current (don't need)
+float getCurrentD(void) {return((((uint32_t)inverterData.data[3][0] << 24) + ((uint32_t)inverterData.data[3][1] << 16) + ((uint32_t)inverterData.data[3][2] << 8) + inverterData.data[3][3])/100.0);}  //FOC current (don't need)
+float getCurrentQ(void) {return((((uint32_t)inverterData.data[3][4] << 24) + ((uint32_t)inverterData.data[3][5] << 16) + ((uint32_t)inverterData.data[3][6] << 8) + inverterData.data[3][7])/100.0);}  //FOC current (don't need)
 uint8_t getThrottleIn(void) {return inverterData.data[4][0];}  //Received throttle signal by the invertor
 uint8_t getBrakeIn(void) {return inverterData.data[4][1];}  //Received brake signal by the invertor
 bool getD1(void) {return ((inverterData.data[4][2] & 0x80) == 0x80);}  //Digital input read
