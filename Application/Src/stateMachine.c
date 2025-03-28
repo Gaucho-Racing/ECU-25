@@ -21,22 +21,21 @@ volatile StatusLump globalStatus = {
 };
 
 volatile uint8_t numberOfBadMessages = 0;
-int32_t dischargeStartMillis = -1;
+int32_t dischargeStartMillis = BAD_TIME_Negative1;
 uint16_t lastECUStatusMsgTick = 0;
 
 static const uint16_t howOftenToSpamECUStatusMsgs = 250;
 
 void stateMachineTick(void)
 {
-    if (numberOfBadMessages >= 3)   // Magic value, 3 is bad arbitrarily (prime)
+    if (numberOfBadMessages > BAD_MESSAGE_LIMIT)
     {
-        numberOfBadMessages = 0;
         Error_Handler();
     }
 
     if (globalStatus.ECUState != TS_DISCHARGE_OFF)
     {
-        dischargeStartMillis = -1;
+        dischargeStartMillis = BAD_TIME_Negative1;
     }
 
     switch(globalStatus.ECUState)
@@ -97,7 +96,7 @@ void glv_on(void)
     }
 
     // Close software latch, should be error free at this point, also reset power level
-    setSoftwareLatch(1);
+    setSoftwareLatch(true);
     globalStatus.PowerLevelTorqueMap = POWERLEVEL_TORQUEMAP_RESET;
     // TS on handled in CANdler -> MSG_DASH_STATUS
 }
@@ -128,10 +127,10 @@ void precharge_complete(void)
 
 void ts_discharge_off(void)
 {
-    setSoftwareLatch(0);
-    controlInverters(0);
+    setSoftwareLatch(false);
+    controlInverters(false);
 
-    if (dischargeStartMillis == -1)
+    if (dischargeStartMillis == BAD_TIME_Negative1)
     {
         dischargeStartMillis = millis();
     }
@@ -157,8 +156,8 @@ void reflash_tune(void) // FIXME Currently a stub
 
 void error(void)
 {
-    setSoftwareLatch(0);
-    controlInverters(0);
+    setSoftwareLatch(false);
+    controlInverters(false);
 
     if (globalStatus.TractiveSystemVoltage >= TS_VOLTAGE_OFF_LIMIT)
     {

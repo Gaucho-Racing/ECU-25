@@ -5,6 +5,8 @@
 
     #define HOW_LONG_TSDISCHARGE_UNTIL_ERROR_MS 5000
     #define TS_VOLTAGE_OFF_LIMIT 60
+    #define BAD_MESSAGE_LIMIT 3
+    #define BAD_TIME_Negative1 -1
 
     typedef enum {
         GLV_ON = (uint8_t)1,

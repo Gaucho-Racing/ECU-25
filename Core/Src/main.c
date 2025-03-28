@@ -180,7 +180,7 @@ void Error_Handler(void)
   /* USER CODE BEGIN Error_Handler_Debug */
   __disable_irq();
 
-  if (globalStatus.TractiveSystemVoltage >= 60)
+  if (globalStatus.TractiveSystemVoltage >= TS_VOLTAGE_OFF_LIMIT)
   {
     globalStatus.ECUState = TS_DISCHARGE_OFF;
   }
@@ -203,14 +203,13 @@ void Error_Handler(void)
   stateMachineTick();
   stateMachineTick(); // Just in case
 
-  while(1)
+  while(true)
   {
-    writeMessage(1, MSG_DEBUG_FD, GR_ALL, (uint8_t*)"ECU Internal Failure", 20);
+    writeMessage(PrimaryBusCAN, MSG_DEBUG_2_0, GR_ALL, (uint8_t*)"ECU Fail", 8);
     HAL_Delay(250);
-    writeMessage(1, MSG_DEBUG_2_0, GR_ALL, (uint8_t*)"ECU Fail", 8);
+    writeMessage(DataBusCAN, MSG_DEBUG_FD, GR_ALL, (uint8_t*)"ECU Internal Failure", 20);
     HAL_Delay(250);
   }
-
   /* USER CODE END Error_Handler_Debug */
 }
 

@@ -30,8 +30,9 @@ extern "C" {
 
 /* USER CODE BEGIN Includes */
 #include <stdbool.h>
-#include "grIDs.h"
 
+#include "grIDs.h"
+#include "CANdler.h"
 /* USER CODE END Includes */
 
 extern FDCAN_HandleTypeDef hfdcan1;

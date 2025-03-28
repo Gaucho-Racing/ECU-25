@@ -5,12 +5,13 @@
 #include "inverter.h"
 #include "fdcan.h"
 #include "msgIDs.h"
+#include "stateMachine.h"
 
 volatile DTI_Data globalInverterData = {0};
 
 volatile InverterSettings globalInverterSettings[3] = {0}; // Set to 4 iff fourth motor/inverter
 
-volatile int32_t lastInverterPingMillis = -1;
+volatile int32_t lastInverterPingMillis = BAD_TIME_Negative1;
 
 void sendInverterCommand(void)
 {
