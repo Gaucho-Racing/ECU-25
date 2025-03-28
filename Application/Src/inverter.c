@@ -6,7 +6,10 @@
 #include "fdcan.h"
 #include "msgIDs.h"
 
+// FIXME Probably figure out a better default
+volatile DTI_Data inverterData = {0};
 volatile InverterSettings globalInverterSettings[4] = {0};
+// FIXME Probably figure out a better default
 
 volatile int32_t lastInverterPingMillis = -1;
 
@@ -31,10 +34,7 @@ void controlInverters(uint8_t driveEnable)
     sendInverterCommand();
 }
 
-// I am so sorry...
 // https://github.com/Gaucho-Racing/VDM-24/blob/main/src/Nodes.h
-
-volatile DTI_Data inverterData = {0}; // FIXME Probably figure out a better default
 
 long getERPM(void) {return(((long)inverterData.data[0][0] << 24) + ((long)inverterData.data[0][1] << 16) + ((long)inverterData.data[0][2] << 8) + inverterData.data[0][3]);} //rpm/pole pairs
 float getDuty(void) {return((((long)inverterData.data[0][4] << 8) + inverterData.data[0][5])/10);} //i think [0,100]. Related to top speed
