@@ -26,7 +26,7 @@
 #include <stdint.h>
 
 FDCAN_TxHeaderTypeDef TxHeader = {
-    .IdType = FDCAN_EXTENDED_ID,
+    .IdType = FDCAN_EXTENDED_ID,  // TODO Does bus 1 and bus 2 both use the same id type?
     .TxFrameType = FDCAN_DATA_FRAME,
     .ErrorStateIndicator = FDCAN_ESI_ACTIVE, // honestly this might be a value you have to read from a node
                                              // FDCAN_ESI_ACTIVE is just a state that assumes there are minimal errors
