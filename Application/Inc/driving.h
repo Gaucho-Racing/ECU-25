@@ -1,54 +1,55 @@
 #include <stdbool.h>
+
 #include "stateMachine.h"
 
 #ifndef DRIVING_H
-#define DRIVING_H
+    #define DRIVING_H
 
-#define APPS_DEADZONE 0.05
-#define BSE_DEADZONE 0.05
-#define REGEN_MPH 5
+    #define APPS_DEADZONE 0.05
+    #define BSE_DEADZONE 0.05
+    #define REGEN_MPH 5
 
-#define GEAR_RATIO 3.55
-#define MOTOR_POLE_PAIRS 10.0
-#define WHEEL_RADIUS_IN 8.0 // inches
+    #define GEAR_RATIO 3.55
+    #define MOTOR_POLE_PAIRS 10.0
+    #define WHEEL_RADIUS_IN 8.0 // inches
 
-extern volatile bool BSE_APPS_violation;
+    extern volatile bool BSE_APPS_violation;
 
-/**
-Drive Standby
+    /**
+    Drive Standby
 
-Once `PRECHARGE_COMPLETE` and brake depressed and RTD on or noncritical violation.
+    Once `PRECHARGE_COMPLETE` and brake depressed and RTD on or noncritical violation.
 
-Awaits a valid torque request or an error of some form.
-*/
-void drive_standby(void);
+    Awaits a valid torque request or an error of some form.
+    */
+    void drive_standby(void);
 
-/**
-Drive Active - Idle
+    /**
+    Drive Active - Idle
 
-Not requesting torque, but still driving.
-Times out if no action requested.
+    Not requesting torque, but still driving.
+    Times out if no action requested.
 
-Not implemented yet, pending TV.
-*/
-void drive_active_idle(void);
+    Not implemented yet, pending TV.
+    */
+    void drive_active_idle(void);
 
-/**
-Drive Active - Power
+    /**
+    Drive Active - Power
 
-Requesting torque, still driving.
+    Requesting torque, still driving.
 
-Not implemented yet, pending TV.
-*/
-void drive_active_power(void);
+    Not implemented yet, pending TV.
+    */
+    void drive_active_power(void);
 
-/**
-Drive Active - Regenerative
+    /**
+    Drive Active - Regenerative
 
-Requesting negative torque to slow the car and recharge the battery.
+    Requesting negative torque to slow the car and recharge the battery.
 
-Not implemented yet, pending TV.
-*/
-void drive_active_regen(void);
+    Not implemented yet, pending TV.
+    */
+    void drive_active_regen(void);
 
 #endif // DRIVING_H
