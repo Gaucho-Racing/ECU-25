@@ -43,7 +43,7 @@
 #elif defined ARMv8MML_DSP_DP
   #include "ARMv8MML_DSP_DP.h"
 #elif defined ARMv7A
-  /* TODO */
+  // Nothing
 #else
   #warning "no appropriate header file found!"
 #endif
