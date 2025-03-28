@@ -14,6 +14,8 @@
     void controlInverters(uint8_t driveEnable);
     void sendInverterCommand(void);
 
+    // FIXME Must implement lots of state-caching
+
     long getERPM(void);
     float getDuty(void);
     int getVoltIn(void);
