@@ -27,10 +27,10 @@
 
 FDCAN_TxHeaderTypeDef TxHeader = {
     .IdType = FDCAN_EXTENDED_ID,  // TODO Does bus 1 and bus 2 both use the same id type?
-    .TxFrameType = FDCAN_DATA_FRAME,
+    .TxFrameType = FDCAN_DATA_FRAME,  // TODO Uh oh
     .ErrorStateIndicator = FDCAN_ESI_ACTIVE, // honestly this might be a value you have to read from a node
                                              // FDCAN_ESI_ACTIVE is just a state that assumes there are minimal errors
-    .BitRateSwitch = FDCAN_BRS_OFF,
+    .BitRateSwitch = FDCAN_BRS_OFF, // TODO Does this change also?
     .TxEventFifoControl = FDCAN_NO_TX_EVENTS, // change to FDCAN_STORE_TX_EVENTS if you need to store info regarding transmitted messages
     .MessageMarker = 0 // also change this to a real address if you change fifo control
 };
