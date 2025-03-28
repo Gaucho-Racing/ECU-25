@@ -17,7 +17,6 @@ float mVehicleSpeedMPH(void)
     return ((getERPM() / MOTOR_POLE_PAIRS) * 2 * M_PI * WHEEL_RADIUS_IN) / (GEAR_RATIO * 1056.0);
 }
 
-
 void sendBseAppsViolationMessage(void)
 {
     uint8_t errorMap = 0x01;

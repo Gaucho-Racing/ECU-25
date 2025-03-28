@@ -6,9 +6,7 @@
 #include "fdcan.h"
 #include "msgIDs.h"
 
-volatile DTI_Data inverterData = {
-    .msgThree.faultCodes = 0x0A    // Chosen at random for error code
-};
+volatile DTI_Data inverterData = {0};
 
 volatile InverterSettings globalInverterSettings[3] = { // Set to 4 iff fourth motor/inverter
     {0, .RPM_Limit = 1, 0},
