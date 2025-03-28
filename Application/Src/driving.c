@@ -14,7 +14,7 @@ volatile bool BSE_APPS_violation = false;
 
 float vehicleSpeedMPH(void)
 {
-    return ((inverterData.msgOne.erpm / MOTOR_POLE_PAIRS) * 2 * M_PI * WHEEL_RADIUS_IN) / (GEAR_RATIO * 1056.0);
+    return ((globalInverterData.msgOne.erpm / MOTOR_POLE_PAIRS) * 2 * M_PI * WHEEL_RADIUS_IN) / (GEAR_RATIO * 1056.0);
 }
 
 void sendBseAppsViolationMessage(void)

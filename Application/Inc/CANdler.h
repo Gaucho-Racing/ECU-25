@@ -95,18 +95,12 @@
         uint8_t canVersion;
     } DTI_Data_Msg_Five;
 
-    typedef union {
-        struct {
-            DTI_Data_Msg_One msgOne;
-            DTI_Data_Msg_Two msgTwo;
-            DTI_Data_Msg_Three msgThree;
-            DTI_Data_Msg_Four msgFour;
-            DTI_Data_Msg_Five msgFive; 
-        };
-
-        struct {
-            uint8_t data[5][8];
-        };
+    typedef struct {
+        DTI_Data_Msg_One msgOne;
+        DTI_Data_Msg_Two msgTwo;
+        DTI_Data_Msg_Three msgThree;
+        DTI_Data_Msg_Four msgFour;
+        DTI_Data_Msg_Five msgFive;
     } DTI_Data;
 
 #endif // CANDLER_H

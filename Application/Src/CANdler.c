@@ -356,7 +356,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
 
-            inverterData.msgOne = *(DTI_Data_Msg_One*)data;
+            globalInverterData.msgOne = *(DTI_Data_Msg_One*)data;
             globalStatus.VehicleSpeed = (uint16_t)vehicleSpeedMPH();
 
             break;
@@ -369,7 +369,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
 
-            inverterData.msgTwo = *(DTI_Data_Msg_Two*)data;
+            globalInverterData.msgTwo = *(DTI_Data_Msg_Two*)data;
 
             break;
 
@@ -381,7 +381,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
 
-            inverterData.msgThree = *(DTI_Data_Msg_Three*)data;
+            globalInverterData.msgThree = *(DTI_Data_Msg_Three*)data;
 
             break;
 
@@ -393,7 +393,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
 
-            inverterData.msgFour = *(DTI_Data_Msg_Four*)data;
+            globalInverterData.msgFour = *(DTI_Data_Msg_Four*)data;
 
             break;
 
@@ -405,7 +405,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
 
-            inverterData.msgFive = *(DTI_Data_Msg_Five*)data;
+            globalInverterData.msgFive = *(DTI_Data_Msg_Five*)data;
 
             break;
     }

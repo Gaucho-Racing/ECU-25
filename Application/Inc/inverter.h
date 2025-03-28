@@ -16,7 +16,7 @@
     } InverterSettings;
 
     extern volatile InverterSettings globalInverterSettings[3]; // Set to 4 iff fourth motor/inverter
-    extern volatile DTI_Data inverterData;
+    extern volatile DTI_Data globalInverterData;
 
     void controlInverters(bool driveEnable);
     void sendInverterCommand(void);
