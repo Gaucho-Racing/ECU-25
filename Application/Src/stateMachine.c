@@ -24,7 +24,7 @@ volatile uint8_t numberOfBadMessages = 0;
 int32_t dischargeStartMillis = BAD_TIME_Negative1;
 uint16_t lastECUStatusMsgTick = 0;
 
-static const uint16_t howOftenToSpamECUStatusMsgs = 250;
+static const uint16_t howOftenToSpamECUStatusMsgs = 250;    // Might change
 
 void stateMachineTick(void)
 {

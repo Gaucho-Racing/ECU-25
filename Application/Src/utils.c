@@ -36,12 +36,12 @@ void setSoftwareLatch(bool close)
 
 bool ACUError(ACU_Status_MsgTwo *acuMsgTwo)
 {
-    return getBits(acuMsgTwo->Error_Warning_Bits, 0, 5) != 0x0 || acuMsgTwo->SDC_Voltage/10 < 5;
+    return getBits(acuMsgTwo->Error_Warning_Bits, 0, 5) != 0x0 || acuMsgTwo->SDC_Voltage / 10 < 5;
 }
 
 bool GRIError(Inverter_Status_Msg_Three *msgGriThree)
 {
-    return msgGriThree->fault_map != 0x00;
+    return msgGriThree->fault_map != 0x0;
 }
 
 bool ACUWarning(ACU_Status_MsgTwo *acuMsgTwo)

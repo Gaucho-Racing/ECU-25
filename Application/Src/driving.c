@@ -19,7 +19,7 @@ float vehicleSpeedMPH(void)
 
 void sendBseAppsViolationMessage(void)
 {
-    uint8_t errorMap = 0x01;
+    uint8_t errorMap = 0x1;
     writeMessage(PrimaryBusCAN, MSG_DASH_WARNING_FLAGS, GR_DASH_PANEL, &errorMap, 1);
 }
 
