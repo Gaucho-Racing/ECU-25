@@ -121,36 +121,69 @@ bool inverter_getDigitalOutput4(void)
     return ((inverterData.data[4][2] & 0x01) == 0x01);
 }
 
+/**
+DTI Data 5 - Capacitor Temperature Limit
+
+@returns Bool representing active
+*/
 bool inverter_getCapacitorTempLimit(void)
 {
     return ((inverterData.data[4][4] & 0x80) == 0x80);
 }
 
+/**
+DTI Data 5 - DC Current Limit
+
+@returns Bool representing active
+*/
 bool inverter_getDCCurrentLimit(void)
 {
     return ((inverterData.data[4][4] & 0x40) == 0x40);
 }
 
+/**
+DTI Data 5 - Drive Enable Limit
+
+@returns Bool representing active
+*/
 bool inverter_getDriveEnableLimit(void)
 {
     return ((inverterData.data[4][4] & 0x20) == 0x20);
 }
 
+/**
+DTI Data 5 - IGBT Acceleration Temperature Limit
+
+@returns Bool representing active
+*/
 bool inverter_getIgbtAccelerationTemperatureLimit(void)
 {
     return ((inverterData.data[4][4] & 0x10) == 0x10);
 }
 
+/**
+DTI Data 5 - IGBT Temperature Limit
+
+@returns Bool representing active
+*/
 bool inverter_getIgbtTemperatureLimit(void)
 {
     return ((inverterData.data[4][4] & 0x08) == 0x08);
 }
 
+/**
+DTI Data 5 - Input Voltage Limit
+
+@returns Bool representing active
+*/
 bool inverter_getVoltageInputLimit(void)
 {
     return ((inverterData.data[4][4] & 0x04) == 0x04);
 }
 
+/**
+
+*/
 bool inverter_getMotorAccelerationTemperatureLimit(void)
 {
     return ((inverterData.data[4][4] & 0x02) == 0x02);
