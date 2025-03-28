@@ -42,23 +42,61 @@ void controlInverters(bool driveEnable)
 // See https://github.com/Gaucho-Racing/VDM-24/blob/main/src/Nodes.h for all of below
 // There is exactly 1 DTI per https://discord.com/channels/756738476887638107/1256764134872060007/1355067348423540757
 
-bool inverter_getDigitalInput1(void) {return ((inverterData.data[4][2] & 0x80) == 0x80);}  //Digital input read
-bool inverter_getDigitalInput2(void) {return ((inverterData.data[4][2] & 0x40) == 0x40);}  //Digital input read
-bool inverter_getDigitalInput3(void) {return ((inverterData.data[4][2] & 0x20) == 0x20);}  //Digital input read
-bool inverter_getDigitalInput4(void) {return ((inverterData.data[4][2] & 0x10) == 0x10);}  //Digital input read
-bool inverter_getDigitalOutput1(void) {return ((inverterData.data[4][2] & 0x08) == 0x08);}  //Digital output write
-bool inverter_getDigitalOutput2(void) {return ((inverterData.data[4][2] & 0x04) == 0x04);}  //Digital output write
+bool inverter_getDigitalInput1(void)
+{
+    return ((inverterData.data[4][2] & 0x80) == 0x80);
+}
+
+bool inverter_getDigitalInput2(void)
+{
+    return ((inverterData.data[4][2] & 0x40) == 0x40);
+}
+
+bool inverter_getDigitalInput3(void)
+{
+    return ((inverterData.data[4][2] & 0x20) == 0x20);
+}
+
+bool inverter_getDigitalInput4(void)
+{
+    return ((inverterData.data[4][2] & 0x10) == 0x10);
+}
+
+bool inverter_getDigitalOutput1(void)
+{
+    return ((inverterData.data[4][2] & 0x08) == 0x08);
+}
+
+bool inverter_getDigitalOutput2(void)
+{return ((inverterData.data[4][2] & 0x04) == 0x04);}  //Digital output write
+
 bool inverter_getDigitalOutput3(void) {return ((inverterData.data[4][2] & 0x02) == 0x02);}  //Digital output write
+
 bool inverter_getDigitalOutput4(void) {return ((inverterData.data[4][2] & 0x01) == 0x01);}  //Digital output write
+
 bool inverter_getCapacitorTempLimit(void) {return ((inverterData.data[4][4] & 0x80) == 0x80);}//         ^
+
 bool inverter_getDCCurrentLimit(void) {return ((inverterData.data[4][4] & 0x40) == 0x40);}//       ^
+
 bool inverter_getDriveEnableLimit(void) {return ((inverterData.data[4][4] & 0x20) == 0x20);}//     ^
+
 bool inverter_getIgbtAccelerationTemperatureLimit(void) {return ((inverterData.data[4][4] & 0x10) == 0x10);}//   ^
+
 bool inverter_getIgbtTemperatureLimit(void) {return ((inverterData.data[4][4] & 0x08) == 0x08);}//        ^
+
 bool inverter_getVoltageInputLimit(void) {return ((inverterData.data[4][4] & 0x04) == 0x04);}//          ^
+
 bool inverter_getMotorAccelerationTemperatureLimit(void) {return ((inverterData.data[4][4] & 0x02) == 0x02);}//  ^
-bool inverter_getMotorTemperatureLimit(void) {return ((inverterData.data[4][4] & 0x01) == 0x01);}//       ^
-bool inverter_getRPMMinLimit(void) {return ((inverterData.data[4][5] & 0x80) == 0x80);}//        ^
+
+bool inverter_getMotorTemperatureLimit(void)
+{
+    return ((inverterData.data[4][4] & 0x01) == 0x01);
+}
+
+bool inverter_getRPMMinLimit(void)
+{
+    return ((inverterData.data[4][5] & 0x80) == 0x80);
+}
 
 bool inverter_getRPMMaxLimit(void)
 {
