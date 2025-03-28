@@ -14,8 +14,7 @@
     void controlInverters(uint8_t driveEnable);
     void sendInverterCommand(void);
 
-    // FIXME Must implement lots of state-caching
-    extern volatile uint8_t inverterData[5][8];
+    extern volatile DTI_Data inverterData;
 
     long getERPM(void);
     float getDuty(void);

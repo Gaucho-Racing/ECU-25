@@ -88,4 +88,52 @@ typedef struct {
     int8_t RTDButtonData;
 } Dash_Status_Msg;
 
+typedef struct {
+    uint32_t erpm;
+    uint16_t dutyCycle;
+    uint16_t inputVoltage;
+} DTI_Data_Msg_One;
+
+typedef struct {
+    uint16_t acVoltage;
+    uint16_t dcVoltage;
+    uint32_t RESERVED_TWO;
+} DTI_Data_Msg_Two;
+
+typedef struct {
+    uint16_t controllerTemp;
+    uint16_t motorTemp;
+    uint8_t faultCodes;
+    uint8_t RESERVED_THREE[3];
+} DTI_Data_Msg_Three;
+
+typedef struct {
+    uint32_t focId;
+    uint32_t focIq;
+} DTI_Data_Msg_Four;
+
+typedef struct {
+    uint8_t throttle;
+    uint8_t brake;
+    uint8_t digitalInput;
+    uint8_t driveEnable;
+    uint8_t variousLimitFlags[2];
+    uint8_t RESERVED_FIVE;
+    uint8_t canVersion;
+} DTI_Data_Msg_Five;
+
+typedef union {
+    struct {
+        DTI_Data_Msg_One msgOne;
+        DTI_Data_Msg_Two msgTwo;
+        DTI_Data_Msg_Three msgThree;
+        DTI_Data_Msg_Four msgFour;
+        DTI_Data_Msg_Five msgFive; 
+    };
+
+    struct {
+        uint8_t data[5][8];
+    };
+} DTI_Data;
+
 #endif // CANDLER_H

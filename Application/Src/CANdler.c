@@ -5,6 +5,8 @@
 #include "stateMachine.h"
 #include "msgIDs.h"
 #include "pinging.h"
+#include "inverter.h"
+#include "customIDs.h"
 #include "adc.h"
 #include "fdcan.h"
 #include "grIDs.h"
@@ -371,5 +373,67 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             globalSteeringStatusButtonMap = msgSteer->buttonMap;
 
             // Handle buttons / regen here
+            break;
+
+        case MSG_DTI_DATA_1:
+            if (length != 8) {
+                numberOfBadMessages++;
+                return;
+            } else {
+                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
+            }
+
+            inverterData.msgOne = *(DTI_Data_Msg_One*)data;
+
+            break;
+
+        case MSG_DTI_DATA_2:
+            if (length != 8) {
+                numberOfBadMessages++;
+                return;
+            } else {
+                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
+            }
+
+            inverterData.msgTwo = *(DTI_Data_Msg_Two*)data;
+
+            break;
+
+        
+        case MSG_DTI_DATA_3:
+            if (length != 8) {
+                numberOfBadMessages++;
+                return;
+            } else {
+                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
+            }
+
+            inverterData.msgThree = *(DTI_Data_Msg_Three*)data;
+
+            break;
+
+        case MSG_DTI_DATA_4:
+            if (length != 8) {
+                numberOfBadMessages++;
+                return;
+            } else {
+                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
+            }
+
+            inverterData.msgFour = *(DTI_Data_Msg_Four*)data;
+
+            break;
+
+        case MSG_DTI_DATA_5:
+            if (length != 8) {
+                numberOfBadMessages++;
+                return;
+            } else {
+                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
+            }
+
+            inverterData.msgFive = *(DTI_Data_Msg_Five*)data;
+
+            break;
     }
 }
