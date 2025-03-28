@@ -43,47 +43,89 @@ typedef union {
 extern volatile StatusLump globalStatus;
 extern volatile uint8_t numberOfBadMessages;
 
-/*
-General low voltage on
+/**
+General Low Voltage - On
 
-When the grounded low voltage system is turned on, the microcontroller has power, 
-but the motor controller is not enabled. This is the second state that the car will enter
-after the ECU Flash is complete. Here it waits for the TS ACTIVE button to be pressed.
+Once the GLVMS is set to ON this state is reached de facto.
+This is the first state reached on the board recieving power.
+The reciprocal off state is when the board has no power.
+Should a terrible error occur we may be thrown back here.
+
+However, we may configure boot to jump to `REFLASH_TUNE` instead.
+That is pending development. The other thought is to configure via CAN.
+
+Pretty much holds state until a CAN message comes in.
 */
 void glv_on(void);
 
-/*
-Precharge engaged
+/**
+Precharge Engaged
+
+Once in `GLV_ON` and the TSMS is set to ON.
+
+Pretty much holds state.
 */
 void precharge_engaged(void);
 
-/*
+/**
 Precharging
+
+Once in `PRECHARGE_ENGAGED` and the ACU gives a precharge confirmation.
+
+Pretty much holds state.
 */
 void precharging(void);
 
-/*
-Precharge complete
+/**
+Precharge Complete
+
+Once in `PRECHARGING` and the ACU gives a precharge success confirmation.
+
+Pretty much holds state.
 */
 void precharge_complete(void);
 
-/*
-Shutting down, ts discharge off
+/**
+TD Discharge Off
+
+Complicated. Refer to the actual code for the best understanding.
+
+Once TSV is higher than 60 volts and we leave drive state for any reason.
+Discharges the TS so that HV systems can be safe iff there are no errors.
+Can be errorful or standardly running when this state is reached.
+
+Tries to reduce the HV TS if it is possible.
 */
 void ts_discharge_off(void);
 
-/*
-Set new stuff, reflash tune
+/**
+Reflash Tune
+
+Might read from the SD card on startup and configure some settings.
+Could backup parameters, change parameters, validate parameters, etc.
+
+Pending implementation. Passes to `GLV_ON` on success.
 */
 void reflash_tune(void);
 
-/*
-Error state, error
+/**
+Error
+
+Complicated. Refer to the actual code for the best understanding.
+
+Attempts to send to discharge if TSV > 60 volts.
+
+Pretty much holds state until errors resolved.
 */
 void error(void);
 
-/*
-CALL ME! Pass in the state and the info and it will automatically tick
+/**
+State Machine Tick
+
+Call as often as possible, handles all logic and internal systems.
+Effectively half of the ECU, works with the interrupt-focused `CANDler.c`.
+
+Ticks the state machine and calls the appropriate function.
 */
 void stateMachineTick(void);
 
