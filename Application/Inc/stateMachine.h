@@ -7,17 +7,17 @@
     #define TS_VOLTAGE_OFF_LIMIT 60
 
     typedef enum {
-        GLV_ON = 1,
-        PRECHARGE_ENGAGED = 2,
-        PRECHARGING = 3,
-        PRECHARGE_COMPLETE = 4,
-        DRIVE_STANDBY = 5,
-        DRIVE_ACTIVE_IDLE = 6,
-        DRIVE_ACTIVE_POWER = 7,
-        DRIVE_ACTIVE_REGEN = 8,
-        TS_DISCHARGE_OFF = 9,
-        REFLASH_TUNE = 10,
-        ERRORSTATE = 11,
+        GLV_ON = (uint8_t)1,
+        PRECHARGE_ENGAGED = (uint8_t)2,
+        PRECHARGING = (uint8_t)3,
+        PRECHARGE_COMPLETE = (uint8_t)4,
+        DRIVE_STANDBY = (uint8_t)5,
+        DRIVE_ACTIVE_IDLE = (uint8_t)6,
+        DRIVE_ACTIVE_POWER = (uint8_t)7,
+        DRIVE_ACTIVE_REGEN = (uint8_t)8,
+        TS_DISCHARGE_OFF = (uint8_t)9,
+        REFLASH_TUNE = (uint8_t)10,
+        ERRORSTATE = (uint8_t)11,
     } State;
 
     typedef union {
