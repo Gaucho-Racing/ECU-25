@@ -19,9 +19,9 @@
     void controlInverters(uint8_t driveEnable);
     void sendInverterCommand(void);
 
-    long getERPM(void);
+    uint32_t getERPM(void);
     float getDuty(void);
-    int getVoltIn(void);
+    uint32_t getVoltIn(void);
     float getACCurrent(void);
     float getDCCurrent(void);
     float getInvTemp(void);
