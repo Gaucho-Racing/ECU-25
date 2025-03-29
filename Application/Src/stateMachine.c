@@ -141,7 +141,7 @@ void ts_discharge_off(void)
     }
 }
 
-void reflash_tune(void) // FIXME Currently a stub
+void reflash_tune(void) // TODO Currently a stub
 {
     globalStatus.ECUState = GLV_ON;
     return;
