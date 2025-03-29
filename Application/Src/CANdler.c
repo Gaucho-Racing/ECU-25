@@ -33,6 +33,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             char* debug2String = (char*)data;
 
+            // TODO Parse
             // Send to steering wheel maybe?
             UNUSED(debug2String);
 
@@ -48,6 +49,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             char* debugFdString = (char*)data;
 
+            // TODO Parse
             // Send to steering wheel maybe?
             UNUSED(debugFdString);
 
