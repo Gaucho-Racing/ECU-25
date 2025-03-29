@@ -142,12 +142,12 @@ void ts_discharge_off(void)
     }
 }
 
-void reflash_tune(void) // TODO Currently a stub
+void reflash_tune(void) // TODO Currently a stub, may decide to use CAN for updating settings (on each boot)
 {
     globalStatus.ECUState = GLV_ON;
     return;
 
-    // READ SD CARD INFORMATION INTO INFO
+    // Planned reading and parsing of SD card contents into settings
 
     // if (true /*Flash error*/)
     // {
