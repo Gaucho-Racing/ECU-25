@@ -17,10 +17,8 @@ volatile uint8_t errorFlagBitsCan = 0;
 volatile uint8_t globalSteeringStatusRegen = 0;
 volatile uint8_t globalSteeringStatusButtonMap = 0;
 
-void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t length, uint32_t timestamp)
+void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t length)
 {
-    UNUSED(timestamp);
-
     switch(msgID)
     {
         case MSG_DEBUG_2_0:
