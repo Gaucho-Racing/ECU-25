@@ -40,7 +40,8 @@ void writeMessage(BusCAN bus, uint16_t msgID, uint8_t destID, uint8_t data[], ui
     TxHeader.DataLength = len;
 
     FDCAN_HandleTypeDef *handle;
-    switch(bus) { // TODO Triple check if any other differences exist
+    switch(bus)
+    {
         case PrimaryBusCAN:
             handle = &hfdcan1;
             TxHeader.FDFormat = FDCAN_CLASSIC_CAN;
