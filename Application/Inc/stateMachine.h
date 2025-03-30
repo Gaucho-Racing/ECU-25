@@ -49,6 +49,15 @@
     extern volatile uint8_t numberOfBadMessages;
 
     /**
+    Scales `globalStatus` and returns a copy that is scaled.
+    
+    @returns A StatusLump struct that follows the CAN ID Assignment spreadsheet
+
+    Does not change globalStatus in any way/shape/form.
+    */
+    StatusLump scaledECUStatusMsgForTx(void);
+
+    /**
     General Low Voltage - On
 
     Once the GLVMS is set to ON this state is reached de facto.

@@ -77,14 +77,31 @@ void stateMachineTick(void)
         break;
     }
 
+    StatusLump correctlyScaledValues = scaledECUStatusMsgForTx();
+
     if (HAL_GetTick() - lastECUStatusMsgTick > howOftenToSpamECUStatusMsgs)
     {
-        writeMessage(PrimaryBusCAN, MSG_ECU_STATUS_1, GR_ALL, (uint8_t*)globalStatus.ECUStatusMsgOne, 8);
-        writeMessage(PrimaryBusCAN, MSG_ECU_STATUS_2, GR_ALL, (uint8_t*)globalStatus.ECUStatusMsgTwo, 8);
-        writeMessage(PrimaryBusCAN, MSG_ECU_STATUS_3, GR_ALL, (uint8_t*)globalStatus.ECUStatusMsgThree, 4);
+        writeMessage(PrimaryBusCAN, MSG_ECU_STATUS_1, GR_ALL, (uint8_t*)correctlyScaledValues.ECUStatusMsgOne, 8);
+        writeMessage(PrimaryBusCAN, MSG_ECU_STATUS_2, GR_ALL, (uint8_t*)correctlyScaledValues.ECUStatusMsgTwo, 8);
+        writeMessage(PrimaryBusCAN, MSG_ECU_STATUS_3, GR_ALL, (uint8_t*)correctlyScaledValues.ECUStatusMsgThree, 4);
 
         lastECUStatusMsgTick = HAL_GetTick();
     }
+}
+
+StatusLump scaledECUStatusMsgForTx(void)
+{
+    StatusLump scaledStatus = globalStatus;
+    scaledStatus.MaxCellTemp *= 4;
+    scaledStatus.AccumulatorStateOfCharge = (uint8_t)(scaledStatus.AccumulatorStateOfCharge * 51.0 / 20.0);
+    scaledStatus.GLVStateOfCharge *= (uint8_t)(scaledStatus.GLVStateOfCharge * 51.0 / 20.0);
+    scaledStatus.TractiveSystemVoltage *= 100;
+    scaledStatus.VehicleSpeed *= 100;
+    scaledStatus.FLWheelRPM *= 10; // TODO Confirm all RPMs are treated as u16 everywhere
+    scaledStatus.FRWheelRPM *= 10;
+    scaledStatus.RLWheelRPM *= 10;
+    scaledStatus.RRWheelRPM *= 10;
+    return scaledStatus;
 }
 
 void glv_on(void)
