@@ -11,10 +11,13 @@
 #include "utils.h"
 
 /*
-Important! globalStatus.??WheelRPM are stored as uint16_t
+Important!
+
+globalStatus.??WheelRPM are stored as uint16_t
 
 A value less than GLOBALSTATUS_WHEEL_RPM_ADJUSTMENT is negative RPM
 A value greater than GLOBALSTATUS_WHEEL_RPM_ADJUSTMENT is positive RPM
+A value of GLOBALSTATUS_WHEEL_RPM_ADJUSTMENT is 0 RPM
 
 Use `convertFromStatusLumpRPMToRealRPM(globalStatus.??WheelRPM)` to get the actual RPM
 */
