@@ -26,7 +26,7 @@
 
     Number is already scaled on reception, just needs to be shifted to be used
     */
-   int16_t convertFromECUStatusRPMToRealRPM(uint16_t ECUStatusMsgWheelRPM);
+   int16_t convertFromStatusLumpRPMToRealRPM(uint16_t ECUStatusMsgWheelRPM);
 
     /**
     Vehicle Speed in MPH
