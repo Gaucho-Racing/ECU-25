@@ -74,9 +74,9 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             ACU_Status_MsgOne* acuMsgOne = (ACU_Status_MsgOne*)data;
-            globalStatus.AccumulatorStateOfCharge = acuMsgOne->Accumulator_SOC;
-            globalStatus.GLVStateOfCharge = acuMsgOne->GLV_SOC;
-            globalStatus.TractiveSystemVoltage = acuMsgOne->TS_Voltage;
+            globalStatus.AccumulatorStateOfCharge = (uint8_t)(acuMsgOne->Accumulator_SOC * 20.0 / 51.0);
+            globalStatus.GLVStateOfCharge = (uint8_t)(acuMsgOne->GLV_SOC * 20.0 / 51.0);
+            globalStatus.TractiveSystemVoltage = (uint8_t)(acuMsgOne->TS_Voltage * 0.01);
 
             break;
         case MSG_ACU_STATUS_2:
@@ -88,7 +88,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             ACU_Status_MsgTwo* acuMsgTwo = (ACU_Status_MsgTwo*)data;
-            globalStatus.MaxCellTemp = acuMsgTwo->Max_Cell_Temp;
+            globalStatus.MaxCellTemp = (uint8_t)(acuMsgTwo->Max_Cell_Temp * 0.25);
 
             // errorFlagBitsCan logic
             if (ACUError(acuMsgTwo) && (errorFlagBitsCan == 0 || errorFlagBitsCan == 2))
@@ -202,16 +202,16 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             switch (srcID)
             {
                 case GR_GR_INVERTER_1:
-                    globalStatus.RLWheelRPM = msgGriOne->Motor_Rpm;
+                    globalStatus.RLWheelRPM = (uint16_t)(msgGriOne->Motor_Rpm * 0.1);
                     break;
                 case GR_GR_INVERTER_2:
-                    globalStatus.RRWheelRPM = msgGriOne->Motor_Rpm;
+                    globalStatus.RRWheelRPM = (uint16_t)(msgGriOne->Motor_Rpm * 0.1);
                     break;
                 case GR_GR_INVERTER_3:
-                    globalStatus.FLWheelRPM = msgGriOne->Motor_Rpm;
+                    globalStatus.FLWheelRPM = (uint16_t)(msgGriOne->Motor_Rpm * 0.1);
                     break;
                 case GR_GR_INVERTER_4:
-                    globalStatus.FRWheelRPM = msgGriOne->Motor_Rpm;
+                    globalStatus.FRWheelRPM = (uint16_t)(msgGriOne->Motor_Rpm * 0.1);
                     break;
             }
 
