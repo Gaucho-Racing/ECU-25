@@ -10,7 +10,21 @@
 #include "msgIDs.h"
 #include "utils.h"
 
+/*
+Important! globalStatus.??WheelRPM are stored as uint16_t
+
+A value less than GLOBALSTATUS_WHEEL_RPM_ADJUSTMENT is negative RPM
+A value greater than GLOBALSTATUS_WHEEL_RPM_ADJUSTMENT is positive RPM
+
+Use `convertTconvertFromECUStatusRPMToRealRPM(globalStatus.??WheelRPM)` to get the actual RPM
+*/
+
 volatile bool BSE_APPS_violation = false;
+
+int16_t convertFromECUStatusRPMToRealRPM(uint16_t ECUStatusMsgWheelRPM)
+{
+    return ECUStatusMsgWheelRPM - GLOBALSTATUS_WHEEL_RPM_ADJUSTMENT;
+}
 
 float vehicleSpeedMPH(void)
 {

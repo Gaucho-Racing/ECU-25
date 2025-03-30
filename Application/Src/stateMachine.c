@@ -92,15 +92,17 @@ void stateMachineTick(void)
 StatusLump scaledECUStatusMsgForTx(void)
 {
     StatusLump scaledStatus = globalStatus;
+
     scaledStatus.MaxCellTemp *= 4;
     scaledStatus.AccumulatorStateOfCharge = (uint8_t)(scaledStatus.AccumulatorStateOfCharge * 51.0 / 20.0);
     scaledStatus.GLVStateOfCharge *= (uint8_t)(scaledStatus.GLVStateOfCharge * 51.0 / 20.0);
     scaledStatus.TractiveSystemVoltage *= 100;
     scaledStatus.VehicleSpeed *= 100;
-    scaledStatus.FLWheelRPM *= 10; // TODO Confirm all RPMs are treated as u16 everywhere
+    scaledStatus.FLWheelRPM *= 10;
     scaledStatus.FRWheelRPM *= 10;
     scaledStatus.RLWheelRPM *= 10;
     scaledStatus.RRWheelRPM *= 10;
+
     return scaledStatus;
 }
 
