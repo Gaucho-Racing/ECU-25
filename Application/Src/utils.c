@@ -24,12 +24,11 @@ uint8_t getBits(uint8_t number, uint8_t indexFromLeft, uint8_t length)
 
 void setSoftwareLatch(bool close)
 {
-    // TODO Confirm that having read/write of the same pin is ok
     if (close && !HAL_GPIO_ReadPin(SOFTWARE_OK_CONTROL_GPIO_Port, SOFTWARE_OK_CONTROL_Pin))
     {
         HAL_GPIO_WritePin(SOFTWARE_OK_CONTROL_GPIO_Port, SOFTWARE_OK_CONTROL_Pin, GPIO_PIN_SET);
     }
-    else if (close == 0 && HAL_GPIO_ReadPin(SOFTWARE_OK_CONTROL_GPIO_Port, SOFTWARE_OK_CONTROL_Pin))
+    else if (!close && HAL_GPIO_ReadPin(SOFTWARE_OK_CONTROL_GPIO_Port, SOFTWARE_OK_CONTROL_Pin))
     {
         HAL_GPIO_WritePin(SOFTWARE_OK_CONTROL_GPIO_Port, SOFTWARE_OK_CONTROL_Pin, GPIO_PIN_RESET);
     }
@@ -37,9 +36,8 @@ void setSoftwareLatch(bool close)
 
 bool ACUError(ACU_Status_MsgTwo *acuMsgTwo)
 {
-    uint8_t value[8];
-    value[0] = getBits(acuMsgTwo->Error_Warning_Bits, 0, 5);
-    value[1] = 'ACUErr!';
+    uint8_t value[8] = 'ACUErr!';
+    value[7] = getBits(acuMsgTwo->Error_Warning_Bits, 0, 5);
 
     if(getBits(acuMsgTwo->Error_Warning_Bits, 0, 5) != 0x0){
         writeMessage(PrimaryBusCAN, DEBUG, GR_DASH_PANEL, (uint8_t*)getBits(acuMsgTwo->Error_Warning_Bits, 0, 5), 8);
@@ -50,7 +48,14 @@ bool ACUError(ACU_Status_MsgTwo *acuMsgTwo)
 
 bool GRIError(Inverter_Status_Msg_Three *msgGriThree)
 {
-    return msgGriThree->fault_map != 0x00;
+    uint8_t value[8] = 'GRIErr!';
+    value[7] = msgGriThree->fault_map;
+
+    if (msgGriThree->fault_map != 0x0) {
+        writeMessage(PrimaryBusCAN, DEBUG, GR_DASH_PANEL, ())
+    }
+
+    return msgGriThree->fault_map != 0x0;
 }
 
 bool ACUWarning(ACU_Status_MsgTwo *acuMsgTwo)

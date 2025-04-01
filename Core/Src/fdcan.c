@@ -40,7 +40,8 @@ void writeMessage(BusCAN bus, uint16_t msgID, uint8_t destID, uint8_t data[], ui
     TxHeader.DataLength = len;
 
     FDCAN_HandleTypeDef *handle;
-    switch(bus) { // TODO Triple check if any other differences exist
+    switch(bus)
+    {
         case PrimaryBusCAN:
             handle = &hfdcan1;
             TxHeader.FDFormat = FDCAN_CLASSIC_CAN;
@@ -62,18 +63,22 @@ void writeMessage(BusCAN bus, uint16_t msgID, uint8_t destID, uint8_t data[], ui
 void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 {
     static FDCAN_RxHeaderTypeDef RxHeader;
-    static uint8_t RxData[64];
+    static uint8_t RxData[8]; // 8 byte max
 
-    if((RxFifo0ITs & FDCAN_IT_RX_FIFO0_NEW_MESSAGE) != RESET) {
-        if(HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO0, &RxHeader, RxData) != HAL_OK) {
+    if((RxFifo0ITs & FDCAN_IT_RX_FIFO0_NEW_MESSAGE) != RESET)
+    {
+        if(HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO0, &RxHeader, RxData) != HAL_OK)
+        {
             Error_Handler();
         }
 
         uint16_t msgID = (RxHeader.Identifier & 0x00FFF00) >> 8;
         uint8_t srcID  = (RxHeader.Identifier & 0xFF00000) >> 20;
-        handleCANMessage(msgID, srcID, RxData, RxHeader.DataLength, RxHeader.RxTimestamp);
+        handleCANMessage(msgID, srcID, RxData, RxHeader.DataLength);
+        // We can add the uint32_t timestamp to the handler if needed with RxHeader.RxTimestamp, but no need as of right now
 
-        if(HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0) != HAL_OK) {
+        if (HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0) != HAL_OK)
+        {
             Error_Handler();
         }
     }
@@ -82,17 +87,22 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 void HAL_FDCAN_RxFifo1Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo1ITs)
 {
     static FDCAN_RxHeaderTypeDef RxHeader;
-    static uint8_t RxData[64];
-    if((RxFifo1ITs & FDCAN_IT_RX_FIFO1_NEW_MESSAGE) != RESET) {
-        if(HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &RxHeader, RxData) != HAL_OK) {
+    static uint8_t RxData[64];  // 64 byte max
+
+    if((RxFifo1ITs & FDCAN_IT_RX_FIFO1_NEW_MESSAGE) != RESET)
+    {
+        if(HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &RxHeader, RxData) != HAL_OK)
+        {
             Error_Handler();
         }
 
         uint16_t msgID = (RxHeader.Identifier & 0x00FFF00) >> 8;
         uint8_t srcID  = (RxHeader.Identifier & 0xFF00000) >> 20;
-        handleCANMessage(msgID, srcID, RxData, RxHeader.DataLength, RxHeader.RxTimestamp);
+        handleCANMessage(msgID, srcID, RxData, RxHeader.DataLength);
+        // We can add the uint32_t timestamp to the handler if needed with RxHeader.RxTimestamp, but no need as of right now
 
-        if(HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO1_NEW_MESSAGE, 0) != HAL_OK) {
+        if(HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO1_NEW_MESSAGE, 0) != HAL_OK)
+        {
             Error_Handler();
         }
     }

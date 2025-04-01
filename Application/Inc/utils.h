@@ -32,11 +32,12 @@
     */
     uint8_t getBits(uint8_t number, uint8_t indexFromLeft, uint8_t length);
 
-    // TODO Improve comment -- what is this for again? Lowkey forgot
     /**
     Essentially a nuanced flip-flop of the ECU software latch.
 
-    @param close Whether or not to close the latch
+    @param close Written to the ECU software latch
+
+    Basically it should immediately start discharging no matter where it is
     */
     void setSoftwareLatch(bool close);
 

@@ -10,7 +10,24 @@
 #include "msgIDs.h"
 #include "utils.h"
 
+/*
+Important!
+
+globalStatus.??WheelRPM are stored as uint16_t
+
+A value less than GLOBALSTATUS_WHEEL_RPM_ADJUSTMENT is negative RPM
+A value greater than GLOBALSTATUS_WHEEL_RPM_ADJUSTMENT is positive RPM
+A value of GLOBALSTATUS_WHEEL_RPM_ADJUSTMENT is 0 RPM
+
+Use `convertFromStatusLumpRPMToRealRPM(globalStatus.??WheelRPM)` to get the actual RPM
+*/
+
 volatile bool BSE_APPS_violation = false;
+
+int16_t convertFromStatusLumpRPMToRealRPM(uint16_t ECUStatusMsgWheelRPM)
+{
+    return ECUStatusMsgWheelRPM - GLOBALSTATUS_WHEEL_RPM_ADJUSTMENT;
+}
 
 float vehicleSpeedMPH(void)
 {
@@ -19,7 +36,7 @@ float vehicleSpeedMPH(void)
 
 void sendBseAppsViolationMessage(void)
 {
-    uint8_t errorMap = 0x01;
+    uint8_t errorMap = 0x1;
     writeMessage(PrimaryBusCAN, MSG_DASH_WARNING_FLAGS, GR_DASH_PANEL, &errorMap, 1);
 }
 

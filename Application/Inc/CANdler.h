@@ -16,9 +16,8 @@
     @param srcID Source GR ID
     @param data Binary data array
     @param length Length of the binary data array
-    @param timestamp Timestamp the message triggered the interrupt
     */
-    void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t length, uint32_t timestamp);
+    void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t length);
 
     typedef enum {
         PrimaryBusCAN = (uint8_t)0,
@@ -107,5 +106,14 @@
         DTI_Data_Msg_Four msgFour;
         DTI_Data_Msg_Five msgFive;
     } DTI_Data;
+
+    typedef struct {
+        uint8_t temp;
+    } SAM_Brake_IR_Msg;
+
+    typedef struct {
+        uint8_t id;
+        uint8_t temp;
+    } Specific_Brake_IR_Msg;
 
 #endif // CANDLER_H

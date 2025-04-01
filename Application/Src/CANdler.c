@@ -13,15 +13,12 @@
 #include "grIDs.h"
 #include "utils.h"
 
-volatile uint8_t errorFlagBitsCan = 0;   // Only R/W inside of interrupts
-
+volatile uint8_t errorFlagBitsCan = 0;
 volatile uint8_t globalSteeringStatusRegen = 0;
 volatile uint8_t globalSteeringStatusButtonMap = 0;
 
-void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t length, uint32_t timestamp)
+void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t length)
 {
-    UNUSED(timestamp);
-
     switch(msgID)
     {
         case MSG_DEBUG_2_0:
@@ -34,10 +31,12 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             char* debug2String = (char*)data;
 
+            // TODO Parse debug message
             // Send to steering wheel maybe?
             UNUSED(debug2String);
 
             break;
+
         case MSG_DEBUG_FD:
             if (length > 64) {
                 numberOfBadMessages++;
@@ -48,10 +47,12 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             char* debugFdString = (char*)data;
 
+            // TODO Parse debug message
             // Send to steering wheel maybe?
             UNUSED(debugFdString);
 
             break;
+
         case MSG_PING:
             if (length != 4) {
                 numberOfBadMessages++;
@@ -63,6 +64,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             respondToPing(srcID, *(uint32_t*)data);
 
             break;
+
         case MSG_ACU_STATUS_1:
             if (length != 8) {
                 numberOfBadMessages++;
@@ -72,9 +74,9 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             ACU_Status_MsgOne* acuMsgOne = (ACU_Status_MsgOne*)data;
-            globalStatus.AccumulatorStateOfCharge = acuMsgOne->Accumulator_SOC;
-            globalStatus.GLVStateOfCharge = acuMsgOne->GLV_SOC;
-            globalStatus.TractiveSystemVoltage = acuMsgOne->TS_Voltage;
+            globalStatus.AccumulatorStateOfCharge = (uint8_t)(acuMsgOne->Accumulator_SOC * 20.0 / 51.0);
+            globalStatus.GLVStateOfCharge = (uint8_t)(acuMsgOne->GLV_SOC * 20.0 / 51.0);
+            globalStatus.TractiveSystemVoltage = (uint8_t)(acuMsgOne->TS_Voltage * 0.01);
 
             break;
         case MSG_ACU_STATUS_2:
@@ -86,7 +88,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             ACU_Status_MsgTwo* acuMsgTwo = (ACU_Status_MsgTwo*)data;
-            globalStatus.MaxCellTemp = acuMsgTwo->Max_Cell_Temp;
+            globalStatus.MaxCellTemp = (uint8_t)(acuMsgTwo->Max_Cell_Temp * 0.25);
 
             // errorFlagBitsCan logic
             if (ACUError(acuMsgTwo) && (errorFlagBitsCan == 0 || errorFlagBitsCan == 2))
@@ -122,6 +124,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             {
                 case GLV_ON:
                     break;
+
                 case PRECHARGE_ENGAGED:
                     if (getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 1) == 0x1)
                     {
@@ -129,13 +132,15 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                     }
 
                     break;
+
                 case PRECHARGING:
                     if (getBits(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 0, 4) == 0x07)
                     {
                         globalStatus.ECUState = PRECHARGE_COMPLETE;
                     }
 
-                    __attribute__((fallthrough));
+                    break;
+
                 default:
                     if (getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 1) == 0x0 || (getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 2) == 0x00 && globalStatus.ECUState != PRECHARGING))
                     {
@@ -181,7 +186,9 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 */
             // USE ACUWarning(acuMsgTwo) HERE FOR DASH WARNINGS
+
             break;
+
         case MSG_INVERTER_STATUS_1:
             if (length != 6) {
                 numberOfBadMessages++;
@@ -195,16 +202,16 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             switch (srcID)
             {
                 case GR_GR_INVERTER_1:
-                    globalStatus.FLWheelRPM = msgGriOne->Motor_Rpm;
+                    globalStatus.RLWheelRPM = (uint16_t)(msgGriOne->Motor_Rpm * 0.1);
                     break;
                 case GR_GR_INVERTER_2:
-                    globalStatus.FRWheelRPM = msgGriOne->Motor_Rpm;
+                    globalStatus.RRWheelRPM = (uint16_t)(msgGriOne->Motor_Rpm * 0.1);
                     break;
                 case GR_GR_INVERTER_3:
-                    globalStatus.RLWheelRPM = msgGriOne->Motor_Rpm;
+                    globalStatus.FLWheelRPM = (uint16_t)(msgGriOne->Motor_Rpm * 0.1);
                     break;
                 case GR_GR_INVERTER_4:
-                    globalStatus.RRWheelRPM = msgGriOne->Motor_Rpm;
+                    globalStatus.FRWheelRPM = (uint16_t)(msgGriOne->Motor_Rpm * 0.1);
                     break;
             }
 
@@ -243,6 +250,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             break;
+
         case MSG_DASH_STATUS:
             if (length != 3) {
                 numberOfBadMessages++;
@@ -266,6 +274,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                     }
 
                     break;
+
                 case PRECHARGE_ENGAGED:
                     if (!ts_on)
                     {
@@ -273,20 +282,23 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                     }
 
                     break;
+
                 case DRIVE_STANDBY:
                     if (!rtd)
                     {
                         globalStatus.ECUState = PRECHARGE_COMPLETE;
                     }
 
-                    __attribute__((fallthrough));
+                    break;
+
                 case PRECHARGE_COMPLETE:
                     if (rtd && analogRead(BRAKE_F_SIGNAL) > 100 && analogRead(BRAKE_R_SIGNAL) > 100)
                     {
                         globalStatus.ECUState = DRIVE_STANDBY;
                     }
 
-                    __attribute__((fallthrough));
+                    break;
+
                 default:
                     if (!ts_on)
                     {
@@ -396,6 +408,36 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             globalInverterData.msgFive = *(DTI_Data_Msg_Five*)data;
+
+            break;
+
+        case MSG_SAM_BRAKE_IR:
+            if (length != 1) {
+                numberOfBadMessages++;
+                return;
+            } else {
+                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
+            }
+
+            Specific_Brake_IR_Msg brakeIrMsg;
+            brakeIrMsg.temp = ((Specific_Brake_IR_Msg*)data)->temp;
+            
+            switch (srcID) {
+                case GR_SAM1:
+                    brakeIrMsg.id = 0;
+                    break;
+                case GR_SAM2:
+                    brakeIrMsg.id = 1;
+                    break;
+                case GR_SAM3:
+                    brakeIrMsg.id = 2;
+                    break;
+                case GR_SAM4:
+                    brakeIrMsg.id = 3;
+                    break;
+            }
+
+            writeMessage(PrimaryBusCAN, MSG_SPECIFIC_BRAKE_IR, GR_STEERING_WHEEL, (uint8_t*)&brakeIrMsg, 2);
 
             break;
     }

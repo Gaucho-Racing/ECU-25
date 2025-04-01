@@ -14,8 +14,19 @@
     #define WHEEL_RADIUS_IN 8.0 // inches
 
     #define POWERLEVEL_TORQUEMAP_RESET 0xFF
+    #define GLOBALSTATUS_WHEEL_RPM_ADJUSTMENT 3276.8
 
     extern volatile bool BSE_APPS_violation;
+
+    /**
+    Converts from `globalStatus.??WheelRPM` to actual RPM of given wheel
+
+    @param ECUStatusMsgWheelRPM A given wheel's ECU Status RPM: globalStatus.??WheelRPM
+    @returns int16_t A signed integer representing the real RPM of the provided wheel
+
+    Number is already scaled on reception, just needs to be shifted to be used
+    */
+   int16_t convertFromStatusLumpRPMToRealRPM(uint16_t ECUStatusMsgWheelRPM);
 
     /**
     Vehicle Speed in MPH

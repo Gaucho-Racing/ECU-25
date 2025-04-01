@@ -11,6 +11,7 @@
 #include "msgIDs.h"
 #include "grIDs.h"
 
+// TODO Confirm valid following of the map/scale of values
 volatile StatusLump globalStatus = {
     .ECUState = GLV_ON,
     .StatusBits = {0},
@@ -24,7 +25,7 @@ volatile uint8_t numberOfBadMessages = 0;
 int32_t dischargeStartMillis = BAD_TIME_Negative1;
 uint16_t lastECUStatusMsgTick = 0;
 
-static const uint16_t howOftenToSpamECUStatusMsgs = 250;
+static const uint16_t howOftenToSpamECUStatusMsgs = 250;    // Might change
 
 void stateMachineTick(void)
 {
@@ -76,14 +77,33 @@ void stateMachineTick(void)
         break;
     }
 
+    StatusLump correctlyScaledValues = scaledECUStatusMsgForTx();
+
     if (HAL_GetTick() - lastECUStatusMsgTick > howOftenToSpamECUStatusMsgs)
     {
-        writeMessage(PrimaryBusCAN, MSG_ECU_STATUS_1, GR_ALL, (uint8_t*)globalStatus.ECUStatusMsgOne, 8);
-        writeMessage(PrimaryBusCAN, MSG_ECU_STATUS_2, GR_ALL, (uint8_t*)globalStatus.ECUStatusMsgTwo, 8);
-        writeMessage(PrimaryBusCAN, MSG_ECU_STATUS_3, GR_ALL, (uint8_t*)globalStatus.ECUStatusMsgThree, 4);
+        writeMessage(PrimaryBusCAN, MSG_ECU_STATUS_1, GR_ALL, (uint8_t*)correctlyScaledValues.ECUStatusMsgOne, 8);
+        writeMessage(PrimaryBusCAN, MSG_ECU_STATUS_2, GR_ALL, (uint8_t*)correctlyScaledValues.ECUStatusMsgTwo, 8);
+        writeMessage(PrimaryBusCAN, MSG_ECU_STATUS_3, GR_ALL, (uint8_t*)correctlyScaledValues.ECUStatusMsgThree, 4);
 
         lastECUStatusMsgTick = HAL_GetTick();
     }
+}
+
+StatusLump scaledECUStatusMsgForTx(void)
+{
+    StatusLump scaledStatus = globalStatus;
+
+    scaledStatus.MaxCellTemp *= 4;
+    scaledStatus.AccumulatorStateOfCharge = (uint8_t)(scaledStatus.AccumulatorStateOfCharge * 51.0 / 20.0);
+    scaledStatus.GLVStateOfCharge *= (uint8_t)(scaledStatus.GLVStateOfCharge * 51.0 / 20.0);
+    scaledStatus.TractiveSystemVoltage *= 100;
+    scaledStatus.VehicleSpeed *= 100;
+    scaledStatus.FLWheelRPM *= 10;
+    scaledStatus.FRWheelRPM *= 10;
+    scaledStatus.RLWheelRPM *= 10;
+    scaledStatus.RRWheelRPM *= 10;
+
+    return scaledStatus;
 }
 
 void glv_on(void)
@@ -141,12 +161,12 @@ void ts_discharge_off(void)
     }
 }
 
-void reflash_tune(void) // FIXME Currently a stub
+void reflash_tune(void) // TODO Currently a stub, may decide to use CAN for updating settings (on each boot)
 {
     globalStatus.ECUState = GLV_ON;
     return;
 
-    // READ SD CARD INFORMATION INTO INFO
+    // Planned reading and parsing of SD card contents into settings
 
     // if (true /*Flash error*/)
     // {
