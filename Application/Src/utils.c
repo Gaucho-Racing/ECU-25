@@ -1,5 +1,6 @@
 #include <stdbool.h>
 
+#include <fdcan.h>
 #include "stm32g4xx_hal.h"
 #include "utils.h"
 #include "main.h"
@@ -36,7 +37,15 @@ void setSoftwareLatch(bool close)
 
 bool ACUError(ACU_Status_MsgTwo *acuMsgTwo)
 {
-    return getBits(acuMsgTwo->Error_Warning_Bits, 0, 5) != 0x0 || acuMsgTwo->SDC_Voltage/10 < 5;
+    uint8_t value[8];
+    value[0] = getBits(acuMsgTwo->Error_Warning_Bits, 0, 5);
+    value[1] = 'ACUErr!';
+
+    if(getBits(acuMsgTwo->Error_Warning_Bits, 0, 5) != 0x0){
+        writeMessage(PrimaryBusCAN, DEBUG, GR_DASH_PANEL, (uint8_t*)getBits(acuMsgTwo->Error_Warning_Bits, 0, 5), 8);
+    }
+
+    return getBits(acuMsgTwo->Error_Warning_Bits, 0, 5) != 0x0 || acuMsgTwo->SDC_Voltage < 50;
 }
 
 bool GRIError(Inverter_Status_Msg_Three *msgGriThree)

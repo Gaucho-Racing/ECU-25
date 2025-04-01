@@ -34,7 +34,7 @@
 
     // TODO Improve comment -- what is this for again? Lowkey forgot
     /**
-    Essentially a nuanced flip-flop.
+    Essentially a nuanced flip-flop of the ECU software latch.
 
     @param close Whether or not to close the latch
     */
