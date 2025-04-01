@@ -1,8 +1,8 @@
 // Auto-generated header file
 // Define message IDs
 
-#ifndef APPLICATION_INC_CUSTOMIDS_H
-#define APPLICATION_INC_CUSTOMIDS_H
+#ifndef _APPLICATION_INC_CUSTOMIDS_H
+#define _APPLICATION_INC_CUSTOMIDS_H
 
 #define MSG_DTI_CONTROL_1 116
 #define MSG_DTI_CONTROL_2 216
