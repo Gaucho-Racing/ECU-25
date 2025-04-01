@@ -42,9 +42,10 @@ bool ACUError(ACU_Status_MsgTwo *acuMsgTwo)
     if(getBits(acuMsgTwo->Error_Warning_Bits, 0, 5) != 0x0)
     {
         writeMessage(PrimaryBusCAN, DEBUG, GR_DASH_PANEL, value, 8);
+        return acuMsgTwo->SDC_Voltage < 50;
     }
 
-    return getBits(acuMsgTwo->Error_Warning_Bits, 0, 5) != 0x0 || acuMsgTwo->SDC_Voltage < 50;
+    return acuMsgTwo->SDC_Voltage < 50;
 }
 
 bool GRIError(Inverter_Status_Msg_Three *msgGriThree)
