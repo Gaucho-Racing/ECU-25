@@ -107,4 +107,13 @@
         DTI_Data_Msg_Five msgFive;
     } DTI_Data;
 
+    typedef struct {
+        uint8_t temp;
+    } SAM_Brake_IR_Msg;
+
+    typedef struct {
+        uint8_t id;
+        uint8_t temp;
+    } Specific_Brake_IR_Msg;
+
 #endif // CANDLER_H

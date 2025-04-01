@@ -410,5 +410,35 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             globalInverterData.msgFive = *(DTI_Data_Msg_Five*)data;
 
             break;
+
+        case MSG_SAM_BRAKE_IR:
+            if (length != 1) {
+                numberOfBadMessages++;
+                return;
+            } else {
+                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
+            }
+
+            Specific_Brake_IR_Msg brakeIrMsg;
+            brakeIrMsg.temp = ((Specific_Brake_IR_Msg*)data)->temp;
+            
+            switch (srcID) {
+                case GR_SAM1:
+                    brakeIrMsg.id = 0;
+                    break;
+                case GR_SAM2:
+                    brakeIrMsg.id = 1;
+                    break;
+                case GR_SAM3:
+                    brakeIrMsg.id = 2;
+                    break;
+                case GR_SAM4:
+                    brakeIrMsg.id = 3;
+                    break;
+            }
+
+            writeMessage(PrimaryBusCAN, MSG_SPECIFIC_BRAKE_IR, GR_STEERING_WHEEL, (uint8_t*)&brakeIrMsg, 2);
+
+            break;
     }
 }
