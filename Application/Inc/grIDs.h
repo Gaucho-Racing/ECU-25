@@ -1,8 +1,8 @@
 // Auto-generated header file
 // Define GR IDs
 
-#ifndef APPLICATION_INC_GRIDS_H
-#define APPLICATION_INC_GRIDS_H
+#ifndef _APPLICATION_INC_GRIDS_H
+#define _APPLICATION_INC_GRIDS_H
 
 #define GR_DTI_INVERTER 0x00
 #define GR_ENERGY_METER 0x00
@@ -50,4 +50,4 @@
 #define GR_LV_DC_DC 0x29
 #define GR_ALL 0xFF
 
-#endif // APPLICATION_INC_GRIDS_H
+#endif // _APPLICATION_INC_GRIDS_H
