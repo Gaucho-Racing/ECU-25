@@ -40,7 +40,7 @@ bool ACUError(ACU_Status_MsgTwo *acuMsgTwo)
     value[7] = getBits(acuMsgTwo->Error_Warning_Bits, 0, 5);
 
     if(getBits(acuMsgTwo->Error_Warning_Bits, 0, 5) != 0x0){
-        writeMessage(PrimaryBusCAN, DEBUG, GR_DASH_PANEL, (uint8_t*)getBits(acuMsgTwo->Error_Warning_Bits, 0, 5), 8);
+        writeMessage(PrimaryBusCAN, DEBUG, GR_DASH_PANEL, value, 8);
     }
 
     return getBits(acuMsgTwo->Error_Warning_Bits, 0, 5) != 0x0 || acuMsgTwo->SDC_Voltage < 50;
@@ -52,7 +52,7 @@ bool GRIError(Inverter_Status_Msg_Three *msgGriThree)
     value[7] = msgGriThree->fault_map;
 
     if (msgGriThree->fault_map != 0x0) {
-        writeMessage(PrimaryBusCAN, DEBUG, GR_DASH_PANEL, ())
+        writeMessage(PrimaryBusCAN, DEBUG, GR_DASH_PANEL, (*u))
     }
 
     return msgGriThree->fault_map != 0x0;
