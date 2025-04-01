@@ -36,7 +36,7 @@ void setSoftwareLatch(bool close)
 
 bool ACUError(ACU_Status_MsgTwo *acuMsgTwo)
 {
-    uint8_t value[8] = 'ACUErr!';
+    uint8_t value[8] = 'ACUErr!?';
     value[7] = getBits(acuMsgTwo->Error_Warning_Bits, 0, 5);
 
     if(getBits(acuMsgTwo->Error_Warning_Bits, 0, 5) != 0x0)
@@ -55,13 +55,22 @@ bool GRIError(Inverter_Status_Msg_Three *msgGriThree)
     if (msgGriThree->fault_map != 0x0)
     {
         writeMessage(PrimaryBusCAN, DEBUG, GR_DASH_PANEL, value, 8);
+        return true;
     }
 
-    return msgGriThree->fault_map != 0x0;
+    return false;
 }
 
 bool ACUWarning(ACU_Status_MsgTwo *acuMsgTwo)
 {
     uint8_t value[8] = 'ACUWar!?';
-    return getBits(acuMsgTwo->Error_Warning_Bits, 5, 3) != 0x0;
+    value[7] = getBits(acuMsgTwo->Error_Warning_Bits, 5, 3);
+
+    if (getBits(acuMsgTwo->Error_Warning_Bits, 5, 3) != 0x0)
+    {
+        writeMessage(PrimaryBusCAN, DEBUG, GR_DASH_PANEL, value, 8);
+        return true;
+    }
+
+    return false;
 }
