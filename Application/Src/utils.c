@@ -1,8 +1,16 @@
 #include <stdbool.h>
+<<<<<<< Updated upstream
+=======
+#include <stdio.h>
+>>>>>>> Stashed changes
 
 #include <fdcan.h>
 #include "stm32g4xx_hal.h"
 #include "utils.h"
+<<<<<<< Updated upstream
+=======
+#include "msgIDs.h"
+>>>>>>> Stashed changes
 #include "main.h"
 #include "stateMachine.h"
 #include "CANdler.h"
@@ -41,7 +49,12 @@ bool ACUError(ACU_Status_MsgTwo *acuMsgTwo)
 
     if(getBits(acuMsgTwo->Error_Warning_Bits, 0, 5) != 0x0)
     {
-        writeMessage(PrimaryBusCAN, DEBUG, GR_DASH_PANEL, value, 8);
+        writeMessage(PrimaryBusCAN, MSG_DEBUG_2_0, GR_DASH_PANEL, value, 8);
+
+        char steeringMsg[18];
+        snprintf(steeringMsg, 18, "ACU Error -- %hhX", value);
+        writeMessage(DataBusCAN, MSG_DEBUG_FD, GR_STEERING_WHEEL, (uint8_t*)steeringMsg, 17);
+
         return acuMsgTwo->SDC_Voltage < 50;
     }
 
@@ -55,7 +68,12 @@ bool GRIError(Inverter_Status_Msg_Three *msgGriThree)
 
     if (msgGriThree->fault_map != 0x0)
     {
-        writeMessage(PrimaryBusCAN, DEBUG, GR_DASH_PANEL, value, 8);
+        writeMessage(PrimaryBusCAN, MSG_DEBUG_2_0, GR_DASH_PANEL, value, 8);
+
+        char steeringMsg[18];
+        snprintf(steeringMsg, 18, "GRI Error -- %hhX", msgGriThree->fault_map);
+        writeMessage(DataBusCAN, MSG_DEBUG_FD, GR_STEERING_WHEEL, (uint8_t*)steeringMsg, 17);
+
         return true;
     }
 
@@ -69,7 +87,11 @@ bool ACUWarning(ACU_Status_MsgTwo *acuMsgTwo)
 
     if (getBits(acuMsgTwo->Error_Warning_Bits, 5, 3) != 0x0)
     {
-        writeMessage(PrimaryBusCAN, DEBUG, GR_DASH_PANEL, value, 8);
+        writeMessage(PrimaryBusCAN, MSG_DEBUG_2_0, GR_DASH_PANEL, value, 8);
+
+        char steeringMsg[20];
+        snprintf(steeringMsg, 20, "ACU Warning -- %hhX", getBits(acuMsgTwo->Error_Warning_Bits, 5, 3));
+        writeMessage(DataBusCAN, MSG_DEBUG_FD, GR_STEERING_WHEEL, (uint8_t*)steeringMsg, 19);
         return true;
     }
 
