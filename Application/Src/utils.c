@@ -1,16 +1,10 @@
 #include <stdbool.h>
-<<<<<<< Updated upstream
-=======
 #include <stdio.h>
->>>>>>> Stashed changes
 
 #include <fdcan.h>
 #include "stm32g4xx_hal.h"
 #include "utils.h"
-<<<<<<< Updated upstream
-=======
 #include "msgIDs.h"
->>>>>>> Stashed changes
 #include "main.h"
 #include "stateMachine.h"
 #include "CANdler.h"
