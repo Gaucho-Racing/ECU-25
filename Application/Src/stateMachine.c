@@ -11,6 +11,7 @@
 #include "msgIDs.h"
 #include "grIDs.h"
 
+//Test push hello
 // TODO Confirm valid following of the map/scale of values
 volatile StatusLump globalStatus = {
     .ECUState = GLV_ON,
