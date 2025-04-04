@@ -43,11 +43,11 @@ bool ACUError(ACU_Status_MsgTwo *acuMsgTwo)
     if (notableBits != 0x0)
     {
         char dashMsg[9];
-        snprintf(dashMsg, 9, "ACUErr%hhX", getBits(acuMsgTwo->Error_Warning_Bits, 0, 5));
+        snprintf(dashMsg, 9, "ACUErr%hhX", notableBits);
         writeMessage(PrimaryBusCAN, MSG_DEBUG_2_0, GR_DASH_PANEL, (uint8_t*)dashMsg, 8);  // Not sending '\0'
 
         char steeringMsg[16];
-        snprintf(steeringMsg, 16, "ACU Error -- %hhX", getBits(acuMsgTwo->Error_Warning_Bits, 0, 5));
+        snprintf(steeringMsg, 16, "ACU Error -- %hhX", notableBits);
         writeMessage(DataBusCAN, MSG_DEBUG_FD, GR_STEERING_WHEEL, (uint8_t*)steeringMsg, 15);   // Not sending '\0'
 
         return acuMsgTwo->SDC_Voltage < 50;
@@ -81,11 +81,11 @@ bool ACUWarning(ACU_Status_MsgTwo *acuMsgTwo)
     if (notableBits != 0x0)
     {
         char dashMsg[9];
-        snprintf(dashMsg, 9, "ACUWar%hhx", notableBits, 5, 3));
+        snprintf(dashMsg, 9, "ACUWar%hhx", notableBits);
         writeMessage(PrimaryBusCAN, MSG_DEBUG_2_0, GR_DASH_PANEL, (uint8_t*)dashMsg, 8);    // Not sending '\0'
 
         char steeringMsg[18];
-        snprintf(steeringMsg, 18, "ACU Warning -- %hhX", notableBits, 5, 3));
+        snprintf(steeringMsg, 18, "ACU Warning -- %hhX", notableBits);
         writeMessage(DataBusCAN, MSG_DEBUG_FD, GR_STEERING_WHEEL, (uint8_t*)steeringMsg, 17);   // Not sending '\0'
 
         return true;
