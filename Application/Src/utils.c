@@ -38,16 +38,17 @@ void setSoftwareLatch(bool close)
 
 bool ACUError(ACU_Status_MsgTwo *acuMsgTwo)
 {
-    uint8_t value[8] = "ACUErr!?";
-    value[7] = getBits(acuMsgTwo->Error_Warning_Bits, 0, 5);
+    uint8_t notableBits = getBits(acuMsgTwo->Error_Warning_Bits, 0, 5);
 
-    if(getBits(acuMsgTwo->Error_Warning_Bits, 0, 5) != 0x0)
+    if (notableBits != 0x0)
     {
-        writeMessage(PrimaryBusCAN, MSG_DEBUG_2_0, GR_DASH_PANEL, value, 8);
+        char dashMsg[9];
+        snprintf(dashMsg, 9, "ACUErr%hhX", getBits(acuMsgTwo->Error_Warning_Bits, 0, 5));
+        writeMessage(PrimaryBusCAN, MSG_DEBUG_2_0, GR_DASH_PANEL, (uint8_t*)dashMsg, 8);  // Not sending '\0'
 
-        char steeringMsg[18];
-        snprintf(steeringMsg, 18, "ACU Error -- %hhX", value);
-        writeMessage(DataBusCAN, MSG_DEBUG_FD, GR_STEERING_WHEEL, (uint8_t*)steeringMsg, 17);
+        char steeringMsg[16];
+        snprintf(steeringMsg, 16, "ACU Error -- %hhX", getBits(acuMsgTwo->Error_Warning_Bits, 0, 5));
+        writeMessage(DataBusCAN, MSG_DEBUG_FD, GR_STEERING_WHEEL, (uint8_t*)steeringMsg, 15);   // Not sending '\0'
 
         return acuMsgTwo->SDC_Voltage < 50;
     }
@@ -57,16 +58,15 @@ bool ACUError(ACU_Status_MsgTwo *acuMsgTwo)
 
 bool GRIError(Inverter_Status_Msg_Three *msgGriThree)
 {
-    uint8_t value[8] = "GRIErr!?";
-    value[7] = msgGriThree->fault_map;
-
     if (msgGriThree->fault_map != 0x0)
     {
-        writeMessage(PrimaryBusCAN, MSG_DEBUG_2_0, GR_DASH_PANEL, value, 8);
+        char dashMsg[9];
+        snprintf(dashMsg, 9, "GRIErr%hhX", msgGriThree->fault_map);
+        writeMessage(PrimaryBusCAN, MSG_DEBUG_2_0, GR_DASH_PANEL, (uint8_t*)dashMsg, 8);  // Not sending '\0'
 
-        char steeringMsg[18];
-        snprintf(steeringMsg, 18, "GRI Error -- %hhX", msgGriThree->fault_map);
-        writeMessage(DataBusCAN, MSG_DEBUG_FD, GR_STEERING_WHEEL, (uint8_t*)steeringMsg, 17);
+        char steeringMsg[16];
+        snprintf(steeringMsg, 16, "GRI Error -- %hhX", msgGriThree->fault_map);
+        writeMessage(DataBusCAN, MSG_DEBUG_FD, GR_STEERING_WHEEL, (uint8_t*)steeringMsg, 15);   // Not sending '\0'
 
         return true;
     }
@@ -76,16 +76,18 @@ bool GRIError(Inverter_Status_Msg_Three *msgGriThree)
 
 bool ACUWarning(ACU_Status_MsgTwo *acuMsgTwo)
 {
-    uint8_t value[8] = "ACUWar!?";
-    value[7] = getBits(acuMsgTwo->Error_Warning_Bits, 5, 3);
+    uint8_t notableBits = getBits(acuMsgTwo->Error_Warning_Bits, 5, 3);
 
-    if (getBits(acuMsgTwo->Error_Warning_Bits, 5, 3) != 0x0)
+    if (notableBits != 0x0)
     {
-        writeMessage(PrimaryBusCAN, MSG_DEBUG_2_0, GR_DASH_PANEL, value, 8);
+        char dashMsg[9];
+        snprintf(dashMsg, 9, "ACUWar%hhx", notableBits, 5, 3));
+        writeMessage(PrimaryBusCAN, MSG_DEBUG_2_0, GR_DASH_PANEL, (uint8_t*)dashMsg, 8);    // Not sending '\0'
 
-        char steeringMsg[20];
-        snprintf(steeringMsg, 20, "ACU Warning -- %hhX", getBits(acuMsgTwo->Error_Warning_Bits, 5, 3));
-        writeMessage(DataBusCAN, MSG_DEBUG_FD, GR_STEERING_WHEEL, (uint8_t*)steeringMsg, 19);
+        char steeringMsg[18];
+        snprintf(steeringMsg, 18, "ACU Warning -- %hhX", notableBits, 5, 3));
+        writeMessage(DataBusCAN, MSG_DEBUG_FD, GR_STEERING_WHEEL, (uint8_t*)steeringMsg, 17);   // Not sending '\0'
+
         return true;
     }
 
