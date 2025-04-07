@@ -72,6 +72,7 @@ void stateMachineTick(void)
             reflash_tune();
             break;
         case ERRORSTATE:
+            [[fallthrough]];
         default:
             error();
         break;
