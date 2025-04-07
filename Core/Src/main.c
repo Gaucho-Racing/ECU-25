@@ -26,6 +26,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdio.h>
+
 #include "stateMachine.h"
 #include "pinging.h"
 #include "msgIDs.h"

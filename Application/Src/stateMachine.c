@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <stdio.h>
 
 #include "stm32g4xx_hal.h"
 #include "stateMachine.h"
@@ -72,7 +73,6 @@ void stateMachineTick(void)
             reflash_tune();
             break;
         case ERRORSTATE:
-            [[fallthrough]];
         default:
             error();
         break;
@@ -88,6 +88,19 @@ void stateMachineTick(void)
 
         lastECUStatusMsgTick = HAL_GetTick();
     }
+
+    printf("ECU State %d\n", globalStatus.ECUState);
+    printf("Status Bits 1 %X%X%x\n", globalStatus.StatusBits[0], globalStatus.StatusBits[1], globalStatus.StatusBits[2]);
+    printf("Power Level & Torque Map %X\n", globalStatus.PowerLevelTorqueMap);
+    printf("Max Cell Temp %d\n", globalStatus.MaxCellTemp);
+    printf("Accumulator SoC %d\n", globalStatus.AccumulatorStateOfCharge);
+    printf("GLV SoC %d\n", globalStatus.GLVStateOfCharge);
+    printf("TS Voltage %d\n", globalStatus.TractiveSystemVoltage);
+    printf("Vehicle Speed %d\n", globalStatus.VehicleSpeed);
+    printf("FR Wheel RPM %d\n", globalStatus.FRWheelRPM);
+    printf("FL Wheel RPM %d\n", globalStatus.FLWheelRPM);
+    printf("RR Wheel RPM %d\n", globalStatus.RRWheelRPM);
+    printf("RL Wheel RPM %d\n", globalStatus.RLWheelRPM);
 }
 
 StatusLump scaledECUStatusMsgForTx(void)
