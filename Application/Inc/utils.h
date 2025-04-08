@@ -9,7 +9,7 @@
 
     #define TICK_FREQ 1000
 
-    #ifdef DEBUG
+    #ifdef LOGOMATIC_ENABLED
         #define LOGOMATIC(...) printf(__VA_ARGS__)
     #else
         #define LOGOMATIC(...) UNUSED(NULL)
