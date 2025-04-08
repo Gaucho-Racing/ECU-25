@@ -12,7 +12,7 @@
     #ifdef DEBUG
         #define LOGOMATIC(...) printf(__VA_ARGS__)
     #else
-        #define LOGOMATIC(...) UNUSED(__VA_ARGS__)
+        #define LOGOMATIC(...) UNUSED(NULL)
     #endif
 
     /**
