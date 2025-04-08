@@ -29,11 +29,8 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
 
-            char* debug2String = (char*)data;
-
-            // TODO Parse debug message
-            // Send to steering wheel maybe?
-            UNUSED(debug2String);
+            LOGOMATIC("%.*s", (int)length, (const char*)data);
+            writeMessage(DataBusCAN, MSG_DEBUG_2_0, GR_STEERING_WHEEL, data, length);
 
             break;
 
@@ -45,11 +42,8 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
 
-            char* debugFdString = (char*)data;
-
-            // TODO Parse debug message
-            // Send to steering wheel maybe?
-            UNUSED(debugFdString);
+            LOGOMATIC("%.*s", (int)length, (const char*)data);
+            writeMessage(DataBusCAN, MSG_DEBUG_2_0, GR_STEERING_WHEEL, data, length);
 
             break;
 
@@ -61,6 +55,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
 
+            LOGOMATIC("Got pinged by %hhX", srcID);
             respondToPing(srcID, *(uint32_t*)data);
 
             break;
@@ -440,5 +435,11 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             writeMessage(PrimaryBusCAN, MSG_SPECIFIC_BRAKE_IR, GR_STEERING_WHEEL, (uint8_t*)&brakeIrMsg, 2);
 
             break;
+
+        #ifdef DEBUG
+            default:
+                LOGOMATIC("Got msg %X from %X of length %d", msgID, srcID, (int)length);
+                break;
+        #endif
     }
 }

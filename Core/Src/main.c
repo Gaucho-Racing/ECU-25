@@ -39,12 +39,20 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#ifdef __GNUC__
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+#else
+#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#endif
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
+PUTCHAR_PROTOTYPE
+{
+  ITM_SendChar(ch);
+  return ch;
+}
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -103,6 +111,7 @@ int main(void)
 
   // 10us ticks
   HAL_SetTickFreq(TICK_FREQ);
+  LOGOMATIC("--Boot Finished at Tick %lu--\n", HAL_GetTick());
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -191,6 +200,7 @@ void Error_Handler(void)
 
   HAL_FDCAN_DeInit(&hfdcan1);
   HAL_FDCAN_DeInit(&hfdcan2);
+  LOGOMATIC("\n--Error Handler Called--\nEverything Is Broken\n");
 
   HAL_Delay(3);
 
@@ -205,6 +215,7 @@ void Error_Handler(void)
 
   while(true)
   {
+    LOGOMATIC("So Cooked\n");
     writeMessage(PrimaryBusCAN, MSG_DEBUG_2_0, GR_ALL, (uint8_t*)"ECU Fail", 8);
     HAL_Delay(250);
     writeMessage(DataBusCAN, MSG_DEBUG_FD, GR_ALL, (uint8_t*)"ECU Internal Failure", 20);

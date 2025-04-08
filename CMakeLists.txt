@@ -22,6 +22,10 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_compile_definitions(LOGOMATIC_ENABLED)
+endif()
+
 # Set the project name
 set(CMAKE_PROJECT_NAME ECU-25)
 

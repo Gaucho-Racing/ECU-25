@@ -86,6 +86,20 @@ void stateMachineTick(void)
         writeMessage(PrimaryBusCAN, MSG_ECU_STATUS_3, GR_ALL, (uint8_t*)correctlyScaledValues.ECUStatusMsgThree, 4);
 
         lastECUStatusMsgTick = HAL_GetTick();
+
+        LOGOMATIC("\n--Global Status Dump--\nECU State %d\n", correctlyScaledValues.ECUState);
+        LOGOMATIC("Status Bits 1 %X%X%x\n", correctlyScaledValues.StatusBits[0], correctlyScaledValues.StatusBits[1], correctlyScaledValues.StatusBits[2]);
+        LOGOMATIC("Power Level & Torque Map %X\n", correctlyScaledValues.PowerLevelTorqueMap);
+        LOGOMATIC("Max Cell Temp %d\n", correctlyScaledValues.MaxCellTemp);
+        LOGOMATIC("Accumulator SoC %d\n", correctlyScaledValues.AccumulatorStateOfCharge);
+        LOGOMATIC("GLV SoC %d\n", correctlyScaledValues.GLVStateOfCharge);
+        LOGOMATIC("TS Voltage %d\n", correctlyScaledValues.TractiveSystemVoltage);
+        LOGOMATIC("Vehicle Speed %d\n", correctlyScaledValues.VehicleSpeed);
+        LOGOMATIC("FR Wheel RPM %d\n", correctlyScaledValues.FRWheelRPM);
+        LOGOMATIC("FL Wheel RPM %d\n", correctlyScaledValues.FLWheelRPM);
+        LOGOMATIC("RR Wheel RPM %d\n", correctlyScaledValues.RRWheelRPM);
+        LOGOMATIC("RL Wheel RPM %d\n", correctlyScaledValues.RLWheelRPM);
+        LOGOMATIC("--Global Status Dump--\n");
     }
 }
 
