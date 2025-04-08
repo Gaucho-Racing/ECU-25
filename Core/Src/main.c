@@ -26,8 +26,6 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <stdio.h>
-
 #include "stateMachine.h"
 #include "pinging.h"
 #include "msgIDs.h"
@@ -113,13 +111,13 @@ int main(void)
 
   // 10us ticks
   HAL_SetTickFreq(TICK_FREQ);
+  LOGOMATIC("--Boot Finished at Tick %lu--\n", HAL_GetTick());
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    printf("Hello, world!\n");
     stateMachineTick();
     pingSchedule();
     /* USER CODE END WHILE */
@@ -202,6 +200,7 @@ void Error_Handler(void)
 
   HAL_FDCAN_DeInit(&hfdcan1);
   HAL_FDCAN_DeInit(&hfdcan2);
+  LOGOMATIC("\n--Error Handler Called--\nEverything Is Broken\n");
 
   HAL_Delay(3);
 
@@ -216,6 +215,7 @@ void Error_Handler(void)
 
   while(true)
   {
+    LOGOMATIC("So Cooked\n");
     writeMessage(PrimaryBusCAN, MSG_DEBUG_2_0, GR_ALL, (uint8_t*)"ECU Fail", 8);
     HAL_Delay(250);
     writeMessage(DataBusCAN, MSG_DEBUG_FD, GR_ALL, (uint8_t*)"ECU Internal Failure", 20);

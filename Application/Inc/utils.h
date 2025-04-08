@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stdio.h>
 #include <stdbool.h>
 
 #include "CANdler.h"
@@ -7,6 +8,17 @@
     #define UTILS_H
 
     #define TICK_FREQ 1000
+
+    #ifdef DEBUG
+        #define LOGOMATIC(...) printf(__VA_ARGS__)
+    #else
+        #define LOGOMATIC(...) UNUSED(__VA_ARGS__)
+    #endif
+
+    /**
+    Prints the content of `globalStatus` over debug
+    */
+    void printGlobalStatus();
 
     /**
     Use in place of HAL Ticks for timing.

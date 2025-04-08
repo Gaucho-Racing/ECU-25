@@ -21,15 +21,16 @@
 #include "fdcan.h"
 
 /* USER CODE BEGIN 0 */
-#include "stm32g4xx_hal_fdcan.h"
-#include "CANdler.h"
 #include <stdint.h>
+#include "stm32g4xx_hal_fdcan.h"
+#include "utils.h"
+#include "CANdler.h"
 
 FDCAN_TxHeaderTypeDef TxHeader = {
     .IdType = FDCAN_EXTENDED_ID,
     .TxFrameType = FDCAN_DATA_FRAME,
     .ErrorStateIndicator = FDCAN_ESI_ACTIVE, // honestly this might be a value you have to read from a node
-                                             // FDCAN_ESI_ACTIVE is just a state that assumes there are minimal errors
+        // FDCAN_ESI_ACTIVE is just a state that assumes there are minimal errors
     .BitRateSwitch = FDCAN_BRS_OFF,
     .TxEventFifoControl = FDCAN_NO_TX_EVENTS, // change to FDCAN_STORE_TX_EVENTS if you need to store info regarding transmitted messages
     .MessageMarker = 0 // also change this to a real address if you change fifo control
@@ -56,6 +57,7 @@ void writeMessage(BusCAN bus, uint16_t msgID, uint8_t destID, uint8_t data[], ui
 
     if(HAL_FDCAN_AddMessageToTxFifoQ(handle, &TxHeader, data) != HAL_OK)
     {
+        LOGOMATIC("Could not add msg to transmission FIFO queue\n");
         Error_Handler();
     }
 }
@@ -99,7 +101,6 @@ void HAL_FDCAN_RxFifo1Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo1ITs)
         uint16_t msgID = (RxHeader.Identifier & 0x00FFF00) >> 8;
         uint8_t srcID  = (RxHeader.Identifier & 0xFF00000) >> 20;
         handleCANMessage(msgID, srcID, RxData, RxHeader.DataLength);
-        // We can add the uint32_t timestamp to the handler if needed with RxHeader.RxTimestamp, but no need as of right now
 
         if(HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO1_NEW_MESSAGE, 0) != HAL_OK)
         {

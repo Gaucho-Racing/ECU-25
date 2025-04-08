@@ -50,6 +50,8 @@ bool ACUError(ACU_Status_MsgTwo *acuMsgTwo)
         snprintf(steeringMsg, 16, "ACU Error -- %hhX", notableBits);
         writeMessage(DataBusCAN, MSG_DEBUG_FD, GR_STEERING_WHEEL, (uint8_t*)steeringMsg, 15);   // Not sending '\0'
 
+        LOGOMATIC("ACU Error -- %hhX", notableBits);
+
         return acuMsgTwo->SDC_Voltage < 50;
     }
 
@@ -67,6 +69,8 @@ bool GRIError(Inverter_Status_Msg_Three *msgGriThree)
         char steeringMsg[16];
         snprintf(steeringMsg, 16, "GRI Error -- %hhX", msgGriThree->fault_map);
         writeMessage(DataBusCAN, MSG_DEBUG_FD, GR_STEERING_WHEEL, (uint8_t*)steeringMsg, 15);   // Not sending '\0'
+
+        LOGOMATIC("GRI Error -- %hhX", msgGriThree->fault_map);
 
         return true;
     }
@@ -87,6 +91,8 @@ bool ACUWarning(ACU_Status_MsgTwo *acuMsgTwo)
         char steeringMsg[18];
         snprintf(steeringMsg, 18, "ACU Warning -- %hhX", notableBits);
         writeMessage(DataBusCAN, MSG_DEBUG_FD, GR_STEERING_WHEEL, (uint8_t*)steeringMsg, 17);   // Not sending '\0'
+
+        LOGOMATIC("ACU Warning -- %hhX", notableBits);
 
         return true;
     }

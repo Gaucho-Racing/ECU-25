@@ -1,5 +1,4 @@
 #include <stdbool.h>
-#include <stdio.h>
 
 #include "stm32g4xx_hal.h"
 #include "stateMachine.h"
@@ -87,20 +86,21 @@ void stateMachineTick(void)
         writeMessage(PrimaryBusCAN, MSG_ECU_STATUS_3, GR_ALL, (uint8_t*)correctlyScaledValues.ECUStatusMsgThree, 4);
 
         lastECUStatusMsgTick = HAL_GetTick();
-    }
 
-    printf("ECU State %d\n", globalStatus.ECUState);
-    printf("Status Bits 1 %X%X%x\n", globalStatus.StatusBits[0], globalStatus.StatusBits[1], globalStatus.StatusBits[2]);
-    printf("Power Level & Torque Map %X\n", globalStatus.PowerLevelTorqueMap);
-    printf("Max Cell Temp %d\n", globalStatus.MaxCellTemp);
-    printf("Accumulator SoC %d\n", globalStatus.AccumulatorStateOfCharge);
-    printf("GLV SoC %d\n", globalStatus.GLVStateOfCharge);
-    printf("TS Voltage %d\n", globalStatus.TractiveSystemVoltage);
-    printf("Vehicle Speed %d\n", globalStatus.VehicleSpeed);
-    printf("FR Wheel RPM %d\n", globalStatus.FRWheelRPM);
-    printf("FL Wheel RPM %d\n", globalStatus.FLWheelRPM);
-    printf("RR Wheel RPM %d\n", globalStatus.RRWheelRPM);
-    printf("RL Wheel RPM %d\n", globalStatus.RLWheelRPM);
+        LOGOMATIC("\n--Global Status Dump--\nECU State %d\n", correctlyScaledValues.ECUState);
+        LOGOMATIC("Status Bits 1 %X%X%x\n", correctlyScaledValues.StatusBits[0], correctlyScaledValues.StatusBits[1], correctlyScaledValues.StatusBits[2]);
+        LOGOMATIC("Power Level & Torque Map %X\n", correctlyScaledValues.PowerLevelTorqueMap);
+        LOGOMATIC("Max Cell Temp %d\n", correctlyScaledValues.MaxCellTemp);
+        LOGOMATIC("Accumulator SoC %d\n", correctlyScaledValues.AccumulatorStateOfCharge);
+        LOGOMATIC("GLV SoC %d\n", correctlyScaledValues.GLVStateOfCharge);
+        LOGOMATIC("TS Voltage %d\n", correctlyScaledValues.TractiveSystemVoltage);
+        LOGOMATIC("Vehicle Speed %d\n", correctlyScaledValues.VehicleSpeed);
+        LOGOMATIC("FR Wheel RPM %d\n", correctlyScaledValues.FRWheelRPM);
+        LOGOMATIC("FL Wheel RPM %d\n", correctlyScaledValues.FLWheelRPM);
+        LOGOMATIC("RR Wheel RPM %d\n", correctlyScaledValues.RRWheelRPM);
+        LOGOMATIC("RL Wheel RPM %d\n", correctlyScaledValues.RLWheelRPM);
+        LOGOMATIC("--Global Status Dump--\n");
+    }
 }
 
 StatusLump scaledECUStatusMsgForTx(void)
