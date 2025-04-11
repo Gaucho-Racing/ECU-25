@@ -14,8 +14,7 @@
 #include "utils.h"
 
 volatile uint8_t errorFlagBitsCan = 0;
-volatile uint8_t globalSteeringStatusRegen = 0;
-volatile uint8_t globalSteeringStatusButtonMap = 0;
+volatile uint8_t globalSteeringStatusRegenButtonMap = 0;
 
 void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t length)
 {
@@ -97,7 +96,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             if (ACUWarning(acuMsgTwo))
             {
-                globalStatus.PowerLevelTorqueMap = (globalStatus.PowerLevelTorqueMap << 4 >> 4) | (1 << 7);
+                globalStatus.PowerLevelTorqueMap = (globalStatus.PowerLevelTorqueMap >> 5 << 4) | (globalStatus.PowerLevelTorqueMap << 4 >> 4);
                 writeMessage(PrimaryBusCAN, MSG_DEBUG_2_0, GR_ALL, (uint8_t*)"UnderVol", 8); // Until they figure out how they want to talk to us...
             }
 
@@ -328,7 +327,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             break;
 
         case MSG_STEERING_STATUS:
-            if (length != 4) {
+            if (length != 2) {
                 numberOfBadMessages++;
                 return;
             } else {
@@ -339,9 +338,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             globalStatus.PowerLevelTorqueMap = msgSteer->Current_Torque_Map_Encoder;
 
             /* Do not write to these values elsewhere! */
-            globalSteeringStatusRegen = msgSteer->regen;
-            globalSteeringStatusButtonMap = msgSteer->buttonMap;
-
+            globalSteeringStatusRegenButtonMap = msgSteer->regenButtonMap;
             // Handle buttons / regen here
             break;
 
