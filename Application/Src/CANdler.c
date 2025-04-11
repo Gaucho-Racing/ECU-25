@@ -436,10 +436,10 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             break;
 
-        #ifdef DEBUG
+        #ifdef LOGOMATIC_ENABLED
             default:
                 LOGOMATIC("Got msg %X from %X of length %d", msgID, srcID, (int)length);
-                break;
+                return;
         #endif
     }
 }
