@@ -55,8 +55,7 @@
 
     typedef struct {
         uint8_t Current_Torque_Map_Encoder;
-        uint8_t regen;
-        uint8_t buttonMap;
+        uint8_t regenButtonMap;
     } Steering_Status_Msg;
 
     typedef struct {

@@ -14,8 +14,7 @@
 #include "utils.h"
 
 volatile uint8_t errorFlagBitsCan = 0;
-volatile uint8_t globalSteeringStatusRegen = 0;
-volatile uint8_t globalSteeringStatusButtonMap = 0;
+volatile uint8_t globalSteeringStatusRegenButtonMap = 0;
 volatile bool globalRTDstate = 0;
 
 void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t length)
@@ -332,7 +331,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             break;
 
         case MSG_STEERING_STATUS:
-            if (length != 4) {
+            if (length != 2) {
                 numberOfBadMessages++;
                 return;
             } else {
@@ -343,9 +342,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             globalStatus.PowerLevelTorqueMap = msgSteer->Current_Torque_Map_Encoder;
 
             /* Do not write to these values elsewhere! */
-            globalSteeringStatusRegen = msgSteer->regen;
-            globalSteeringStatusButtonMap = msgSteer->buttonMap;
-
+            globalSteeringStatusRegenButtonMap = msgSteer->regenButtonMap;
             // Handle buttons / regen here
             break;
 
@@ -440,10 +437,10 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             break;
 
-        #ifdef DEBUG
+        #ifdef LOGOMATIC_ENABLED
             default:
                 LOGOMATIC("Got msg %X from %X of length %d", msgID, srcID, (int)length);
-                break;
+                return;
         #endif
     }
 }
