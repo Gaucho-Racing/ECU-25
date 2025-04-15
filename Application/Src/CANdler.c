@@ -16,6 +16,7 @@
 volatile uint8_t errorFlagBitsCan = 0;
 volatile uint8_t globalSteeringStatusRegen = 0;
 volatile uint8_t globalSteeringStatusButtonMap = 0;
+volatile bool globalRTDstate = 0;
 
 void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t length)
 {
@@ -256,7 +257,8 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             Dash_Status_Msg *dashStatusMsg = (Dash_Status_Msg*)data;
             bool ts_on = dashStatusMsg->TSButtonData < 0;
-            bool rtd = dashStatusMsg->RTDButtonData < 0;
+            bool rtd = !globalRTDstate && dashStatusMsg->RTDButtonData < 0;
+            globalRTDstate = dashStatusMsg->RTDButtonData < 0;
 
             HAL_GPIO_WritePin(RTD_CONTROL_GPIO_Port, RTD_CONTROL_Pin, rtd);
 
@@ -283,7 +285,9 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                     {
                         globalStatus.ECUState = PRECHARGE_COMPLETE;
                     }
-
+                    else if(globalRTDstate){
+                        writeMessage(DataBusCan, MSG_DEBUG_2_0, GR_DASH_PANEL, (uint8_t*) "RTD Button Error. Please press brake before RTD", 47)
+                    }
                     break;
 
                 case PRECHARGE_COMPLETE:
