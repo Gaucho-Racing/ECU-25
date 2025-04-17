@@ -1,8 +1,9 @@
 #include <stdbool.h>
 #include <math.h>
 
-#include "stateMachine.h"
 #include "driving.h"
+#include "CANdler.h"
+#include "stateMachine.h"
 #include "main.h"
 #include "adc.h"
 #include "inverter.h"

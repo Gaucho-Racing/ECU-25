@@ -285,7 +285,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                         globalStatus.ECUState = PRECHARGE_COMPLETE;
                     }
                     else if(globalRTDstate){
-                        writeMessage(DataBusCan, MSG_DEBUG_2_0, GR_DASH_PANEL, (uint8_t*) "RTD Button Error. Please press brake before RTD", 47)
+                        writeMessage(DataBusCAN, MSG_DEBUG_2_0, GR_DASH_PANEL, (uint8_t*) "RTD Button Error. Please press brake before RTD", 47);
                     }
                     break;
 
