@@ -20,15 +20,10 @@ A value less than GLOBALSTATUS_WHEEL_RPM_ADJUSTMENT is negative RPM
 A value greater than GLOBALSTATUS_WHEEL_RPM_ADJUSTMENT is positive RPM
 A value of GLOBALSTATUS_WHEEL_RPM_ADJUSTMENT is 0 RPM
 
-Use `convertFromStatusLumpRPMToRealRPM(globalStatus.??WheelRPM)` to get the actual RPM
+Dont use `convertFromStatusLumpRPMToRealRPM(globalStatus.??WheelRPM)` to get the actual RPM
 */
 
 volatile bool BSE_APPS_violation = false;
-
-int16_t convertFromStatusLumpRPMToRealRPM(uint16_t ECUStatusMsgWheelRPM)
-{
-    return ECUStatusMsgWheelRPM - GLOBALSTATUS_WHEEL_RPM_ADJUSTMENT;
-}
 
 float vehicleSpeedMPH(void)
 {
@@ -96,7 +91,7 @@ void drive_active_power(void)
     {
         globalStatus.ECUState = DRIVE_STANDBY;
     }
-
+    
     sendInverterCommand();
 }
 

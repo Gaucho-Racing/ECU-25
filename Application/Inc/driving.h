@@ -21,13 +21,6 @@
     /**
     Converts from `globalStatus.??WheelRPM` to actual RPM of given wheel
 
-    @param ECUStatusMsgWheelRPM A given wheel's ECU Status RPM: globalStatus.??WheelRPM
-    @returns int16_t A signed integer representing the real RPM of the provided wheel
-
-    Number is already scaled on reception, just needs to be shifted to be used
-    */
-   int16_t convertFromStatusLumpRPMToRealRPM(uint16_t ECUStatusMsgWheelRPM);
-
     /**
     Vehicle Speed in MPH
 
