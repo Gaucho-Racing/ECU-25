@@ -14,7 +14,7 @@
     #define WHEEL_RADIUS_IN 8.0 // inches
 
     #define POWERLEVEL_TORQUEMAP_RESET 0xFF
-    #define GLOBALSTATUS_WHEEL_RPM_ADJUSTMENT 3276.8
+    #define GLOBALSTATUS_WHEEL_RPM_ADJUSTMENT 3276
 
     extern volatile bool BSE_APPS_violation;
 
