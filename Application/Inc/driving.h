@@ -17,10 +17,7 @@
     #define GLOBALSTATUS_WHEEL_RPM_ADJUSTMENT 3276
 
     extern volatile bool BSE_APPS_violation;
-
-    /**
-    Converts from `globalStatus.??WheelRPM` to actual RPM of given wheel
-
+    
     /**
     Vehicle Speed in MPH
 
