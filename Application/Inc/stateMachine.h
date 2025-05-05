@@ -32,10 +32,10 @@
             uint8_t GLVStateOfCharge;
             uint16_t TractiveSystemVoltage;
             uint16_t VehicleSpeed;
-            uint16_t FRWheelRPM;
-            uint16_t FLWheelRPM;
-            uint16_t RRWheelRPM;
-            uint16_t RLWheelRPM;
+            int16_t FRWheelRPM;
+            int16_t FLWheelRPM;
+            int16_t RRWheelRPM;
+            int16_t RLWheelRPM;
         };
 
         struct {
