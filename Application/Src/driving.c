@@ -49,7 +49,7 @@ void drive_active_idle(void)
     {
         globalStatus.ECUState = DRIVE_ACTIVE_POWER;
     }
-    else if (throttle1 < APPS_DEADZONE && vehicleSpeedMPH() > REGEN_MPH && globalSteeringStatusRegen > 0)
+    else if (throttle1 < APPS_DEADZONE && vehicleSpeedMPH() > REGEN_MPH && getBits(globalSteeringStatusRegenButtonMap, 0, 4) != 0)
     {
         globalStatus.ECUState = DRIVE_ACTIVE_REGEN;
     }
@@ -94,7 +94,7 @@ void drive_active_regen(void)
     {
         globalStatus.ECUState = DRIVE_ACTIVE_POWER;
     }
-    else if (vehicleSpeedMPH() < REGEN_MPH || globalSteeringStatusRegen == 0)
+    else if (vehicleSpeedMPH() < REGEN_MPH || getBits(globalSteeringStatusRegenButtonMap, 0, 4) == 0)
     {
         globalStatus.ECUState = DRIVE_ACTIVE_IDLE;
     }

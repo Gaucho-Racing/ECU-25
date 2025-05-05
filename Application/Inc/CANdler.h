@@ -5,8 +5,7 @@
 
     // FIXME Compilation fails because of something with these (95% asleep when I thought to double check --- UNFIXED)
     // More complicated than just wrong names, CAN messages got reworked and will need to check all access to these
-    extern volatile uint8_t globalSteeringStatusRegen;
-    extern volatile uint8_t globalSteeringStatusButtonMap;
+    extern volatile uint8_t globalSteeringStatusRegenButtonMap;
 
     /**
     Takes in all CAN messages and handles them as they need to be handled.
