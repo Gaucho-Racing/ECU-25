@@ -149,7 +149,186 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             {
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
+/*
+            // IR- -> 1 = ACU Precharge Confirmation
+            if ((globalStatus.ECUState == PRECHARGE_ENGAGED) && (getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 1) == 0x1))
+            {
+                globalStatus.ECUState = PRECHARGING;
+            }
 
+            // If IR- ever becomes 0 while not in GLV_ON or PRECHARGE_ENGAGED, that is a precharge cancellation and it must start discharging.
+            if (getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 1) == 0x0 && (globalStatus.ECUState != GLV_ON) && (globalStatus.ECUState != PRECHARGE_ENGAGED))
+            {
+                globalStatus.ECUState = TS_DISCHARGE_OFF;
+            }
+
+            // If it is precharging with IR- closed and then IR+ goes closed as well without precharge error, precharge is complete (success confirmation)
+            // IR+ -> 1 is precharge success confirmation
+            if ((getBits(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 0, 4) == 0x07) && (globalStatus.ECUState == PRECHARGING))
+            {
+                globalStatus.ECUState = PRECHARGE_COMPLETE;
+            }
+
+            //If IR+ ever opens on or after the precharging complete state, start discharging
+            if (getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 2) == 0x00 && globalStatus.ECUState != GLV_ON && globalStatus.ECUState != PRECHARGE_ENGAGED && globalStatus.ECUState != PRECHARGING)
+            {
+                globalStatus.ECUState = TS_DISCHARGE_OFF;
+            }
+
+            //If ACU software latch ever opens or IR- ever opens while IR+ is closed, something has gone wrong
+            if (getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 3) == 0x00 || getBits(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 1, 2) == 0x01)
+            {
+                globalStatus.ECUState = TS_DISCHARGE_OFF;
+            }
+*/
+            // USE ACUWarning(acuMsgTwo) HERE FOR DASH WARNINGS
+
+            break;
+
+        case MSG_INVERTER_STATUS_1:
+            if (length != 6) {
+                numberOfBadMessages++;
+                return;
+            } else {
+                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
+            }
+
+            Inverter_Status_Msg_One* msgGriOne = (Inverter_Status_Msg_One*)data;
+
+            switch (srcID)
+            {
+                case GR_GR_INVERTER_1:
+                    globalStatus.RLWheelRPM = (uint16_t)(msgGriOne->Motor_Rpm * 0.1);
+                    break;
+                case GR_GR_INVERTER_2:
+                    globalStatus.RRWheelRPM = (uint16_t)(msgGriOne->Motor_Rpm * 0.1);
+                    break;
+                case GR_GR_INVERTER_3:
+                    globalStatus.FLWheelRPM = (uint16_t)(msgGriOne->Motor_Rpm * 0.1);
+                    break;
+                case GR_GR_INVERTER_4:
+                    globalStatus.FRWheelRPM = (uint16_t)(msgGriOne->Motor_Rpm * 0.1);
+                    break;
+            }
+
+            break;
+
+        case MSG_INVERTER_STATUS_3:
+            if (length != 2) {
+                numberOfBadMessages++;
+                return;
+            } else {
+                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
+            }
+
+            Inverter_Status_Msg_Three* msgGriThree = (Inverter_Status_Msg_Three*)data;
+
+            if (GRIError(msgGriThree) && (errorFlagBitsCan == 0 || errorFlagBitsCan == 1))
+            {
+                errorFlagBitsCan += 2;
+            }
+            else if (!GRIError(msgGriThree) && (errorFlagBitsCan == 2 || errorFlagBitsCan == 3))
+            {
+                errorFlagBitsCan -= 2;
+            }
+
+            if (errorFlagBitsCan && globalStatus.TractiveSystemVoltage >= TS_VOLTAGE_OFF_LIMIT)
+            {
+                globalStatus.ECUState = TS_DISCHARGE_OFF;
+            }
+            else if (errorFlagBitsCan)
+            {
+                globalStatus.ECUState = ERRORSTATE;
+            }
+            else if (globalStatus.ECUState == ERRORSTATE || (globalStatus.ECUState == TS_DISCHARGE_OFF && globalStatus.TractiveSystemVoltage < TS_VOLTAGE_OFF_LIMIT))
+            {
+                globalStatus.ECUState = GLV_ON;
+            }
+
+            break;
+
+        case MSG_DASH_STATUS:
+            if (length != 3) {
+                numberOfBadMessages++;
+                return;
+            } else {
+                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
+            }
+
+            Dash_Status_Msg *dashStatusMsg = (Dash_Status_Msg*)data;
+            bool ts_on = dashStatusMsg->TSButtonData < 0;
+            bool rtd = !globalRTDstate && dashStatusMsg->RTDButtonData < 0;
+            globalRTDstate = dashStatusMsg->RTDButtonData < 0;
+
+            HAL_GPIO_WritePin(RTD_CONTROL_GPIO_Port, RTD_CONTROL_Pin, rtd);
+
+            switch(globalStatus.ECUState)
+            {
+                case GLV_ON:
+                    if (ts_on)
+                    {
+                        globalStatus.ECUState = PRECHARGE_ENGAGED;
+                    }
+
+                    break;
+
+                case PRECHARGE_ENGAGED:
+                    if (!ts_on)
+                    {
+                        globalStatus.ECUState = GLV_ON;
+                    }
+
+                    break;
+
+                case DRIVE_STANDBY:
+                    if (!rtd)
+                    {
+                        globalStatus.ECUState = PRECHARGE_COMPLETE;
+                    }
+                    else if(globalRTDstate){
+                        writeMessage(DataBusCAN, MSG_DEBUG_2_0, GR_DASH_PANEL, (uint8_t*) "RTD Button Error. Please press brake before RTD", 47);
+                    }
+                    break;
+
+                case PRECHARGE_COMPLETE:
+                    if (rtd && analogRead(BRAKE_F_SIGNAL) > 100 && analogRead(BRAKE_R_SIGNAL) > 100)
+                    {
+                        globalStatus.ECUState = DRIVE_STANDBY;
+                    }
+
+                    break;
+
+                default:
+                    if (!ts_on)
+                    {
+                        globalStatus.ECUState = TS_DISCHARGE_OFF;
+                    }
+            }
+/*
+            if (globalStatus.ECUState == GLV_ON)
+            {
+                if (ts_on)
+                {
+                    globalStatus.ECUState = PRECHARGE_ENGAGED;
+                }
+            }            
+            else if (!ts_on && globalStatus.ECUState == PRECHARGE_ENGAGED)
+            {
+                globalStatus.ECUState = GLV_ON;
+            }
+            else if (!ts_on && globalStatus.ECUState != ERRORSTATE) // If it is not in GLV_ON, PRECHARGE_ENGAGED or ERRORSTATE, if ts_off is ever true it must go to discharge
+            {
+                globalStatus.ECUState = TS_DISCHARGE_OFF;
+            }
+            else if (globalStatus.ECUState == PRECHARGE_COMPLETE && rtd && analogRead(BRAKE_F_SIGNAL) > 100 && analogRead(BRAKE_R_SIGNAL) > 100)
+            {
+                globalStatus.ECUState = DRIVE_STANDBY;
+            }
+            else if (globalStatus.ECUState == DRIVE_STANDBY && !rtd)
+            {
+                globalStatus.ECUState = PRECHARGE_COMPLETE;
+            }
+*/
             break;
 
         case MSG_INVERTER_STATUS_1:
