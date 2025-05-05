@@ -112,10 +112,10 @@ StatusLump scaledECUStatusMsgForTx(void)
     scaledStatus.GLVStateOfCharge *= (uint8_t)(scaledStatus.GLVStateOfCharge * 51.0 / 20.0);
     scaledStatus.TractiveSystemVoltage *= 100;
     scaledStatus.VehicleSpeed *= 100;
-    scaledStatus.FLWheelRPM *= 10;
-    scaledStatus.FRWheelRPM *= 10;
-    scaledStatus.RLWheelRPM *= 10;
-    scaledStatus.RRWheelRPM *= 10;
+    scaledStatus.FLWheelRPM = scaledStatus.FLWheelRPM * 10 + 32768;
+    scaledStatus.FRWheelRPM = scaledStatus.FRWheelRPM * 10 + 32768;
+    scaledStatus.RLWheelRPM = scaledStatus.RLWheelRPM * 10 + 32768;
+    scaledStatus.RRWheelRPM = scaledStatus.RRWheelRPM * 10 + 32768;
 
     return scaledStatus;
 }

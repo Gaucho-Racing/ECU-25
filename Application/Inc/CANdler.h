@@ -3,6 +3,8 @@
 #ifndef CANDLER_H
     #define CANDLER_H
 
+    // FIXME Compilation fails because of something with these (95% asleep when I thought to double check --- UNFIXED)
+    // More complicated than just wrong names, CAN messages got reworked and will need to check all access to these
     extern volatile uint8_t globalSteeringStatusRegen;
     extern volatile uint8_t globalSteeringStatusButtonMap;
 
