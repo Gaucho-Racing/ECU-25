@@ -198,16 +198,16 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             switch (srcID)
             {
                 case GR_GR_INVERTER_1:
-                    globalStatus.RLWheelRPM = (int16_t)(msgGriOne->Motor_Rpm * 0.1 - 3278.7);
+                    globalStatus.RLWheelRPM = (int16_t)(msgGriOne->Motor_Rpm * 0.1 - 3279);
                     break;
                 case GR_GR_INVERTER_2:
-                    globalStatus.RRWheelRPM = (int16_t)(msgGriOne->Motor_Rpm * 0.1 - 3278.7);
+                    globalStatus.RRWheelRPM = (int16_t)(msgGriOne->Motor_Rpm * 0.1 - 3279);
                     break;
                 case GR_GR_INVERTER_3:
-                    globalStatus.FLWheelRPM = (int16_t)(msgGriOne->Motor_Rpm * 0.1 - 3278.7);
+                    globalStatus.FLWheelRPM = (int16_t)(msgGriOne->Motor_Rpm * 0.1 - 3279);
                     break;
                 case GR_GR_INVERTER_4:
-                    globalStatus.FRWheelRPM = (int16_t)(msgGriOne->Motor_Rpm * 0.1 - 3278.7);
+                    globalStatus.FRWheelRPM = (int16_t)(msgGriOne->Motor_Rpm * 0.1 - 3279);
                     break;
             }
 
