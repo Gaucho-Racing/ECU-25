@@ -87,7 +87,7 @@ void stateMachineTick(void)
         lastECUStatusMsgTick = HAL_GetTick();
 
         LOGOMATIC("\n--Global Status Dump--\nECU State %d\n", correctlyScaledValues.ECUState);
-        LOGOMATIC("Status Bits 1 %X%X%x\n", correctlyScaledValues.StatusBits[0], correctlyScaledValues.StatusBits[1], correctlyScaledValues.StatusBits[2]);
+        LOGOMATIC("Status Bits 1 %X%X%X\n", correctlyScaledValues.StatusBits[0], correctlyScaledValues.StatusBits[1], correctlyScaledValues.StatusBits[2]);
         LOGOMATIC("Power Level & Torque Map %X\n", correctlyScaledValues.PowerLevelTorqueMap);
         LOGOMATIC("Max Cell Temp %d\n", correctlyScaledValues.MaxCellTemp);
         LOGOMATIC("Accumulator SoC %d\n", correctlyScaledValues.AccumulatorStateOfCharge);
