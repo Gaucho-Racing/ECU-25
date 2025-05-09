@@ -99,6 +99,19 @@ void stateMachineTick(void)
         LOGOMATIC("RR Wheel RPM %d\n", correctlyScaledValues.RRWheelRPM);
         LOGOMATIC("RL Wheel RPM %d\n", correctlyScaledValues.RLWheelRPM);
         LOGOMATIC("--Global Status Dump--\n");
+
+        uint8_t onlinePingBits = 0;
+        for (uint8_t i = 0; i < 3; i++)
+        {
+            for (uint8_t j = 0; j < 8; j++)
+            {
+                if ((correctlyScaledValues.StatusBits[i] >> j) & 0x1)
+                {
+                    onlinePingBits++;
+                }
+            }
+        }
+        writeMessage(DataBusCAN, MSG_ECU_PING_INFORMATION, GR_STEERING_WHEEL, &onlinePingBits, 1);
     }
 }
 
