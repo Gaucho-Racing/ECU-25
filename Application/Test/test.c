@@ -35,5 +35,5 @@ int main()
 
 void ledControl()
 {
-    // This space left completely blank
+    // Should we toggle the LED here?
 }

@@ -15,7 +15,7 @@ volatile bool BSE_APPS_violation = false;
 
 float vehicleSpeedMPH(void)
 {
-    return ((globalInverterData.msgOne.erpm / MOTOR_POLE_PAIRS) * 2 * M_PI * WHEEL_RADIUS_IN) / (GEAR_RATIO * 1056.0);
+    return ((globalInverterData.msgOne.erpm / MOTOR_POLE_PAIRS) * 2 * M_PI * WHEEL_RADIUS_IN) / (GEAR_RATIO * 1056.0);  // TODO: Where did 1056 come from?
 }
 
 void sendBseAppsViolationMessage(void)
@@ -90,7 +90,7 @@ void drive_active_regen(void)
         globalStatus.ECUState = DRIVE_STANDBY;
         sendBseAppsViolationMessage();
     }
-    else if ((float)analogRead(APPS1_SIGNAL)/ADC_MAX >= APPS_DEADZONE)
+    else if ((float)analogRead(APPS1_SIGNAL) / ADC_MAX >= APPS_DEADZONE)
     {
         globalStatus.ECUState = DRIVE_ACTIVE_POWER;
     }
