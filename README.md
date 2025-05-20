@@ -2,13 +2,15 @@
 
 ## Todo
 ### Urgent
-* :construction: [CANSniffer-25](https://github.com/Gaucho-Racing/CANSniffer-25) testing
-* :eyes: Motor testing
+:construction: [CANSniffer-25](https://github.com/Gaucho-Racing/CANSniffer-25) testing
+
+:eyes: Motor testing
 ### Delayed
-* :point_right: Integration testing
-* :warning: Correctness testing
+:point_right: Integration testing
+
+:warning: Correctness testing
 ### Stretch
-* :x: Torque vectoring
+:x: Torque vectoring
 
 ## Git Submodule
 To get the submodule added correctly, run:
