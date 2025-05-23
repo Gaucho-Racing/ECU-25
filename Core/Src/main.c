@@ -109,8 +109,7 @@ int main(void)
   MX_ADC2_Init();
   MX_LPUART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  HAL_FDCAN_Start(&hfdcan1);
-  HAL_FDCAN_Start(&hfdcan2);
+
   // 10us ticks
   HAL_SetTickFreq(TICK_FREQ);
   LOGOMATIC("--Boot Finished at Tick %lu--\n", HAL_GetTick());
