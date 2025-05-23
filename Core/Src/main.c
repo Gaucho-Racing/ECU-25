@@ -29,6 +29,7 @@
 #include "stateMachine.h"
 #include "pinging.h"
 #include "msgIDs.h"
+#include "customIDs.h"
 #include "utils.h"
 /* USER CODE END Includes */
 
@@ -112,15 +113,18 @@ int main(void)
   // 10us ticks
   HAL_SetTickFreq(TICK_FREQ);
   LOGOMATIC("--Boot Finished at Tick %lu--\n", HAL_GetTick());
+
+  uint8_t enabled = 1;
+  uint16_t targetAcCurrent = 200;  // 20
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    stateMachineTick();
-    pingSchedule();
     /* USER CODE END WHILE */
+    writeMessage(PrimaryBusCAN, MSG_DTI_CONTROL_12, GR_DTI_INVERTER, &enabled, 1);        // 1 Drive Enable
+    writeMessage(PrimaryBusCAN, MSG_DTI_CONTROL_1, GR_DTI_INVERTER, &targetAcCurrent, 2); // 20A Target AC Current
 
     /* USER CODE BEGIN 3 */
   }
