@@ -123,10 +123,10 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-    writeMessage(DataBusCAN, MSG_DTI_CONTROL_12, GR_DTI_INVERTER, &enabled, 1);                       // 1 Drive Enable
-    //writeMessage(PrimaryBusCAN, MSG_DTI_CONTROL_1, GR_DTI_INVERTER, (uint8_t*)&targetAcCurrent, 2); // 20A Target AC Current
-    HAL_Delay(500);
     /* USER CODE BEGIN 3 */
+    writeMessage(DataBusCAN, MSG_DTI_CONTROL_12, GR_DTI_INVERTER, &enabled, 1);                       // 1 Drive Enable
+    writeMessage(PrimaryBusCAN, MSG_DTI_CONTROL_1, GR_DTI_INVERTER, (uint8_t*)&targetAcCurrent, 2); // 20A Target AC Current
+    HAL_Delay(500);
   }
   /* USER CODE END 3 */
 }
