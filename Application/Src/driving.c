@@ -32,8 +32,6 @@ void drive_standby(void)
 {
     controlInverters(true);
 
-    //following is probably wrong, double check analogRead
-
     float throttle2 = (float) analogRead(APPS2_SIGNAL) / (ADC_MAX);
     float pedalTravel = (1 - (throttle2 - THROTTLE_MIN_2) / (THROTTLE_MAX_2 - THROTTLE_MIN_2));
 
@@ -76,8 +74,6 @@ void drive_active_idle(void)
 
 void drive_active_power(void)
 {
-    //fill these in when known
-
     float throttle1 = analogRead(APPS1_SIGNAL) * ADC_CONV;
     float throttle2 = analogRead(APPS2_SIGNAL) * ADC_CONV;
     float brakeTravel = (analogRead(BSE_SIGNAL) * ADC_CONV - BRAKE_MIN) / (BRAKE_MAX - BRAKE_MIN);
@@ -96,8 +92,6 @@ void drive_active_power(void)
     }
     
     sendInverterCommand();
-
-    //FIXME in ECU, dti stuff here
 
     // Scale throttle request for CAN messaging
 
