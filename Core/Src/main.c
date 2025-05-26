@@ -31,6 +31,7 @@
 #include "msgIDs.h"
 #include "customIDs.h"
 #include "utils.h"
+#include "driving.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -122,11 +123,12 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    //globalStatus.ECUState = DRIVE_ACTIVE_POWER;
-
     LOGOMATIC("APPS1 is %d\t\tAPPS2 is %d\n", analogRead(APPS1_SIGNAL), analogRead(APPS2_SIGNAL));
 
     writeMessage(PrimaryBusCAN, MSG_DEBUG_2_0, GR_ALL, (uint8_t*)"Testing", 8);
+
+    drive_active_power();
+
     HAL_Delay(10);
   }
   /* USER CODE END 3 */
