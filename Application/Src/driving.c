@@ -58,25 +58,33 @@ void drive_active_idle(void)
 
 void drive_active_power(void)
 {
-    float throttle1 = (float)analogRead(APPS1_SIGNAL) / ADC_MAX;
-    float throttle2 = (float)analogRead(APPS2_SIGNAL) / ADC_MAX;
+    //below line is probably wrongw
     float brake = (float)analogRead(BSE_SIGNAL) / ADC_MAX;
+    uint8_t driveEnable = 1;
+    //APPS1
+    uint16_t throttleMin = 0.869;
+    uint16_t throttleMax = 1.14;
+    //APPS2
+    uint16_t throttle2Min = 1.983;
+    uint16_t throttle2Max = 2.54;
+    uint16_t maxCurrentValue = 10; // 10 A
+    uint16_t throttle1 = analogRead(APPS1_SIGNAL);
+    uint16_t throttle2 = analogRead(APPS2_SIGNAL);
+    float throttleRequest = (1 - (throttle2 - throttle2Min) / ((float)(throttle2Max - throttle2Min))) * maxCurrentValue;
 
-    if (BSE_APPS_violation)
-    {
-        globalStatus.ECUState = DRIVE_STANDBY;
+    //Checks 2 * APPS_1 is within 10% of APPS_2
+    if(throttle2 - throttle1 * 1.8 > throttle2 * 0.2){
+        globalStatus.ECUState = ERRORSTATE;
+        BSE_APPS_violation = true;
         sendBseAppsViolationMessage();
+        return;
     }
     else if (brake >= BSE_DEADZONE && throttle1 >= 0.25)
     {
         globalStatus.ECUState = DRIVE_STANDBY;
         BSE_APPS_violation = true;
     }
-    else if (throttle1 < APPS_DEADZONE)
-    {
-        globalStatus.ECUState = DRIVE_STANDBY;
-    }
-    else if (fabs(throttle1 - throttle2) > 0.1)
+    else if (throttleRequest < APPS_DEADZONE)
     {
         globalStatus.ECUState = DRIVE_STANDBY;
     }
@@ -84,16 +92,6 @@ void drive_active_power(void)
     sendInverterCommand();
 
     //FIXME in ECU, dti stuff here
-    //Checks 2 * APPS_1 is within 10% of APPS_2
-    if(analogRead(APPS1_SIGNAL) - analogRead(APPS2_SIGNAL) * 1.8 > analogRead(APPS2_SIGNAL) * 0.4){
-        globalStatus.ECUState = ERRORSTATE;
-        return;
-    }
-    uint8_t driveEnable = 1;
-    uint16_t throttleMin = 0;
-    uint16_t throttleMax = 2.048;
-    uint16_t maxCurrentValue = 10; // 10 A
-    uint16_t throttleRequest = (1 - (analogRead(APPS1_SIGNAL) - throttleMin) / ((double)(throttleMax - throttleMin))) * maxCurrentValue;
 
     // Scale throttle request for CAN messaging
     throttleRequest = (throttleRequest * 10) << 8;
