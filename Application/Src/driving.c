@@ -11,6 +11,8 @@
 #include "msgIDs.h"
 #include "utils.h"
 
+// TODO Copy over from dtiMotorTest the throttle setup
+
 volatile bool BSE_APPS_violation = false;
 
 float vehicleSpeedMPH(void)
