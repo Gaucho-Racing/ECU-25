@@ -12,6 +12,8 @@
     #define THROTTLE_MIN_2 1.983
     #define THROTTLE_MAX_1 1.14
     #define THROTTLE_MAX_2 2.54
+    #define BRAKE_MIN 0 //change when value is known
+    #define BRAKE_MAX 5 // change when value is known
     #define MAX_CURRENT 10 // 10 A
 
     #define GEAR_RATIO 3.55

@@ -34,9 +34,7 @@ void drive_standby(void)
 
     //following is probably wrong, double check analogRead
 
-
     float throttle2 = (float) analogRead(APPS2_SIGNAL) / (ADC_MAX);
-    float brake = (float) analogRead(BSE_SIGNAL) / (ADC_MAX);
     float pedalTravel = (1 - (throttle2 - THROTTLE_MIN_2) / (THROTTLE_MAX_2 - THROTTLE_MIN_2));
 
     if(BSE_APPS_violation && pedalTravel < APPS_DEADZONE){
@@ -53,12 +51,12 @@ void drive_active_idle(void)
 {
     controlInverters(true);
 
-    float throttle1 = (float) analogRead(APPS1_SIGNAL) / (ADC_MAX);
-    float throttle2 = (float) analogRead(APPS2_SIGNAL) / (ADC_MAX);
-    float brake = (float) analogRead(BSE_SIGNAL) / (ADC_MAX);
+    float throttle1 = analogRead(APPS1_SIGNAL) * ADC_CONV;
+    float throttle2 = analogRead(APPS2_SIGNAL) * ADC_CONV;
+    float brakeTravel = (analogRead(BSE_SIGNAL) * ADC_CONV - BRAKE_MIN) / (BRAKE_MAX - BRAKE_MIN);
     float pedalTravel = (1 - (throttle2 - THROTTLE_MIN_2) / (THROTTLE_MAX_2 - THROTTLE_MIN_2));
 
-    if (checkBSEAPPSviolation(throttle1, throttle2, pedalTravel, brake))
+    if (checkBSEAPPSviolation(throttle1, throttle2, pedalTravel, brakeTravel))
     {  
         writeDtiMessage(MSG_DTI_CONTROL_12, &driveDisable, 1);   //0 for disable
         globalStatus.ECUState = DRIVE_STANDBY;
@@ -79,16 +77,13 @@ void drive_active_idle(void)
 void drive_active_power(void)
 {
     //fill these in when known
-    float brakeMin = 0;
-    float brakeMax = 5;
-    
-    //Check how analog read works, because this definitely isnt right. We need a number in Volts, not whatever this function returns
-    float throttle1 = (float) analogRead(APPS1_SIGNAL) / (ADC_MAX);
-    float throttle2 = (float) analogRead(APPS2_SIGNAL) / (ADC_MAX);
-    float pedalTravel = (1 - (throttle2 - THROTTLE_MIN_2) / (THROTTLE_MAX_2 - THROTTLE_MIN_2));
-    float brake = (float) analogRead(BSE_SIGNAL) / (ADC_MAX);
 
-    if(checkBSEAPPSviolation(throttle1, throttle2, pedalTravel, brake)){
+    float throttle1 = analogRead(APPS1_SIGNAL) * ADC_CONV;
+    float throttle2 = analogRead(APPS2_SIGNAL) * ADC_CONV;
+    float brakeTravel = (analogRead(BSE_SIGNAL) * ADC_CONV - BRAKE_MIN) / (BRAKE_MAX - BRAKE_MIN);
+    float pedalTravel = (1 - (throttle2 - THROTTLE_MIN_2) / (THROTTLE_MAX_2 - THROTTLE_MIN_2));
+
+    if(checkBSEAPPSviolation(throttle1, throttle2, pedalTravel, brakeTravel)){
         writeDtiMessage(MSG_DTI_CONTROL_12, &driveDisable, 1);   //0 for disable
         globalStatus.ECUState = DRIVE_STANDBY;
         BSE_APPS_violation = true;
@@ -115,12 +110,12 @@ void drive_active_power(void)
 
 void drive_active_regen(void)
 {
-    float throttle1 = (float) analogRead(APPS1_SIGNAL) / (ADC_MAX);
-    float throttle2 = (float) analogRead(APPS2_SIGNAL) / (ADC_MAX);
+    float throttle1 = analogRead(APPS1_SIGNAL) * ADC_CONV;
+    float throttle2 = analogRead(APPS2_SIGNAL) * ADC_CONV;
+    float brakeTravel = (analogRead(BSE_SIGNAL) * ADC_CONV - BRAKE_MIN) / (BRAKE_MAX - BRAKE_MIN);
     float pedalTravel = (1 - (throttle2 - THROTTLE_MIN_2) / (THROTTLE_MAX_2 - THROTTLE_MIN_2));
-    float brake = (float) analogRead(BSE_SIGNAL) / (ADC_MAX);
 
-    if(checkBSEAPPSviolation(throttle1, throttle2, pedalTravel, brake)){
+    if(checkBSEAPPSviolation(throttle1, throttle2, pedalTravel, brakeTravel)){
         writeDtiMessage(MSG_DTI_CONTROL_12, &driveDisable, 1);   //0 for disable
         globalStatus.ECUState = DRIVE_STANDBY;
         BSE_APPS_violation = true;
