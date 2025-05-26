@@ -89,8 +89,8 @@ void drive_active_power(void)
     uint16_t throttleMin = 15;
     uint16_t throttleMax = 100;
     uint16_t maxCurrentValue = 100; // 10 A
-    uint16_t throttleRequest = (analogRead(APPS1_SIGNAL) / ((double)ADC_MAX) * ((throttleMax - throttleMin));
-    uint16_t throttleRequest = (analogRead(APPS1_SIGNAL) - throttleMin) / ((double)ADC_MAX) * (maxCurrentValue);
+    uint16_t throttleRequest = (analogRead(APPS1_SIGNAL) / ((double)ADC_MAX) * ((throttleMax - throttleMin)));
+    //uint16_t throttleRequest = (analogRead(APPS1_SIGNAL) - throttleMin) / ((double)ADC_MAX) * (maxCurrentValue);
 
     // analogRead -> 0 to ADC_MAX
 
