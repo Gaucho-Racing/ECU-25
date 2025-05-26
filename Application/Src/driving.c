@@ -33,7 +33,7 @@ void drive_standby(void)
     controlInverters(true);
 
     float throttle2 = (float) analogRead(APPS2_SIGNAL) / (ADC_MAX);
-    float pedalTravel = (1 - (throttle2 - THROTTLE_MIN_2) / (THROTTLE_MAX_2 - THROTTLE_MIN_2));
+    float pedalTravel = (throttle2 - THROTTLE_MIN_2) / (THROTTLE_MAX_2 - THROTTLE_MIN_2);
 
     if(BSE_APPS_violation && pedalTravel < APPS_DEADZONE){
         BSE_APPS_violation = false;
@@ -52,7 +52,7 @@ void drive_active_idle(void)
     float throttle1 = analogRead(APPS1_SIGNAL) * ADC_CONV;
     float throttle2 = analogRead(APPS2_SIGNAL) * ADC_CONV;
     float brakeTravel = (analogRead(BSE_SIGNAL) * ADC_CONV - BRAKE_MIN) / (BRAKE_MAX - BRAKE_MIN);
-    float pedalTravel = (1 - (throttle2 - THROTTLE_MIN_2) / (THROTTLE_MAX_2 - THROTTLE_MIN_2));
+    float pedalTravel = (throttle2 - THROTTLE_MIN_2) / (THROTTLE_MAX_2 - THROTTLE_MIN_2);
 
     if (checkBSEAPPSviolation(throttle1, throttle2, pedalTravel, brakeTravel))
     {  
@@ -77,7 +77,7 @@ void drive_active_power(void)
     float throttle1 = analogRead(APPS1_SIGNAL) * ADC_CONV;
     float throttle2 = analogRead(APPS2_SIGNAL) * ADC_CONV;
     float brakeTravel = (analogRead(BSE_SIGNAL) * ADC_CONV - BRAKE_MIN) / (BRAKE_MAX - BRAKE_MIN);
-    float pedalTravel = (1 - (throttle2 - THROTTLE_MIN_2) / (THROTTLE_MAX_2 - THROTTLE_MIN_2));
+    float pedalTravel = (throttle2 - THROTTLE_MIN_2) / (THROTTLE_MAX_2 - THROTTLE_MIN_2);
 
     if(checkBSEAPPSviolation(throttle1, throttle2, pedalTravel, brakeTravel)){
         writeDtiMessage(MSG_DTI_CONTROL_12, &driveDisable, 1);   //0 for disable
@@ -107,7 +107,7 @@ void drive_active_regen(void)
     float throttle1 = analogRead(APPS1_SIGNAL) * ADC_CONV;
     float throttle2 = analogRead(APPS2_SIGNAL) * ADC_CONV;
     float brakeTravel = (analogRead(BSE_SIGNAL) * ADC_CONV - BRAKE_MIN) / (BRAKE_MAX - BRAKE_MIN);
-    float pedalTravel = (1 - (throttle2 - THROTTLE_MIN_2) / (THROTTLE_MAX_2 - THROTTLE_MIN_2));
+    float pedalTravel = (throttle2 - THROTTLE_MIN_2) / (THROTTLE_MAX_2 - THROTTLE_MIN_2);
 
     if(checkBSEAPPSviolation(throttle1, throttle2, pedalTravel, brakeTravel)){
         writeDtiMessage(MSG_DTI_CONTROL_12, &driveDisable, 1);   //0 for disable
