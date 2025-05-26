@@ -82,14 +82,21 @@ void drive_active_power(void)
     }
     
     sendInverterCommand();
-    uint16_t throttleMin = 0;
-    uint16_t throttleMax = 100;
-    uint16_t throttleRequest = 0;
+
+    //FIXME in ECU, dti stuff here
     uint8_t driveEnable = 1;
+
+    uint16_t throttleMin = 0;
+    uint16_t throttleMax = 100;     // V is 0 to ADC_MAX
+    uint16_t maxCurrentValue = 100; // 10 A
+    uint16_t throttleRequest = (analogRead(APPS1_SIGNAL) * (max - min) * request) >> 8 ;
+
+    // Fix the values well
+    throttleRequest = (throttleRequest * 10) << 8; //(max - min) * request/0xFFFF
 
     writeDtiMessage(MSG_DTI_CONTROL_12, &driveEnable, 1);            // 1 Drive Enable
 
-    writeDtiMessage(MSG_DTI_CONTROL_5, (uint8_t*)&throttleRequest, 2);
+    writeDtiMessage(MSG_DTI_CONTROL_5, (uint8_t*) &throttleRequest, 2);
 }
 
 void drive_active_regen(void)
