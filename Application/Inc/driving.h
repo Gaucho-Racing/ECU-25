@@ -8,6 +8,11 @@
     #define APPS_DEADZONE 0.05
     #define BSE_DEADZONE 0.05
     #define REGEN_MPH 5
+    #define THROTTLE_MIN_1 0.869
+    #define THROTTLE_MIN_2 1.983
+    #define THROTTLE_MAX_1 1.14
+    #define THROTTLE_MAX_2 2.54
+    #define MAX_CURRENT 10 // 10 A
 
     #define GEAR_RATIO 3.55
     #define MOTOR_POLE_PAIRS 10.0
