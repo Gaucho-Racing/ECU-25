@@ -125,7 +125,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    writeMessage(DataBusCAN, MSG_DTI_CONTROL_12, GR_DTI_INVERTER, &enabled, 1);                     // 1 Drive Enable
+    writeMessage(PrimaryBusCAN, MSG_DTI_CONTROL_12, GR_DTI_INVERTER, &enabled, 1);                     // 1 Drive Enable
     writeMessage(PrimaryBusCAN, MSG_DTI_CONTROL_5, GR_DTI_INVERTER, (uint8_t*)&acCurrent, 2); // 20A Target AC Current
     HAL_Delay(10);
   }
