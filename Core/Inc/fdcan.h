@@ -49,6 +49,11 @@ void MX_FDCAN2_Init(void);
 
 /* USER CODE BEGIN Prototypes */
 /**
+Make a description here or something
+*/
+void writeDtiMessage(uint16_t msgID, uint8_t data[], uint32_t len);
+
+/**
 Write Message
 
 @param bus Bus to send on (enum value)
