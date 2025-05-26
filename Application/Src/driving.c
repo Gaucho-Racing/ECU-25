@@ -2,6 +2,7 @@
 #include <math.h>
 
 #include "driving.h"
+#include "customIDs.h"
 #include "CANdler.h"
 #include "stateMachine.h"
 #include "main.h"
@@ -81,6 +82,13 @@ void drive_active_power(void)
     }
     
     sendInverterCommand();
+
+    uint16_t throttleRequest = ??;
+    uint8_t driveEnable = 1;
+
+    writeDtiMessage(MSG_DTI_CONTROL_12, &driveEnable, 1);            // 1 Drive Enable
+
+    writeDtiMessage(MSG_DTI_CONTROL_5, &throttleRequest, 2);
 }
 
 void drive_active_regen(void)

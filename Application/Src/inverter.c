@@ -5,6 +5,7 @@
 #include "inverter.h"
 #include "fdcan.h"
 #include "msgIDs.h"
+#include "customIDs.h"
 #include "stateMachine.h"
 
 volatile DTI_Data globalInverterData = {0};
@@ -18,6 +19,7 @@ void sendInverterCommand(void)
     if (millis() - lastInverterPingMillis >= INVERTER_MINIMUM_SENDING_TIME_MS) // Must send every 100 ms for power
     {
         lastInverterPingMillis = millis();
+
         writeMessage(PrimaryBusCAN, MSG_INVERTER_COMMAND, GR_GR_INVERTER_1, (uint8_t*)&globalInverterSettings[0], 7);
         writeMessage(PrimaryBusCAN, MSG_INVERTER_COMMAND, GR_GR_INVERTER_2, (uint8_t*)&globalInverterSettings[1], 7);
         writeMessage(PrimaryBusCAN, MSG_INVERTER_COMMAND, GR_GR_INVERTER_3, (uint8_t*)&globalInverterSettings[2], 7);

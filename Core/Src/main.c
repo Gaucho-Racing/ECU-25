@@ -124,10 +124,10 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+    LOGOMATIC("APPS1 is %d\t, APPS2 is %d\t", analogRead(APPS1_SIGNAL), analogRead(APPS2_SIGNAL));
 
     /* USER CODE BEGIN 3 */
-    writeDtiMessage(MSG_DTI_CONTROL_12, &enabled, 1);            // 1 Drive Enable
-    writeDtiMessage(MSG_DTI_CONTROL_5, (uint8_t*)&acCurrent, 2); // 20A Target AC Current
+    globalStatus.ECUState = DRIVE_ACTIVE_POWER;
     HAL_Delay(10);
   }
   /* USER CODE END 3 */
