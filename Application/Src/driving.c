@@ -87,11 +87,13 @@ void drive_active_power(void)
     uint8_t driveEnable = 1;
 
     uint16_t throttleMin = 0;
-    uint16_t throttleMax = 100;     // V is 0 to ADC_MAX
+    uint16_t throttleMax = 100;
     uint16_t maxCurrentValue = 100; // 10 A
-    uint16_t throttleRequest = (analogRead(APPS1_SIGNAL) * (max - min) * request) >> 8 ;
+    uint16_t throttleRequest = (analogRead(APPS1_SIGNAL) * (throttleMax - throttleMin));
 
-    // Fix the values well
+    // analogRead -> 0 to ADC_MAX
+
+    // Scale throttle request for CAN messaging
     throttleRequest = (throttleRequest * 10) << 8; //(max - min) * request/0xFFFF
 
     writeDtiMessage(MSG_DTI_CONTROL_12, &driveEnable, 1);            // 1 Drive Enable
