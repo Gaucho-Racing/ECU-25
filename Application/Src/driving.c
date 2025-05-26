@@ -83,12 +83,12 @@ void drive_active_power(void)
     
     sendInverterCommand();
 
-    uint16_t throttleRequest = ??;
+    uint16_t throttleRequest = 0;
     uint8_t driveEnable = 1;
 
     writeDtiMessage(MSG_DTI_CONTROL_12, &driveEnable, 1);            // 1 Drive Enable
 
-    writeDtiMessage(MSG_DTI_CONTROL_5, &throttleRequest, 2);
+    writeDtiMessage(MSG_DTI_CONTROL_5, (uint8_t*)&throttleRequest, 2);
 }
 
 void drive_active_regen(void)
