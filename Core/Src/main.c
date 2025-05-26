@@ -116,7 +116,7 @@ int main(void)
 
   // FIXME: All DTI related code needs to be fixed in ECU
   uint8_t enabled = 1;
-  uint16_t acCurrent = 30 << 8;
+  uint16_t acCurrent = 30 << 8; // 3%
   /* USER CODE END 2 */
 
   /* Infinite loop */
