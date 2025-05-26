@@ -90,6 +90,7 @@ void drive_active_power(void)
     uint16_t throttleMax = 0xFFFF;
     uint16_t maxCurrentValue = 10; // 10 A
     uint16_t throttleRequest = (1 - (analogRead(APPS1_SIGNAL) - throttleMin) / ((double)(throttleMax - throttleMin))) * maxCurrentValue;
+    //TODO: Add APPS1\APPS2 check based on which one is double (within 10%)
 
     // Scale throttle request for CAN messaging
     throttleRequest = (throttleRequest * 10) << 8; //(max - min) * request/0xFFFF ()
