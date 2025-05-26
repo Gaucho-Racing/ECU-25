@@ -36,7 +36,24 @@ FDCAN_TxHeaderTypeDef TxHeader = {
     .MessageMarker = 0 // also change this to a real address if you change fifo control
 };
 
-void writeMessage(BusCAN bus, uint16_t msgID, uint8_t destID, uint8_t data[], uint32_t len) {
+void writeDtiMessage(uint16_t msgID, uint8_t data[], uint32_t len)
+{
+    TxHeader.Identifier = (LOCAL_GR_ID << 16) | (msgID << 8) | GR_DTI_INVERTER;
+    TxHeader.DataLength = len;
+
+    FDCAN_HandleTypeDef *handle;
+    handle = &hfdcan1;
+    TxHeader.FDFormat = FDCAN_CLASSIC_CAN;
+
+    if (HAL_FDCAN_AddMessageToTxFifoQ(handle, &TxHeader, data) != HAL_OK)
+    {
+        LOGOMATIC("Could not add msg to transmission FIFO queue\n");
+        Error_Handler();
+    }
+}
+
+void writeMessage(BusCAN bus, uint16_t msgID, uint8_t destID, uint8_t data[], uint32_t len)
+{
     TxHeader.Identifier = (LOCAL_GR_ID << 20) | (msgID << 8) | destID;
     TxHeader.DataLength = len;
 
