@@ -115,7 +115,7 @@ int main(void)
   LOGOMATIC("--Boot Finished at Tick %lu--\n", HAL_GetTick());
 
   uint8_t enabled = 1;
-  uint16_t targetAcCurrent = 200;  // 20
+  uint16_t acCurrent = 3;  // 20
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -126,7 +126,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     writeMessage(DataBusCAN, MSG_DTI_CONTROL_12, GR_DTI_INVERTER, &enabled, 1);                     // 1 Drive Enable
-    writeMessage(PrimaryBusCAN, MSG_DTI_CONTROL_1, GR_DTI_INVERTER, (uint8_t*)&targetAcCurrent, 2); // 20A Target AC Current
+    writeMessage(PrimaryBusCAN, MSG_DTI_CONTROL_5, GR_DTI_INVERTER, (uint8_t*)&acCurrent, 2); // 20A Target AC Current
     HAL_Delay(10);
   }
   /* USER CODE END 3 */
