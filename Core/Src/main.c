@@ -125,7 +125,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    writeDtiMessage(MSG_DTI_CONTROL_12, &enabled, 1);                     // 1 Drive Enable
+    writeDtiMessage(MSG_DTI_CONTROL_12, &enabled, 1);            // 1 Drive Enable
     writeDtiMessage(MSG_DTI_CONTROL_5, (uint8_t*)&acCurrent, 2); // 20A Target AC Current
     HAL_Delay(10);
   }
