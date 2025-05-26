@@ -114,8 +114,9 @@ int main(void)
   HAL_SetTickFreq(TICK_FREQ);
   LOGOMATIC("--Boot Finished at Tick %lu--\n", HAL_GetTick());
 
+  // FIXME: All DTI related code needs to be fixed in ECU
   uint8_t enabled = 1;
-  uint16_t acCurrent = 30 << 8;  // 3
+  uint16_t acCurrent = 30 << 8;
   /* USER CODE END 2 */
 
   /* Infinite loop */
