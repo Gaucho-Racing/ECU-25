@@ -38,7 +38,7 @@ FDCAN_TxHeaderTypeDef TxHeader = {
 
 void writeDtiMessage(uint16_t msgID, uint8_t data[], uint32_t len)
 {
-    TxHeader.Identifier = (LOCAL_GR_ID << 16) | (msgID << 8) | GR_DTI_INVERTER;
+    TxHeader.Identifier = (LOCAL_GR_ID << 24) | (msgID << 8) | GR_DTI_INVERTER;
     TxHeader.DataLength = len;
 
     FDCAN_HandleTypeDef *handle;
