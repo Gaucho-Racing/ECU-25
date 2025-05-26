@@ -36,7 +36,7 @@ FDCAN_TxHeaderTypeDef TxHeader = {
     .MessageMarker = 0 // also change this to a real address if you change fifo control
 };
 
-void writeDtiMessage(uint16_t msgID, uint8_t data[], uint32_t len)
+void writeDtiMessage(uint16_t msgID, uint8_t data[], uint32_t len)  // TODO Copy over when ready
 {
     TxHeader.Identifier = msgID;
     TxHeader.DataLength = len;
