@@ -124,6 +124,8 @@ int main(void)
     /* USER CODE BEGIN 3 */
     //globalStatus.ECUState = DRIVE_ACTIVE_POWER;
 
+    LOGOMATIC("APPS1 is %d\t\tAPPS2 is %d\n", analogRead(APPS1_SIGNAL), analogRead(APPS2_SIGNAL));
+
     writeMessage(PrimaryBusCAN, MSG_DEBUG_2_0, GR_ALL, (uint8_t*)"Testing", 8);
     HAL_Delay(10);
   }
