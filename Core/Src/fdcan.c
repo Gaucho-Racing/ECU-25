@@ -45,7 +45,7 @@ void writeDtiMessage(uint16_t msgID, uint8_t data[], uint32_t len)
     FDCAN_HandleTypeDef *handle;
     handle = &hfdcan1;
     TxHeader.FDFormat = FDCAN_CLASSIC_CAN;
-    TxHeader.IdType = FDCAN_STANDARD_ID
+    TxHeader.IdType = FDCAN_STANDARD_ID;
 
     if (HAL_FDCAN_AddMessageToTxFifoQ(handle, &TxHeader, data) != HAL_OK)
     {
