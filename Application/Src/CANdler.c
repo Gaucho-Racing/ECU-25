@@ -19,6 +19,8 @@ volatile bool globalRTDstate = 0;
 
 void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t length)
 {
+    LOGOMATIC("Recieved CAN message\n");
+
     switch(msgID)
     {
         case MSG_DEBUG_2_0:
