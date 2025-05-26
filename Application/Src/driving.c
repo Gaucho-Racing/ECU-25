@@ -86,8 +86,8 @@ void drive_active_power(void)
     //FIXME in ECU, dti stuff here
     uint8_t driveEnable = 1;
 
-    uint16_t throttleMin = 15;
-    uint16_t throttleMax = 100;
+    uint16_t throttleMin = 0;
+    uint16_t throttleMax = 0xFFFFFFFF;
     uint16_t maxCurrentValue = 10; // 10 A
     uint16_t throttleRequest = (1 - (analogRead(APPS1_SIGNAL) - throttleMin) / ((double)(throttleMax - throttleMin))) * maxCurrentValue;
 
