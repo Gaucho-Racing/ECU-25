@@ -115,7 +115,7 @@ int main(void)
   LOGOMATIC("--Boot Finished at Tick %lu--\n", HAL_GetTick());
 
   uint8_t enabled = 1;
-  uint16_t acCurrent = 30;  // 3
+  uint16_t acCurrent = 30 << 8;  // 3
   /* USER CODE END 2 */
 
   /* Infinite loop */
