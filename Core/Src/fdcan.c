@@ -38,8 +38,10 @@ FDCAN_TxHeaderTypeDef TxHeader = {
 
 void writeDtiMessage(uint16_t msgID, uint8_t data[], uint32_t len)
 {
-    TxHeader.Identifier = (msgID << 8) | (GR_DTI_INVERTER);
+    TxHeader.Identifier = (msgID) | (GR_DTI_INVERTER);
     TxHeader.DataLength = len;
+
+    TxHeader.IdType = FDCAN_STANDARD_ID;
 
     FDCAN_HandleTypeDef *handle;
     handle = &hfdcan1;
@@ -56,6 +58,8 @@ void writeMessage(BusCAN bus, uint16_t msgID, uint8_t destID, uint8_t data[], ui
 {
     TxHeader.Identifier = (LOCAL_GR_ID << 20) | (msgID << 8) | destID;
     TxHeader.DataLength = len;
+
+    TxHeader.IdType = FDCAN_EXTENDED_ID;
 
     FDCAN_HandleTypeDef *handle;
     switch(bus)
