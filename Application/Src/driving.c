@@ -82,7 +82,8 @@ void drive_active_power(void)
     }
     
     sendInverterCommand();
-
+    uint16_t throttleMin = 0;
+    uint16_t throttleMax = 100;
     uint16_t throttleRequest = 0;
     uint8_t driveEnable = 1;
 
