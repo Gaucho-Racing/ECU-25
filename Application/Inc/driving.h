@@ -12,13 +12,14 @@
     #define THROTTLE_MIN_1 0.738866666667
     #define THROTTLE_MAX_1 0.982231481481
 
-    // NOT SETUP
-    #define THROTTLE_MIN_2 0.901
-    #define THROTTLE_MAX_2 1.597
+    // NOT SETUP, NEED TO CONFIRM
+    #define THROTTLE_MIN_2 1.477733333
+    #define THROTTLE_MAX_2 1.964462963
 
     #define BRAKE_MIN 0 // FIXME change when value is known
     #define BRAKE_MAX 5 // FIXME change when value is known
-    #define MAX_CURRENT 10 // 10 A
+    #define MAX_CURRENT_REAR 240 // A
+    #define MAX_CURRENT_FORWARD 105 // A
 
     #define GEAR_RATIO 3.55
     #define MOTOR_POLE_PAIRS 10.0

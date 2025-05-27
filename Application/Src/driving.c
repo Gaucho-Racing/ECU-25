@@ -84,16 +84,19 @@ void drive_active_power(void)
 
     // Scale throttle request for CAN messaging
 
-    uint16_t throttleRequest = (uint16_t)(pedalTravel * MAX_CURRENT * 10) << 8;
+    uint16_t rearThrottleRequest = (uint16_t)(pedalTravel * MAX_CURRENT_REAR * 10) << 8;
+    uint16_t forwardThrottleRequest = (uint16_t)(pedalTravel * MAX_CURRENT_FORWARD * 10) << 8;
 
     //Assuming dti inverter is #0
-    globalInverterSettings[0].Set_AC_Current = throttleRequest;
+    globalInverterSettings[0].Set_AC_Current = rearThrottleRequest;
     
     sendInverterCommand();
 
     writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveEnable, 1);            // 1 Drive Enable
 
-    writeDtiMessage(MSG_DTI_CONTROL_5, (uint8_t*)&throttleRequest, 2);
+    writeDtiMessage(MSG_DTI_CONTROL_5, (uint8_t*)&rearThrottleRequest, 2);
+
+    //TODO: Figure out how and where to sed forward throttle request. Is it just the other two inverters?
 }
 
 void drive_active_regen(void)
@@ -122,7 +125,7 @@ void drive_active_regen(void)
     //TODO: Figure out wtf below line is supposed to be
     //sendInverterCommand();
 
-    uint16_t brakerequest = (uint16_t)(brakeTravel * MAX_CURRENT * 10) << 8;
+    uint16_t brakerequest = (uint16_t)(brakeTravel * MAX_CURRENT_REAR * 10) << 8;
 
     writeDtiMessage(MSG_DTI_CONTROL_6, (uint8_t*)&brakerequest, 2);
 
