@@ -84,9 +84,10 @@ void drive_active_power(void)
 
     // Scale throttle request for CAN messaging
 
-    uint16_t throttleRequest = (uint16_t)(pedalTravel * MAX_CURRENT * 10) << 8;.Se
+    uint16_t throttleRequest = (uint16_t)(pedalTravel * MAX_CURRENT * 10) << 8;
 
-    globalInverterSettings.Set_AC_Current = throttleRequest;
+    //Assuming dti inverter is #0
+    globalInverterSettings[0].Set_AC_Current = throttleRequest;
     
     sendInverterCommand();
 
