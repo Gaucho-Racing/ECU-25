@@ -97,11 +97,11 @@ void drive_active_power(void)
 
     // Scale throttle request for CAN messaging
 
-    uint8_t throttleRequest = (uint8_t)(pedalTravel * MAX_CURRENT * 10) << 8;
+    uint16_t throttleRequest = (uint16_t)(pedalTravel * MAX_CURRENT * 10) << 8;
 
     writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveEnable, 1);            // 1 Drive Enable
 
-    writeDtiMessage(MSG_DTI_CONTROL_5, (uint8_t*) &throttleRequest, 2);
+    writeDtiMessage(MSG_DTI_CONTROL_5, (uint8_t*)&throttleRequest, 2);
 }
 
 void drive_active_regen(void)
