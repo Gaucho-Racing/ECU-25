@@ -19,17 +19,6 @@ volatile bool BSE_APPS_violation = false;
 static const uint8_t driveDisable = 0;
 static const uint8_t driveEnable = 1;
 
-float vehicleSpeedMPH(void)
-{
-    return ((globalInverterData.msgOne.erpm / MOTOR_POLE_PAIRS) * 2 * M_PI * WHEEL_RADIUS_IN) / (GEAR_RATIO * 1056.0);  // TODO: Where did 1056 come from?
-}
-
-void sendBseAppsViolationMessage(void)
-{
-    uint8_t errorMap = 0x1;
-    writeMessage(PrimaryBusCAN, MSG_DASH_WARNING_FLAGS, GR_DASH_PANEL, &errorMap, 1);
-}
-
 void drive_standby(void)
 {
     controlInverters(true);

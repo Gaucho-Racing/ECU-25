@@ -54,6 +54,14 @@
     void setSoftwareLatch(bool close);
     
     /**
+    Returns the vehicle speed
+     */
+    float vehicleSpeedMPH(void);
+    /**
+    Sends a BSE APPS violation warning message
+     */
+    void sendBseAppsViolationMessage(void);
+    /**
      Checks for apps violation given the throttles, throttle request, and brake signal
      */
     bool checkBSEAPPSviolation(float throttle1, float throttle2, float pedalTravel, float brake);

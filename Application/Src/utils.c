@@ -8,6 +8,9 @@
 #include "main.h"
 #include "stateMachine.h"
 #include "CANdler.h"
+#include "driving.h"
+#include "math.h"
+#include "inverter.h"
 
 uint32_t millis(void)
 {
@@ -40,6 +43,17 @@ bool checkBSEAPPSviolation(float throttle1, float throttle2, float pedalTravel, 
 {
     //Checks 2 * APPS_1 is within 10% of APPS_2 and break + throttle at the same time
     return fabs(throttle2 - throttle1 * 2) > throttle2 * 0.1 || (brake >= BSE_DEADZONE && pedalTravel >= 0.25);
+}
+
+float vehicleSpeedMPH(void)
+{
+    return ((globalInverterData.msgOne.erpm / MOTOR_POLE_PAIRS) * 2 * M_PI * WHEEL_RADIUS_IN) / (GEAR_RATIO * 1056.0);  // TODO: Where did 1056 come from?
+}
+
+void sendBseAppsViolationMessage(void)
+{
+    uint8_t errorMap = 0x1;
+    writeMessage(PrimaryBusCAN, MSG_DASH_WARNING_FLAGS, GR_DASH_PANEL, &errorMap, 1);
 }
 
 bool ACUError(ACU_Status_MsgTwo *acuMsgTwo)
