@@ -52,7 +52,11 @@
     Basically it should immediately start discharging no matter where it is
     */
     void setSoftwareLatch(bool close);
-
+    
+    /**
+     Checks for apps violation given the throttles, throttle request, and brake signal
+     */
+    bool checkBSEAPPSviolation(float throttle1, float throttle2, float pedalTravel, float brake);
     /**
     Parses the message in question to see if there are any errors.
 
