@@ -222,7 +222,7 @@ void Error_Handler(void)
 
   while(true)
   {
-    LOGOMATIC("So Cooked\n");
+    LOGOMATIC("---ECU got cooked---\n");
     writeMessage(PrimaryBusCAN, MSG_DEBUG_2_0, GR_ALL, (uint8_t*)"ECU Fail", 8);
     HAL_Delay(250);
     writeMessage(DataBusCAN, MSG_DEBUG_FD, GR_ALL, (uint8_t*)"ECU Internal Failure", 20);
