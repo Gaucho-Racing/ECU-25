@@ -126,11 +126,6 @@ int main(void)
     /* USER CODE BEGIN 3 */
     drive_active_power();
 
-    // uint8_t driveEnable = 1;
-    // uint16_t throttleRequest = (uint16_t)((analogRead(APPS2_SIGNAL) * ADC_CONV - THROTTLE_MIN_1) / (THROTTLE_MAX_1 - THROTTLE_MIN_1) * MAX_CURRENT * 10) << 8;
-    // writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveEnable, 1);            // 1 Drive Enable
-    // writeDtiMessage(MSG_DTI_CONTROL_5, (uint8_t*) &throttleRequest, 2);
-
     HAL_Delay(10);
   }
   /* USER CODE END 3 */
