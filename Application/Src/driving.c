@@ -23,7 +23,7 @@ void drive_standby(void)
 {
     controlInverters(true);
 
-    float throttle2 = (float) analogRead(APPS2_SIGNAL) / (ADC_MAX);
+    float throttle2 = (float) analogRead(APPS2_SIGNAL) * ADC_CONV;
     float pedalTravel = (throttle2 - THROTTLE_MIN_2) / (THROTTLE_MAX_2 - THROTTLE_MIN_2);
 
     //escape condition for BSE_APPS_violation according to rules
