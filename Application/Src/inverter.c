@@ -7,6 +7,8 @@
 #include "msgIDs.h"
 #include "stateMachine.h"
 
+// TODO Get DTI code up to date
+
 volatile DTI_Data globalInverterData = {0};
 
 volatile InverterSettings globalInverterSettings[3] = {0}; // Set to 4 iff fourth motor/inverter

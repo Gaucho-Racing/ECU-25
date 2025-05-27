@@ -2,13 +2,11 @@
 
 ## Todo
 ### Urgent
-:construction: [CANSniffer-25](https://github.com/Gaucho-Racing/CANSniffer-25) testing
-
-:eyes: Motor testing
+:construction: Motor testing
 ### Delayed
 :point_right: Integration testing
 
-:warning: Correctness testing
+:warning: Copy over DTI and throttle code from [`dtiMotorTest`](../../tree/dtiMotorTest)
 ### Stretch
 :x: Torque vectoring
 
