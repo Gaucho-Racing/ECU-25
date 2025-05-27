@@ -124,10 +124,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    LOGOMATIC("%lf,\n", (double)analogRead(APPS1_SIGNAL) * ADC_CONV);
-    //writeMessage(PrimaryBusCAN, MSG_DEBUG_2_0, GR_ALL, (uint8_t*)"Testing", 8);
-
-    //drive_active_power();
+    drive_active_power();
 
     HAL_Delay(10);
   }
