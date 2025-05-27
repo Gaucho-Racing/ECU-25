@@ -1417,3 +1417,4 @@ void LL_ADC_INJ_StructInit(LL_ADC_INJ_InitTypeDef *pADC_InjInitStruct)
   */
 
 #endif /* USE_FULL_LL_DRIVER */
+typedef int fix_iso_c_forbids_an_empty_translation_unit;
