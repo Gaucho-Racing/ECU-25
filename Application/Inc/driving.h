@@ -8,10 +8,14 @@
     #define APPS_DEADZONE 0.05
     #define BSE_DEADZONE 0.05
     #define REGEN_MPH 5
-    #define THROTTLE_MIN_1 0.673
-    #define THROTTLE_MIN_2 0.901
+
+    #define THROTTLE_MIN_1 0.738866666667
     #define THROTTLE_MAX_1 0.982231481481
+
+    // NOT SETUP
+    #define THROTTLE_MIN_2 0.901
     #define THROTTLE_MAX_2 1.597
+
     #define BRAKE_MIN 0 // FIXME change when value is known
     #define BRAKE_MAX 5 // FIXME change when value is known
     #define MAX_CURRENT 10 // 10 A
