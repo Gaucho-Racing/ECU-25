@@ -96,3 +96,7 @@ add_custom_target(
     COMMENT "Updating GR ID and MSG ID header files from CSVs"
     USES_TERMINAL
 )
+
+# FIXME Copy these to other boards!
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -u _printf_float")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -u _printf_float")

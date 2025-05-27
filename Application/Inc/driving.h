@@ -10,7 +10,7 @@
     #define REGEN_MPH 5
     #define THROTTLE_MIN_1 0.673
     #define THROTTLE_MIN_2 0.901
-    #define THROTTLE_MAX_1 1.172
+    #define THROTTLE_MAX_1 0.982231481481
     #define THROTTLE_MAX_2 1.597
     #define BRAKE_MIN 0 // FIXME change when value is known
     #define BRAKE_MAX 5 // FIXME change when value is known
