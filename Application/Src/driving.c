@@ -88,7 +88,7 @@ void drive_active_power(void)
 
     uint16_t throttleRequest = (uint16_t)(pedalTravel * MAX_CURRENT * 10) << 8;
 
-    //writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveEnable, 1);            // 1 Drive Enable
+    writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveEnable, 1);            // 1 Drive Enable
 
     writeDtiMessage(MSG_DTI_CONTROL_5, (uint8_t*)&throttleRequest, 2);
 }
@@ -118,7 +118,7 @@ void drive_active_regen(void)
 
     sendInverterCommand();
 
-    uint16_t brakerequest = (brakeTravel * MAX_CURRENT * 10) << 8;
+    uint16_t brakerequest = (uint16_t)(brakeTravel * MAX_CURRENT * 10) << 8;
 
     writeDtiMessage(MSG_DTI_CONTROL_6, (uint8_t*)&brakerequest, 2);
 
