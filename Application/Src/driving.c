@@ -51,7 +51,7 @@ void drive_active_idle(void)
         globalStatus.ECUState = DRIVE_STANDBY;
         BSE_APPS_violation = true;
         sendBseAppsViolationMessage();
-        return; ADC_MAX
+        return;
     }
     else if (pedalTravel >= APPS_DEADZONE)
     {
@@ -81,12 +81,14 @@ void drive_active_power(void)
     {
         globalStatus.ECUState = DRIVE_STANDBY;
     }
-    
-    sendInverterCommand();
 
     // Scale throttle request for CAN messaging
 
-    uint16_t throttleRequest = (uint16_t)(pedalTravel * MAX_CURRENT * 10) << 8;
+    uint16_t throttleRequest = (uint16_t)(pedalTravel * MAX_CURRENT * 10) << 8;.Se
+
+    globalInverterSettings.Set_AC_Current = throttleRequest;
+    
+    sendInverterCommand();
 
     writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveEnable, 1);            // 1 Drive Enable
 
@@ -116,7 +118,8 @@ void drive_active_regen(void)
         globalStatus.ECUState = DRIVE_ACTIVE_IDLE;
     }
 
-    sendInverterCommand();
+    //TODO: Figure out wtf below line is supposed to be
+    //sendInverterCommand();
 
     uint16_t brakerequest = (uint16_t)(brakeTravel * MAX_CURRENT * 10) << 8;
 
