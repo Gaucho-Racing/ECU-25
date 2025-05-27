@@ -26,6 +26,7 @@ void drive_standby(void)
     float throttle2 = (float) analogRead(APPS2_SIGNAL) / (ADC_MAX);
     float pedalTravel = (throttle2 - THROTTLE_MIN_2) / (THROTTLE_MAX_2 - THROTTLE_MIN_2);
 
+    //escape condition for BSE_APPS_violation according to rules
     if(BSE_APPS_violation && pedalTravel < APPS_DEADZONE){
         BSE_APPS_violation = false;
     }
