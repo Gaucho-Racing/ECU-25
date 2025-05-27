@@ -123,13 +123,13 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    LOGOMATIC("APPS1 is %lf\t\tAPPS2 is %lf\n", analogRead(APPS1_SIGNAL) * ADC_CONV, analogRead(APPS2_SIGNAL) * ADC_CONV);
+    LOGOMATIC("APPS1 is %d\t\tAPPS2 is %d\n", analogRead(APPS1_SIGNAL), analogRead(APPS2_SIGNAL));
 
     //writeMessage(PrimaryBusCAN, MSG_DEBUG_2_0, GR_ALL, (uint8_t*)"Testing", 8);
 
     //drive_active_power();
 
-    HAL_Delay(100);
+    HAL_Delay(500);
   }
   /* USER CODE END 3 */
 }
