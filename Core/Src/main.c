@@ -111,6 +111,7 @@ int main(void)
   MX_LPUART1_UART_Init();
   /* USER CODE BEGIN 2 */
 
+
   // 10us ticks
   HAL_SetTickFreq(TICK_FREQ);
   LOGOMATIC("--Boot Finished at Tick %lu--\n", HAL_GetTick());
@@ -177,10 +178,6 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-
-  /** Enables the Clock Security System
-  */
-  HAL_RCC_EnableCSS();
 }
 
 /* USER CODE BEGIN 4 */
