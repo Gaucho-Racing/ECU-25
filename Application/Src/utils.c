@@ -36,6 +36,14 @@ void setSoftwareLatch(bool close)
     }
 }
 
+bool checkBSEAPPSviolation(float throttle1, float throttle2, float pedalTravel, float brake)
+{
+    //FIXME remove below
+    return false;
+    //Checks 2 * APPS_1 is within 10% of APPS_2 and break + throttle at the same time
+    return fabs(throttle2 - throttle1 * 2) > throttle2 * 0.1 || (brake >= BSE_DEADZONE && pedalTravel >= 0.25);
+}
+
 bool ACUError(ACU_Status_MsgTwo *acuMsgTwo)
 {
     uint8_t notableBits = getBits(acuMsgTwo->Error_Warning_Bits, 0, 5);
