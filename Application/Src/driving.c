@@ -14,8 +14,8 @@
 
 volatile bool BSE_APPS_violation = false;
 
-const uint8_t driveDisable = 0;
-const uint8_t driveEnable = 1;
+static const uint8_t driveDisable = 0;
+static const uint8_t driveEnable = 1;
 
 float vehicleSpeedMPH(void)
 {
@@ -56,7 +56,7 @@ void drive_active_idle(void)
 
     if (checkBSEAPPSviolation(throttle1, throttle2, pedalTravel, brakeTravel))
     {  
-        writeDtiMessage(MSG_DTI_CONTROL_12, &driveDisable, 1);   //0 for disable
+        writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveDisable, 1);   //0 for disable
         globalStatus.ECUState = DRIVE_STANDBY;
         BSE_APPS_violation = true;
         sendBseAppsViolationMessage();
@@ -80,7 +80,7 @@ void drive_active_power(void)
     float pedalTravel = (throttle2 - THROTTLE_MIN_2) / (THROTTLE_MAX_2 - THROTTLE_MIN_2);
 
     if(checkBSEAPPSviolation(throttle1, throttle2, pedalTravel, brakeTravel)){
-        writeDtiMessage(MSG_DTI_CONTROL_12, &driveDisable, 1);   //0 for disable
+        writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveDisable, 1);   //0 for disable
         globalStatus.ECUState = DRIVE_STANDBY;
         BSE_APPS_violation = true;
         sendBseAppsViolationMessage();
@@ -97,7 +97,7 @@ void drive_active_power(void)
 
     uint8_t throttleRequest = (uint8_t)(pedalTravel * MAX_CURRENT * 10) << 8;
 
-    writeDtiMessage(MSG_DTI_CONTROL_12, &driveEnable, 1);            // 1 Drive Enable
+    writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveEnable, 1);            // 1 Drive Enable
 
     writeDtiMessage(MSG_DTI_CONTROL_5, (uint8_t*) &throttleRequest, 2);
 }
@@ -110,7 +110,7 @@ void drive_active_regen(void)
     float pedalTravel = (throttle2 - THROTTLE_MIN_2) / (THROTTLE_MAX_2 - THROTTLE_MIN_2);
 
     if(checkBSEAPPSviolation(throttle1, throttle2, pedalTravel, brakeTravel)){
-        writeDtiMessage(MSG_DTI_CONTROL_12, &driveDisable, 1);   //0 for disable
+        writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveDisable, 1);   //0 for disable
         globalStatus.ECUState = DRIVE_STANDBY;
         BSE_APPS_violation = true;
         sendBseAppsViolationMessage();
