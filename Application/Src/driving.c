@@ -139,6 +139,7 @@ static float getThrottle2()
 
 static float getBrakeTravel()
 {
+    // TODO Check which signal
     return (analogRead(BSE_SIGNAL) * ADC_CONV - BRAKE_MIN) / (BRAKE_MAX - BRAKE_MIN);
 }
 
