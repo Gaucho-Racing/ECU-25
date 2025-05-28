@@ -20,7 +20,7 @@ volatile bool globalRTDstate = 0;
 
 void handleDtiCANMessage(uint16_t msgID, uint8_t* data, uint32_t length)
 {
-    LOGOMATIC("Recieved a CAN message from the DTI!\nMessage ID: %d\tLength: %d", msgID, length);
+    //LOGOMATIC("Recieved a CAN message from the DTI!\nMessage ID: %d\tLength: %ld", msgID, length);
 
     if (length != 8) {
         numberOfBadMessages++;
@@ -53,7 +53,7 @@ void handleDtiCANMessage(uint16_t msgID, uint8_t* data, uint32_t length)
             break;
 
         default:
-            LOGOMATIC("Called to handle a DTI message... but it was not the right message ID (%d)\n", msgID);
+            //LOGOMATIC("Called to handle a DTI message... but it was not the right message ID (%d)\n", msgID);
             return;
     }
 }
@@ -420,7 +420,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             break;
 
             default:
-                LOGOMATIC("Got msg %X from %X of length %d", msgID, srcID, (int)length);
+                //LOGOMATIC("Got msg %X from %X of length %d", msgID, srcID, (int)length);
                 return;
     }
 }

@@ -21,6 +21,8 @@
 #include "adc.h"
 
 /* USER CODE BEGIN 0 */
+#include "utils.h"
+
 struct {
     uint16_t adc1buf[6];
     uint16_t adc2buf[5];
@@ -29,6 +31,7 @@ struct {
 // returns int from 0 to ADC_MAX, inclusive
 uint16_t analogRead(AnalogSignal signal) {
     if(signal >= 11) {
+        LOGOMATIC("Invalid analog read!\n");
         Error_Handler();
         return -1;
     }

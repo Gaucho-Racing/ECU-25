@@ -15,7 +15,7 @@
         uint8_t Drive_Enable;
     } InverterSettings;
 
-    extern volatile InverterSettings globalInverterSettings[3];
+    extern volatile InverterSettings globalInverterSettings[2];
     extern volatile DTI_Data globalInverterData;
 
     void controlInverters(bool driveEnable);

@@ -124,9 +124,11 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    drive_active_power();
+    //drive_active_power();
 
-    HAL_Delay(10);
+    LOGOMATIC("APPS1 is %d at %f\t\tAPPS2 is %d at %f\n", analogRead(APPS1_SIGNAL), analogRead(APPS1_SIGNAL) * ADC_CONV, analogRead(APPS2_SIGNAL), analogRead(APPS2_SIGNAL) * ADC_CONV);
+
+    HAL_Delay(100);
   }
   /* USER CODE END 3 */
 }
