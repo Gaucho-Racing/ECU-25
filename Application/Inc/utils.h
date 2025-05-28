@@ -62,6 +62,9 @@
      */
     void sendBseAppsViolationMessage(void);
 
+    /**
+    Validates the torque request, updates heat capacity and adjusts torque request if needed
+     */
     void validateForwardTorqueRequest(int16_t* tqr);
     /**
      Checks for apps violation given the throttles, throttle request, and brake signal
