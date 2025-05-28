@@ -8,6 +8,8 @@
 #include "customIDs.h"
 #include "stateMachine.h"
 
+// FIXME What is going on here DTI <-> FOCER?
+
 volatile DTI_Data globalInverterData = {0};
 
 volatile InverterSettings globalInverterSettings[3] = {0}; // Set to 4 iff fourth motor/inverter
@@ -23,7 +25,6 @@ void sendInverterCommand(void)
         writeMessage(PrimaryBusCAN, MSG_INVERTER_COMMAND, GR_GR_INVERTER_1, (uint8_t*)&globalInverterSettings[0], 7);
         writeMessage(PrimaryBusCAN, MSG_INVERTER_COMMAND, GR_GR_INVERTER_2, (uint8_t*)&globalInverterSettings[1], 7);
         writeMessage(PrimaryBusCAN, MSG_INVERTER_COMMAND, GR_GR_INVERTER_3, (uint8_t*)&globalInverterSettings[2], 7);
-//      writeMessage(PrimaryBusCAN, MSG_INVERTER_COMMAND, GR_GR_INVERTER_4, (uint8_t*)&globalInverterSettings[3], 7);   // Enable iff fourth motor/inverter
 
         // LOGOMATIC("Global Inverter Settings 1 -- Set AC Current %d\n", globalInverterSettings[0].Set_AC_Current);
         // LOGOMATIC("Global Inverter Settings 1 -- Set DC Current %d\n", globalInverterSettings[0].Set_DC_Current);
