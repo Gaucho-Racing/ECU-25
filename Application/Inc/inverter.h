@@ -6,7 +6,7 @@
 #ifndef INVERTER_H
     #define INVERTER_H
 
-    #define INVERTER_MINIMUM_SENDING_TIME_MS 50
+    #define INVERTER_MINIMUM_SENDING_TIME_MS 10
 
     typedef struct {
         uint16_t Set_AC_Current;

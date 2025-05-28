@@ -18,8 +18,11 @@
 
     #define BRAKE_MIN 0 // FIXME change when value is known
     #define BRAKE_MAX 5 // FIXME change when value is known
-    #define MAX_CURRENT_REAR 240 // A
-    #define MAX_CURRENT_FORWARD 105 // A
+    #define MAX_CURRENT_REAR 240.0 // A
+    #define MAX_CURRENT_FORWARD 105.0 // A
+    #define NOMINAL_CURRENT_FORWARD 41.0 // A
+
+    #define MAX_AMK_HEAT_CAP 11587
 
     #define GEAR_RATIO 3.55
     #define MOTOR_POLE_PAIRS 10.0
@@ -29,6 +32,8 @@
     #define GLOBALSTATUS_WHEEL_RPM_ADJUSTMENT 3276
 
     extern volatile bool BSE_APPS_violation;
+    extern volatile uint16_t heatCapacity;
+    extern volatile int32_t lastHeatCapacityUpdateMillis;
     
     /**
     Vehicle Speed in MPH

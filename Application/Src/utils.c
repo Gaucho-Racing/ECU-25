@@ -11,6 +11,7 @@
 #include "driving.h"
 #include "math.h"
 #include "inverter.h"
+#include "driving.h"
 
 uint32_t millis(void)
 {
@@ -43,6 +44,22 @@ bool checkBSEAPPSviolation(float throttle1, float throttle2, float pedalTravel, 
 {
     //Checks 2 * APPS_1 is within 10% of APPS_2 and break + throttle at the same time
     return fabs(throttle2 - throttle1 * 2) > throttle2 * 0.1 || (brake >= BSE_DEADZONE && pedalTravel >= 0.25);
+}
+
+void validateForwardTorqueRequest(uint16_t* tqr)
+{
+    int8_t deltaH;
+    if(millis() - lastHeatCapacityUpdateMillis > 10){
+        deltaH = 0.1;
+    }
+    else{
+        deltaH = millis() - lastHeatCapacityUpdateMillis;
+    }
+    deltaH *=*   tqr**   tqr - MAX_CURRENT_FORWARD * MAX_CURRENT_FORWARD;
+    heatCapacity += (heatCapacity + deltaH  > 0) ? deltaH : 0;
+    if(heatCapacity > MAX_AMK_HEAT_CAP * 0.9){
+        
+    }
 }
 
 float vehicleSpeedMPH(void)

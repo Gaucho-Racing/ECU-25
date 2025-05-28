@@ -19,6 +19,8 @@ volatile bool BSE_APPS_violation = false;
 static const uint8_t driveDisable = 0;
 static const uint8_t driveEnable = 1;
 
+volatile uint16_t heatCapacity = 0;
+
 void drive_standby(void)
 {
     controlInverters(true);
@@ -88,10 +90,14 @@ void drive_active_power(void)
     uint16_t rearThrottleRequest = (uint16_t)(pedalTravel * MAX_CURRENT_REAR * 10) << 8;
     uint16_t forwardThrottleRequest = (uint16_t)(pedalTravel * MAX_CURRENT_FORWARD * 10) << 8;
 
+    validateForwardTorqueRequest(&rearThrottleRequest);
+
     //Assuming dti inverter is #0
     globalInverterSettings[0].Set_AC_Current = rearThrottleRequest;
     
     sendInverterCommand();
+
+    //TODO: LIMIT DTI MESSAGE TO EVERY 10 ms
 
     writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveEnable, 1);            // 1 Drive Enable
 
