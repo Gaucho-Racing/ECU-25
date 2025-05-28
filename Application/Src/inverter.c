@@ -12,7 +12,7 @@
 
 volatile DTI_Data globalInverterData = {0};
 
-volatile InverterSettings globalInverterSettings[3] = {0}; // Set to 4 iff fourth motor/inverter
+volatile InverterSettings globalInverterSettings[3] = {0};
 
 volatile int32_t lastInverterPingMillis = BAD_TIME_Negative1;
 
