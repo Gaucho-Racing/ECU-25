@@ -40,15 +40,15 @@ void setSoftwareLatch(bool close)
     }
 }
 
-bool checkBSEAPPSviolation(float throttle1, float throttle2, float pedalTravel, float brake)
+bool checkBSEAPPSviolation(float throttle1, float throttle2, float getPedalTravel, float brake)
 {
     //Checks 2 * APPS_1 is within 10% of APPS_2 and break + throttle at the same time
-    return fabs(throttle2 - throttle1 * 2) > throttle2 * 0.1 || (brake >= BSE_DEADZONE && pedalTravel >= 0.25);
+    return fabs(throttle2 - throttle1 * 2) > throttle2 * 0.1 || (brake >= BSE_DEADZONE && getPedalTravel >= 0.25);
 }
 
-void validateForwardTorqueRequest(uint16_t* tqr)
+void validateForwardTorqueRequest(float* tqr)
 {
-    int8_t deltaH;
+    float deltaH;
     if(millis() - lastHeatCapacityUpdateMillis > 10){
         deltaH = 0.1;
     }

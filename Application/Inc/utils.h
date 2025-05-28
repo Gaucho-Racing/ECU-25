@@ -66,7 +66,7 @@
     /**
      Checks for apps violation given the throttles, throttle request, and brake signal
      */
-    bool checkBSEAPPSviolation(float throttle1, float throttle2, float pedalTravel, float brake);
+    bool checkBSEAPPSviolation(float throttle1, float throttle2, float getPedalTravel, float brake);
     /**
     Parses the message in question to see if there are any errors.
 

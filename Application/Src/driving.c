@@ -12,8 +12,6 @@
 #include "msgIDs.h"
 #include "utils.h"
 
-// TODO Copy over from dtiMotorTest the throttle setup
-
 volatile bool BSE_APPS_violation = false;
 
 static const uint8_t driveDisable = 0;
@@ -26,8 +24,7 @@ void drive_standby(void)
 {
     controlInverters(true);
 
-    float throttle2 = (float) analogRead(APPS2_SIGNAL) * ADC_CONV;
-    float pedalTravel = (throttle2 - THROTTLE_MIN_2) / (THROTTLE_MAX_2 - THROTTLE_MIN_2);
+    float pedalTravel = getPedalTravel();
 
     //escape condition for BSE_APPS_violation according to rules
     if(BSE_APPS_violation && pedalTravel < APPS_DEADZONE){
@@ -44,14 +41,12 @@ void drive_active_idle(void)
 {
     controlInverters(true);
 
-    float throttle1 = analogRead(APPS1_SIGNAL) * ADC_CONV;
-    float throttle2 = analogRead(APPS2_SIGNAL) * ADC_CONV;
-    float brakeTravel = (analogRead(BSE_SIGNAL) * ADC_CONV - BRAKE_MIN) / (BRAKE_MAX - BRAKE_MIN);
-    float pedalTravel = (throttle2 - THROTTLE_MIN_2) / (THROTTLE_MAX_2 - THROTTLE_MIN_2);
+    float brakeTravel = getBrakeTravel();
+    float pedalTravel = getPedalTravel();
 
-    if (checkBSEAPPSviolation(throttle1, throttle2, pedalTravel, brakeTravel))
+    if (checkBSEAPPSviolation(getThrottle1(), getThrottle2(), pedalTravel, brakeTravel))
     {  
-        writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveDisable, 1);   //0 for disable
+        controlInverters(0);   //0 for disable
         globalStatus.ECUState = DRIVE_STANDBY;
         BSE_APPS_violation = true;
         sendBseAppsViolationMessage();
@@ -69,13 +64,11 @@ void drive_active_idle(void)
 
 void drive_active_power(void)
 {
-    float throttle1 = analogRead(APPS1_SIGNAL) * ADC_CONV;
-    float throttle2 = analogRead(APPS2_SIGNAL) * ADC_CONV;
-    float brakeTravel = (analogRead(BSE_SIGNAL) * ADC_CONV - BRAKE_MIN) / (BRAKE_MAX - BRAKE_MIN);
-    float pedalTravel = (throttle2 - THROTTLE_MIN_2) / (THROTTLE_MAX_2 - THROTTLE_MIN_2);
+    float brakeTravel = getBrakeTravel();
+    float pedalTravel = getPedalTravel();
 
-    if (checkBSEAPPSviolation(throttle1, throttle2, pedalTravel, brakeTravel)){
-        writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveDisable, 1);   //0 for disable
+    if (checkBSEAPPSviolation(getThrottle1(), getThrottle2(), pedalTravel, brakeTravel)){
+        controlInverters(0);   //0 for disable
         globalStatus.ECUState = DRIVE_STANDBY;
         BSE_APPS_violation = true;
         sendBseAppsViolationMessage();
@@ -91,37 +84,29 @@ void drive_active_power(void)
     uint16_t rearThrottleRequest = (uint16_t)(pedalTravel * MAX_CURRENT_REAR * 10) << 8;
     uint16_t forwardThrottleRequest = (uint16_t)(pedalTravel * MAX_CURRENT_FORWARD * 10) << 8;
 
-    validateForwardTorqueRequest(&rearThrottleRequest);
+    validateForwardTorqueRequest(&forwardThrottleRequest);
 
-    //Assuming dti inverter is #0
     globalInverterSettings[0].acCurrent = rearThrottleRequest;
-    
+    globalInverterSettings[1].acCurrent = forwardThrottleRequest;
+    globalInverterSettings[2].acCurrent = forwardThrottleRequest;
+
     sendInverterCommand();
-
-    //TODO: LIMIT DTI MESSAGE TO EVERY 10 ms
-
-    writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveEnable, 1);            // 1 Drive Enable
-
-    writeDtiMessage(MSG_DTI_CONTROL_1, (uint8_t*)&rearThrottleRequest, 2);
-
-    //TODO: Figure out how and where to sed forward throttle request. Is it just the other two inverters?
 }
 
 void drive_active_regen(void)
 {
-    float throttle1 = analogRead(APPS1_SIGNAL) * ADC_CONV;
-    float throttle2 = analogRead(APPS2_SIGNAL) * ADC_CONV;
-    float brakeTravel = (analogRead(BSE_SIGNAL) * ADC_CONV - BRAKE_MIN) / (BRAKE_MAX - BRAKE_MIN);
-    float pedalTravel = (throttle2 - THROTTLE_MIN_2) / (THROTTLE_MAX_2 - THROTTLE_MIN_2);
+    float brakeTravel = getBrakeTravel();
+    float pedalTravel = getPedalTravel();
 
-    if(checkBSEAPPSviolation(throttle1, throttle2, pedalTravel, brakeTravel)){
-        writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveDisable, 1);   //0 for disable
+    if(checkBSEAPPSviolation(getThrottle1(), getThrottle2(), pedalTravel, brakeTravel))
+    {
+        controlInverters(0);
         globalStatus.ECUState = DRIVE_STANDBY;
         BSE_APPS_violation = true;
         sendBseAppsViolationMessage();
         return;
     }
-    else if (pedalTravel >= APPS_DEADZONE)
+    else if (getPedalTravel() >= APPS_DEADZONE)
     {
         globalStatus.ECUState = DRIVE_ACTIVE_POWER;
     }
@@ -130,11 +115,34 @@ void drive_active_regen(void)
         globalStatus.ECUState = DRIVE_ACTIVE_IDLE;
     }
 
-    //TODO: Figure out wtf below line is supposed to be
-    //sendInverterCommand();
+    int16_t rearTorqueRequest = (int16_t)(getBrakeTravel() * MAX_CURRENT_REAR * -10) << 8;
+    int16_t forwardTorqueRequest = (int16_t)(getPedalTravel() * MAX_CURRENT_FORWARD * 10) << 8;
 
-    uint16_t brakerequest = (uint16_t)(brakeTravel * MAX_CURRENT_REAR * 10) << 8;
+    validateForwardTorqueRequest(&forwardTorqueRequest);
 
-    writeDtiMessage(MSG_DTI_CONTROL_6, (uint8_t*)&brakerequest, 2);
+    globalInverterSettings[0].acCurrent = rearTorqueRequest;
+    globalInverterSettings[1].acCurrent = forwardTorqueRequest;
+    globalInverterSettings[2].acCurrent = forwardTorqueRequest;
 
+    sendInverterCommand();
+}
+
+static float getThrottle1()
+{
+    return analogRead(APPS1_SIGNAL) * ADC_CONV;
+}
+
+static float getThrottle2()
+{
+    return analogRead(APPS2_SIGNAL) * ADC_CONV;
+}
+
+static float getBrakeTravel()
+{
+    return (analogRead(BSE_SIGNAL) * ADC_CONV - BRAKE_MIN) / (float)(BRAKE_MAX - BRAKE_MIN);
+}
+
+static float getPedalTravel()
+{
+    return (getThrottle2() - THROTTLE_MIN_2) / (float)(THROTTLE_MAX_2 - THROTTLE_MIN_2);
 }
