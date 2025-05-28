@@ -8,11 +8,13 @@
 #include "customIDs.h"
 #include "stateMachine.h"
 
-// FIXME What is going on here DTI <-> FOCER?
+// Q: What is going on here DTI <-> FOCER?
+// A: This whole file setup is weirdly AMK specific!
+// TODO Maybe migrate some code over to here for safeguarding
 
 volatile DTI_Data globalInverterData = {0};
 
-volatile InverterSettings globalInverterSettings[3] = {0};
+volatile InverterSettings globalInverterSettings[2] = {0};
 
 volatile int32_t lastInverterPingMillis = BAD_TIME_Negative1;
 
@@ -24,7 +26,6 @@ void sendInverterCommand(void)
 
         writeMessage(PrimaryBusCAN, MSG_INVERTER_COMMAND, GR_GR_INVERTER_1, (uint8_t*)&globalInverterSettings[0], 7);
         writeMessage(PrimaryBusCAN, MSG_INVERTER_COMMAND, GR_GR_INVERTER_2, (uint8_t*)&globalInverterSettings[1], 7);
-        writeMessage(PrimaryBusCAN, MSG_INVERTER_COMMAND, GR_GR_INVERTER_3, (uint8_t*)&globalInverterSettings[2], 7);
 
         // LOGOMATIC("Global Inverter Settings 1 -- Set AC Current %d\n", globalInverterSettings[0].Set_AC_Current);
         // LOGOMATIC("Global Inverter Settings 1 -- Set DC Current %d\n", globalInverterSettings[0].Set_DC_Current);
@@ -33,11 +34,7 @@ void sendInverterCommand(void)
         // LOGOMATIC("Global Inverter Settings 2 -- Set AC Current %d\n", globalInverterSettings[1].Set_AC_Current);
         // LOGOMATIC("Global Inverter Settings 2 -- Set DC Current %d\n", globalInverterSettings[1].Set_DC_Current);
         // LOGOMATIC("Global Inverter Settings 2 -- RPM Limit %d\n", globalInverterSettings[1].RPM_Limit);
-        // LOGOMATIC("Global Inverter Settings 2 -- Drive Enable %d\n", globalInverterSettings[1].Drive_Enable);
-        // LOGOMATIC("Global Inverter Settings 3 -- Set AC Current %d\n", globalInverterSettings[2].Set_AC_Current);
-        // LOGOMATIC("Global Inverter Settings 3 -- Set DC Current %d\n", globalInverterSettings[2].Set_DC_Current);
-        // LOGOMATIC("Global Inverter Settings 3 -- RPM Limit %d\n", globalInverterSettings[2].RPM_Limit);
-        // LOGOMATIC("Global Inverter Settings 3 -- Drive Enable %d\n", globalInverterSettings[2].Drive_Enable);
+        // LOGOMATIC("Global Inverter Settings 2 -- Drive Enable %d\n", globalInverterSettings[1].Drive_Enable);;
     }
 }
 
@@ -45,7 +42,6 @@ void controlInverters(bool driveEnable)
 {
     globalInverterSettings[0] = (InverterSettings){0, 0, 0, (uint8_t)driveEnable};
     globalInverterSettings[1] = (InverterSettings){0, 0, 0, (uint8_t)driveEnable};
-    globalInverterSettings[2] = (InverterSettings){0, 0, 0, (uint8_t)driveEnable};
 
     sendInverterCommand();
 }
