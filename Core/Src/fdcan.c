@@ -95,10 +95,9 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
             Error_Handler();
         }
 
-        if (RxHeader.Identifier & 0xFF == GR_DTI_INVERTER)
+        if (RxHeader.Identifier & 0x2016 == 0x2016)
         {
-            uint32_t PacketID = (RxHeader.Identifier >> 8);
-            handleDtiCANMessage(RxHeader.Identifier >> 8, RxData, RxHeader.DataLength);
+            handleDtiCANMessage(RxHeader.Identifier, RxData, RxHeader.DataLength);
         }
 
         uint16_t msgID = (RxHeader.Identifier & 0x00FFF00) >> 8;
