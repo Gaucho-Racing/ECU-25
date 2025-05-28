@@ -62,7 +62,7 @@
      */
     void sendBseAppsViolationMessage(void);
 
-    void validateForwardTorqueRequest(uint16_t* tqr);
+    void validateForwardTorqueRequest(int16_t* tqr);
     /**
      Checks for apps violation given the throttles, throttle request, and brake signal
      */

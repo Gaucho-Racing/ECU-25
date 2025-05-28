@@ -46,7 +46,7 @@ bool checkBSEAPPSviolation(float throttle1, float throttle2, float getPedalTrave
     return fabs(throttle2 - throttle1 * 2) > throttle2 * 0.1 || (brake >= BSE_DEADZONE && getPedalTravel >= 0.25);
 }
 
-void validateForwardTorqueRequest(float* tqr)
+void validateForwardTorqueRequest(int16_t* tqr)
 {
     float deltaH;
     if(millis() - lastHeatCapacityUpdateMillis > 10){
