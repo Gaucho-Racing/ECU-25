@@ -95,7 +95,7 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
             Error_Handler();
         }
 
-        if ((RxHeader.Identifier & ~0xF00) == 0x2016)
+        if ((RxHeader.Identifier & ~0xF00) == 0x2016) // TODO Copy out when ready
         {
             handleDtiCANMessage(RxHeader.Identifier, RxData, RxHeader.DataLength);
         }
