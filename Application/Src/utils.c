@@ -55,10 +55,11 @@ void validateForwardTorqueRequest(uint16_t* tqr)
     else{
         deltaH = millis() - lastHeatCapacityUpdateMillis;
     }
+    lastHeatCapacityUpdateMillis = millis();
     deltaH *=*   tqr**   tqr - MAX_CURRENT_FORWARD * MAX_CURRENT_FORWARD;
     heatCapacity += (heatCapacity + deltaH  > 0) ? deltaH : 0;
-    if(heatCapacity > MAX_AMK_HEAT_CAP * 0.9){
-        
+    if(heatCapacity > MAX_AMK_HEAT_CAP * 0.9 && *tqr > MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity/MAX_AMK_HEAT_CAP - 0.9) / 0.1)){
+        *tqr = MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity/MAX_AMK_HEAT_CAP - 0.9) / 0.1);
     }
 }
 

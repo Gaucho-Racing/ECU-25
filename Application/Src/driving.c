@@ -20,6 +20,7 @@ static const uint8_t driveDisable = 0;
 static const uint8_t driveEnable = 1;
 
 volatile uint16_t heatCapacity = 0;
+volatile int32_t lastHeatCapacityUpdateMillis = BAD_TIME_Negative1;
 
 void drive_standby(void)
 {
@@ -93,7 +94,7 @@ void drive_active_power(void)
     validateForwardTorqueRequest(&rearThrottleRequest);
 
     //Assuming dti inverter is #0
-    globalInverterSettings[0].Set_AC_Current = rearThrottleRequest;
+    globalInverterSettings[0].acCurrent = rearThrottleRequest;
     
     sendInverterCommand();
 
@@ -101,7 +102,7 @@ void drive_active_power(void)
 
     writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveEnable, 1);            // 1 Drive Enable
 
-    writeDtiMessage(MSG_DTI_CONTROL_5, (uint8_t*)&rearThrottleRequest, 2);
+    writeDtiMessage(MSG_DTI_CONTROL_1, (uint8_t*)&rearThrottleRequest, 2);
 
     //TODO: Figure out how and where to sed forward throttle request. Is it just the other two inverters?
 }

@@ -48,6 +48,8 @@ void MX_FDCAN1_Init(void);
 void MX_FDCAN2_Init(void);
 
 /* USER CODE BEGIN Prototypes */
+void writeDtiMessage(uint16_t msgID, uint8_t data[], uint32_t len);
+
 /**
 Write Message
 
