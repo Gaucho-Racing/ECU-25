@@ -95,9 +95,7 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
             Error_Handler();
         }
 
-        LOGOMATIC("Rx: %ld", RxHeader.Identifier & 0xF0FF);
-
-        if (RxHeader.Identifier & 0xF0FF == 0x2016)
+        if ((RxHeader.Identifier & ~0xF00) == 0x2016)
         {
             handleDtiCANMessage(RxHeader.Identifier, RxData, RxHeader.DataLength);
         }
