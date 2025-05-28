@@ -51,7 +51,7 @@ void handleDtiCANMessage(uint16_t msgID, uint8_t* data, uint32_t length)
         case MSG_DTI_DATA_5:
             globalInverterData.msgFive = *(DTI_Data_Msg_Five*)data;
             break;
-        
+
         default:
             LOGOMATIC("Called to handle a DTI message... but it was not the right message ID (%d)\n", msgID);
             return;
