@@ -139,10 +139,10 @@ static float getThrottle2()
 
 static float getBrakeTravel()
 {
-    return (analogRead(BSE_SIGNAL) * ADC_CONV - BRAKE_MIN) / (float)(BRAKE_MAX - BRAKE_MIN);
+    return (analogRead(BSE_SIGNAL) * ADC_CONV - BRAKE_MIN) / (BRAKE_MAX - BRAKE_MIN);
 }
 
 static float getPedalTravel()
 {
-    return (getThrottle2() - THROTTLE_MIN_2) / (float)(THROTTLE_MAX_2 - THROTTLE_MIN_2);
+    return (getThrottle2() + getThrottle1() - THROTTLE_MIN_2 - THROTTLE_MIN_1) / (THROTTLE_MAX_1 + THROTTLE_MAX_2 - THROTTLE_MIN_1 - THROTTLE_MIN_2);
 }
