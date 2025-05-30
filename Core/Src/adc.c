@@ -145,7 +145,7 @@ void MX_ADC1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN ADC1_Init 2 */
-
+  HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
   if(HAL_ADC_Start_DMA(&hadc1, (uint32_t *)adcBuffers.adc1buf, 6) != HAL_OK) {
     Error_Handler();
   }
@@ -239,7 +239,7 @@ void MX_ADC2_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN ADC2_Init 2 */
-
+  HAL_ADCEx_Calibration_Start(&hadc2, ADC_SINGLE_ENDED);
   if(HAL_ADC_Start_DMA(&hadc2, (uint32_t *)adcBuffers.adc2buf, 5) != HAL_OK) {
     Error_Handler();
   }
