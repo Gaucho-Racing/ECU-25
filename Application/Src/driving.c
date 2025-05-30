@@ -17,24 +17,16 @@ volatile bool BSE_APPS_violation = false;
 static const uint8_t driveDisable = 0;
 static const uint8_t driveEnable = 1;
 
-float vehicleSpeedMPH(void)
-{
-    return ((globalInverterData.msgOne.erpm / MOTOR_POLE_PAIRS) * 2 * M_PI * WHEEL_RADIUS_IN) / (GEAR_RATIO * 1056.0);  // TODO: Where did 1056 come from?
-}
-
-void sendBseAppsViolationMessage(void)
-{
-    uint8_t errorMap = 0x1;
-    writeMessage(PrimaryBusCAN, MSG_DASH_WARNING_FLAGS, GR_DASH_PANEL, &errorMap, 1);
-}
+volatile uint16_t heatCapacity = 0;
+volatile int32_t lastHeatCapacityUpdateMillis = BAD_TIME_Negative1;
 
 void drive_standby(void)
 {
     controlInverters(true);
 
-    float throttle2 = (float) analogRead(APPS2_SIGNAL) * ADC_CONV;
-    float pedalTravel = (throttle2 - THROTTLE_MIN_2) / (THROTTLE_MAX_2 - THROTTLE_MIN_2);
+    float pedalTravel = getPedalTravel();
 
+    //escape condition for BSE_APPS_violation according to rules
     if(BSE_APPS_violation && pedalTravel < APPS_DEADZONE){
         BSE_APPS_violation = false;
     }
@@ -49,15 +41,12 @@ void drive_active_idle(void)
 {
     controlInverters(true);
 
-    float throttle1 = analogRead(APPS1_SIGNAL) * ADC_CONV;
-    float throttle2 = analogRead(APPS2_SIGNAL) * ADC_CONV;
-    float brakeTravel = (analogRead(BSE_SIGNAL) * ADC_CONV - BRAKE_MIN) / (BRAKE_MAX - BRAKE_MIN);
-    float pedalTravel = (throttle1 - THROTTLE_MIN_1) / (THROTTLE_MAX_1 - THROTTLE_MIN_1);
-    //float pedalTravel = (throttle2 - THROTTLE_MIN_2) / (THROTTLE_MAX_2 - THROTTLE_MIN_2);
+    float brakeTravel = getBrakeTravel();
+    float pedalTravel = getPedalTravel();
 
-    if (checkBSEAPPSviolation(throttle1, throttle2, pedalTravel, brakeTravel))
+    if (checkBSEAPPSviolation(getThrottle1(), getThrottle2(), pedalTravel, brakeTravel))
     {  
-        writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveDisable, 1);   //0 for disable
+        controlInverters(0);   //0 for disable
         globalStatus.ECUState = DRIVE_STANDBY;
         BSE_APPS_violation = true;
         sendBseAppsViolationMessage();
@@ -75,14 +64,11 @@ void drive_active_idle(void)
 
 void drive_active_power(void)
 {
-    float throttle1 = analogRead(APPS1_SIGNAL) * ADC_CONV;
-    float throttle2 = analogRead(APPS2_SIGNAL) * ADC_CONV;
-    float brakeTravel = (analogRead(BSE_SIGNAL) * ADC_CONV - BRAKE_MIN) / (BRAKE_MAX - BRAKE_MIN);
-    float pedalTravel = (throttle1 - THROTTLE_MIN_1) / (THROTTLE_MAX_1 - THROTTLE_MIN_1);
+    float brakeTravel = getBrakeTravel();
+    float pedalTravel = getPedalTravel();
 
-    if (checkBSEAPPSviolation(throttle1, throttle2, pedalTravel, brakeTravel))
-    {
-        writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveDisable, 1);   //TODO When ready set to 0 for disable
+    if (checkBSEAPPSviolation(getThrottle1(), getThrottle2(), pedalTravel, brakeTravel)){
+        controlInverters(0);   //0 for disable
         globalStatus.ECUState = DRIVE_STANDBY;
         BSE_APPS_violation = true;
         sendBseAppsViolationMessage();
@@ -92,34 +78,35 @@ void drive_active_power(void)
     {
         globalStatus.ECUState = DRIVE_STANDBY;
     }
-    
-    sendInverterCommand();
 
     // Scale throttle request for CAN messaging
 
-    uint16_t throttleRequest = (uint16_t)(pedalTravel * MAX_CURRENT * 10) << 8;
+    uint16_t rearThrottleRequest = (uint16_t)(pedalTravel * MAX_CURRENT_REAR * 10) << 8;
+    uint16_t forwardThrottleRequest = (uint16_t)(pedalTravel * MAX_CURRENT_FORWARD * 10) << 8;
 
-    writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveEnable, 1);            // 1 Drive Enable
+    validateForwardTorqueRequest(&forwardThrottleRequest);
 
-    writeDtiMessage(MSG_DTI_CONTROL_5, (uint8_t*)&throttleRequest, 2);
+    globalInverterSettings[0].acCurrent = rearThrottleRequest;
+    globalInverterSettings[1].acCurrent = forwardThrottleRequest;
+    globalInverterSettings[2].acCurrent = forwardThrottleRequest;
+
+    sendInverterCommand();
 }
 
 void drive_active_regen(void)
 {
-    float throttle1 = analogRead(APPS1_SIGNAL) * ADC_CONV;
-    float throttle2 = analogRead(APPS2_SIGNAL) * ADC_CONV;
-    float brakeTravel = (analogRead(BSE_SIGNAL) * ADC_CONV - BRAKE_MIN) / (BRAKE_MAX - BRAKE_MIN);
-    float pedalTravel = (throttle1 - THROTTLE_MIN_1) / (THROTTLE_MAX_1 - THROTTLE_MIN_1);
-    //float pedalTravel = (throttle2 - THROTTLE_MIN_2) / (THROTTLE_MAX_2 - THROTTLE_MIN_2);
+    float brakeTravel = getBrakeTravel();
+    float pedalTravel = getPedalTravel();
 
-    if(checkBSEAPPSviolation(throttle1, throttle2, pedalTravel, brakeTravel)){
-        writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveDisable, 1);   //0 for disable
+    if(checkBSEAPPSviolation(getThrottle1(), getThrottle2(), pedalTravel, brakeTravel))
+    {
+        controlInverters(0);
         globalStatus.ECUState = DRIVE_STANDBY;
         BSE_APPS_violation = true;
         sendBseAppsViolationMessage();
         return;
     }
-    else if (pedalTravel >= APPS_DEADZONE)
+    else if (getPedalTravel() >= APPS_DEADZONE)
     {
         globalStatus.ECUState = DRIVE_ACTIVE_POWER;
     }
@@ -128,5 +115,35 @@ void drive_active_regen(void)
         globalStatus.ECUState = DRIVE_ACTIVE_IDLE;
     }
 
+    int16_t rearTorqueRequest = (int16_t)(getBrakeTravel() * MAX_CURRENT_REAR * -10) << 8;
+    int16_t forwardTorqueRequest = (int16_t)(getPedalTravel() * MAX_CURRENT_FORWARD * 10) << 8;
+
+    validateForwardTorqueRequest(&forwardTorqueRequest);
+
+    globalInverterSettings[0].acCurrent = rearTorqueRequest;
+    globalInverterSettings[1].acCurrent = forwardTorqueRequest;
+    globalInverterSettings[2].acCurrent = forwardTorqueRequest;
+
     sendInverterCommand();
+}
+
+static float getThrottle1()
+{
+    return analogRead(APPS1_SIGNAL) * ADC_CONV;
+}
+
+static float getThrottle2()
+{
+    return analogRead(APPS2_SIGNAL) * ADC_CONV;
+}
+
+static float getBrakeTravel()
+{
+    // TODO Check which signal
+    return (analogRead(BSE_SIGNAL) * ADC_CONV - BRAKE_MIN) / (BRAKE_MAX - BRAKE_MIN);
+}
+
+static float getPedalTravel()
+{
+    return (getThrottle2() + getThrottle1() - THROTTLE_MIN_2 - THROTTLE_MIN_1) / (THROTTLE_MAX_1 + THROTTLE_MAX_2 - THROTTLE_MIN_1 - THROTTLE_MIN_2);
 }
