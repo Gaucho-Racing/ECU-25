@@ -10,6 +10,8 @@
 
 volatile InverterSettings globalInverterSettings[3] = {0};
 
+volatile DTI_Data globalInverterData = {0};
+
 volatile int32_t lastInverterPingMillis = BAD_TIME_Negative1;
 
 void sendInverterCommand(void)
