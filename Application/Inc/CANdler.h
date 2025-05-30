@@ -5,8 +5,6 @@
 
     extern volatile uint8_t globalSteeringStatusRegenButtonMap;
 
-    volatile DTI_Data globalInverterData = {0};    
-
     /**
     Takes in all CAN messages and handles them as they need to be handled.
     The identifiers can represent which bus the packet came in on, if that is needed.
