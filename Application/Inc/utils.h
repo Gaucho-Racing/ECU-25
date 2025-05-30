@@ -69,6 +69,11 @@
     void validateForwardTorqueRequest(int16_t* tqr);
 
     /**
+    Sends apps violation message
+     */
+    void sendBseAppsViolationMessage(void);
+
+    /**
     Parses the message in question to see if there are any errors.
 
     @param acuMsgTwo ACU Status Message 2
