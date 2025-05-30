@@ -1,6 +1,5 @@
 #include <stdbool.h>
 #include <stdio.h>
-#include <math.h>
 
 #include <fdcan.h>
 #include "stm32g4xx_hal.h"
@@ -10,7 +9,9 @@
 #include "stateMachine.h"
 #include "CANdler.h"
 #include "driving.h"
-#include "customIDs.h"
+#include "math.h"
+#include "inverter.h"
+#include "driving.h"
 
 uint32_t millis(void)
 {
@@ -39,12 +40,39 @@ void setSoftwareLatch(bool close)
     }
 }
 
-bool checkBSEAPPSviolation(float throttle1, float throttle2, float pedalTravel, float brake)
+bool checkBSEAPPSviolation(float throttle1, float throttle2, float getPedalTravel, float brake)
 {
-    //FIXME remove below
-    return false;
+    // End to end factor: 1.886089, offset = 0.2053413
     //Checks 2 * APPS_1 is within 10% of APPS_2 and break + throttle at the same time
-    return fabs(throttle2 - throttle1 * 2) > throttle2 * 0.1 || (brake >= BSE_DEADZONE && pedalTravel >= 0.25);
+    return fabs(throttle2 - throttle1 * 1.91245 - 0.194428785) > throttle2 * 0.1 || (brake >= BSE_DEADZONE && getPedalTravel >= 0.25);
+}
+
+void validateForwardTorqueRequest(int16_t* tqr)
+{
+    float deltaH;
+    if(millis() - lastHeatCapacityUpdateMillis > 10){
+        deltaH = 0.1;
+    }
+    else{
+        deltaH = millis() - lastHeatCapacityUpdateMillis;
+    }
+    lastHeatCapacityUpdateMillis = millis();
+    deltaH *=*   tqr**   tqr - MAX_CURRENT_FORWARD * MAX_CURRENT_FORWARD;
+    heatCapacity += (heatCapacity + deltaH  > 0) ? deltaH : 0;
+    if(heatCapacity > MAX_AMK_HEAT_CAP * 0.9 && *tqr > MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity/MAX_AMK_HEAT_CAP - 0.9) / 0.1)){
+        *tqr = MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity/MAX_AMK_HEAT_CAP - 0.9) / 0.1);
+    }
+}
+
+float vehicleSpeedMPH(void)
+{
+    return ((globalInverterData.msgOne.erpm / MOTOR_POLE_PAIRS) * 2 * M_PI * WHEEL_RADIUS_IN) / (GEAR_RATIO * 1056.0);  // TODO: Where did 1056 come from?
+}
+
+void sendBseAppsViolationMessage(void)
+{
+    uint8_t errorMap = 0x1;
+    writeMessage(PrimaryBusCAN, MSG_DASH_WARNING_FLAGS, GR_DASH_PANEL, &errorMap, 1);
 }
 
 bool ACUError(ACU_Status_MsgTwo *acuMsgTwo)
