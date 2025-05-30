@@ -126,8 +126,9 @@ int main(void)
     /* USER CODE BEGIN 3 */
     //drive_active_power();
 
-    LOGOMATIC("APPS1 is %d at %f\tAPPS2 is %d at %f\tBSE is %d at %f\n", analogRead(APPS1_SIGNAL), analogRead(APPS1_SIGNAL) * ADC_CONV, analogRead(APPS2_SIGNAL), analogRead(APPS2_SIGNAL) * ADC_CONV, analogRead(BSE_SIGNAL), analogRead(BSE_SIGNAL) * ADC_CONV);
+    //LOGOMATIC("APPS1 is %d at %f\tAPPS2 is %d at %f\tBSE is %d at %f\n", analogRead(APPS1_SIGNAL), analogRead(APPS1_SIGNAL) * ADC_CONV, analogRead(APPS2_SIGNAL), analogRead(APPS2_SIGNAL) * ADC_CONV, analogRead(BSE_SIGNAL), analogRead(BSE_SIGNAL) * ADC_CONV);
 
+    LOGOMATIC("%d\n", analogRead(BSE_SIGNAL));
     HAL_Delay(100);
   }
   /* USER CODE END 3 */
