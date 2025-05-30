@@ -92,10 +92,14 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
             Error_Handler();
         }
 
-        uint16_t msgID = (RxHeader.Identifier & 0x00FFF00) >> 8;
-        uint8_t srcID  = (RxHeader.Identifier & 0xFF00000) >> 20;
-        handleCANMessage(msgID, srcID, RxData, RxHeader.DataLength);
-        // We can add the uint32_t timestamp to the handler if needed with RxHeader.RxTimestamp, but no need as of right now
+        if ((RxHeader.Identifier & ~0xF00) == 0x2016)
+        {
+            handleDtiCANMessage(RxHeader.Identifier, RxData, RxHeader.DataLength);
+        }
+        else
+        {
+            handleCANMessage((RxHeader.Identifier & 0x00FFF00) >> 8, (RxHeader.Identifier & 0xFF00000) >> 20, RxData, RxHeader.DataLength);
+        }
 
         if (HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0) != HAL_OK)
         {

@@ -17,6 +17,46 @@ volatile uint8_t errorFlagBitsCan = 0;
 volatile uint8_t globalSteeringStatusRegenButtonMap = 0;
 volatile bool globalRTDstate = 0;
 
+void handleDtiCANMessage(uint16_t msgID, uint8_t* data, uint32_t length)
+{
+    LOGOMATIC("Recieved a CAN message from the DTI!\nMessage ID: %d\tLength: %ld", msgID, length);
+
+    if (length != 8) {
+        numberOfBadMessages++;
+        return;
+    } else {
+        numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
+    }
+
+    switch(msgID)
+    {
+        case MSG_DTI_DATA_1:
+            globalInverterData.msgOne = *(DTI_Data_Msg_One*)data;
+            globalStatus.VehicleSpeed = (uint16_t)vehicleSpeedMPH();
+            break;
+
+        case MSG_DTI_DATA_2:
+            globalInverterData.msgTwo = *(DTI_Data_Msg_Two*)data;
+            break;
+
+        case MSG_DTI_DATA_3:
+            globalInverterData.msgThree = *(DTI_Data_Msg_Three*)data;
+            break;
+
+        case MSG_DTI_DATA_4:
+            globalInverterData.msgFour = *(DTI_Data_Msg_Four*)data;
+            break;
+
+        case MSG_DTI_DATA_5:
+            globalInverterData.msgFive = *(DTI_Data_Msg_Five*)data;
+            break;
+
+        default:
+            //LOGOMATIC("Called to handle a DTI message... but it was not the right message ID (%d)\n", msgID);
+            return;
+    }
+}
+
 void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t length)
 {
     switch(msgID)
@@ -346,67 +386,6 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             /* Do not write to these values elsewhere! */
             globalSteeringStatusRegenButtonMap = msgSteer->regenButtonMap;
             // Handle buttons / regen here
-            break;
-
-        case MSG_DTI_DATA_1:
-            if (length != 8) {
-                numberOfBadMessages++;
-                return;
-            } else {
-                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
-            }
-
-            globalInverterData.msgOne = *(DTI_Data_Msg_One*)data;
-            globalStatus.VehicleSpeed = (uint16_t)vehicleSpeedMPH();
-
-            break;
-
-        case MSG_DTI_DATA_2:
-            if (length != 8) {
-                numberOfBadMessages++;
-                return;
-            } else {
-                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
-            }
-
-            globalInverterData.msgTwo = *(DTI_Data_Msg_Two*)data;
-
-            break;
-
-        case MSG_DTI_DATA_3:
-            if (length != 8) {
-                numberOfBadMessages++;
-                return;
-            } else {
-                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
-            }
-
-            globalInverterData.msgThree = *(DTI_Data_Msg_Three*)data;
-
-            break;
-
-        case MSG_DTI_DATA_4:
-            if (length != 8) {
-                numberOfBadMessages++;
-                return;
-            } else {
-                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
-            }
-
-            globalInverterData.msgFour = *(DTI_Data_Msg_Four*)data;
-
-            break;
-
-        case MSG_DTI_DATA_5:
-            if (length != 8) {
-                numberOfBadMessages++;
-                return;
-            } else {
-                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
-            }
-
-            globalInverterData.msgFive = *(DTI_Data_Msg_Five*)data;
-
             break;
 
         case MSG_SAM_BRAKE_IR:
