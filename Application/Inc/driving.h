@@ -12,13 +12,17 @@
     #define THROTTLE_MIN_1 0.29581270903
     #define THROTTLE_MAX_1 0.424390532544
 
-    // NOT SETUP
+
     #define THROTTLE_MIN_2 0.763270491803
     #define THROTTLE_MAX_2 1.00577876106
 
-    #define BRAKE_MIN 0 // FIXME change when value is known
-    #define BRAKE_MAX 5 // FIXME change when value is known
-    #define MAX_CURRENT 10 // 10 A
+    #define BRAKE_MIN 0.0 // FIXME change when value is known
+    #define BRAKE_MAX 5.0 // FIXME change when value is known
+    #define MAX_CURRENT_REAR 240.0 // A
+    #define MAX_CURRENT_FORWARD 105.0 // A
+    #define NOMINAL_CURRENT_FORWARD 41.0 // A
+
+    #define MAX_AMK_HEAT_CAP 11587
 
     #define GEAR_RATIO 3.55
     #define MOTOR_POLE_PAIRS 10.0
@@ -28,6 +32,8 @@
     #define GLOBALSTATUS_WHEEL_RPM_ADJUSTMENT 3276
 
     extern volatile bool BSE_APPS_violation;
+    extern volatile uint16_t heatCapacity;
+    extern volatile int32_t lastHeatCapacityUpdateMillis;
     
     /**
     Vehicle Speed in MPH
