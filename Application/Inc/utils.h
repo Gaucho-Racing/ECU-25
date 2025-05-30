@@ -52,24 +52,27 @@
     Basically it should immediately start discharging no matter where it is
     */
     void setSoftwareLatch(bool close);
-    
-    /**
-    Returns the vehicle speed
-     */
-    float vehicleSpeedMPH(void);
-    /**
-    Sends a BSE APPS violation warning message
-     */
-    void sendBseAppsViolationMessage(void);
 
     /**
-    Validates the torque request, updates heat capacity and adjusts torque request if needed
+    Checks for BSE APPS violation
      */
-    void validateForwardTorqueRequest(int16_t* tqr);
+    bool checkBSEAPPSviolation(float throttle1, float throttle2, float getPedalTravel, float brake);
+
     /**
      Checks for apps violation given the throttles, throttle request, and brake signal
      */
-    bool checkBSEAPPSviolation(float throttle1, float throttle2, float getPedalTravel, float brake);
+    bool checkBSEAPPSviolation(float throttle1, float throttle2, float pedalTravel, float brake);
+
+    /**
+    Validate torque request to AMK motors and manage heat
+     */
+    void validateForwardTorqueRequest(int16_t* tqr);
+
+    /**
+    Sends apps violation message
+     */
+    void sendBseAppsViolationMessage(void);
+
     /**
     Parses the message in question to see if there are any errors.
 
