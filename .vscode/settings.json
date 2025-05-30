@@ -2,5 +2,10 @@
     "files.associations": {
         "*.h": "c",
         "*.c": "c",
+        "*.py": "python",
+        "*.md": "markdown",
+        "*.ioc": "restructuredtext",
+        "*.s": "code-text-binary",
+        "*.svd": "restructuredtext"
     }
 }
