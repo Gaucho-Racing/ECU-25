@@ -2,7 +2,7 @@
 
 ## Todo
 ### Urgent
-:construction: Motor testing
+:construction: AMK testing
 ### Delayed
 :point_right: Integration testing
 
@@ -53,3 +53,5 @@ Run each of the tools independently:
 * ARM toolchain - `arm-none-eabi-gcc --version`
 * openocd - `openocd --version`
 * ninja - `ninja --version`
+
+`LOGOMATIC` is also your friend, but it only works for CMake preset `Debug`
