@@ -130,6 +130,11 @@ int main(void)
 
     LOGOMATIC("APPS 1, APPS 2\n");
     LOGOMATIC("%d, %d\n", analogRead(APPS1_SIGNAL), analogRead(APPS2_SIGNAL));
+    float brakeTravel = getBrakeTravel();
+    float pedalTravel = getPedalTravel();
+    float throttle1 = getThrottle1();
+    float throttle2 = getThrottle2();
+    LOGOMATIC(!checkBSEAPPSviolation(throttle1, throttle2, pedalTravel, brakeTravel) ? "APPS VIOLATION\n" : "");
     //LOGOMATIC("%d\n", analogRead(BSE_SIGNAL));
     HAL_Delay(100);
   }

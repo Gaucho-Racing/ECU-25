@@ -17,28 +17,6 @@ volatile bool BSE_APPS_violation = false;
 volatile uint16_t heatCapacity = 0;
 volatile int32_t lastHeatCapacityUpdateMillis = BAD_TIME_Negative1;
 
-
-static float getThrottle1()
-{
-    return analogRead(APPS1_SIGNAL) * ADC_CONV;
-}
-
-static float getThrottle2()
-{
-    return analogRead(APPS2_SIGNAL) * ADC_CONV;
-}
-
-static float getBrakeTravel()
-{
-    // TODO Check which signal
-    return (analogRead(BSE_SIGNAL) * ADC_CONV - BRAKE_MIN) / (BRAKE_MAX - BRAKE_MIN);
-}
-
-static float getPedalTravel()
-{
-    return (getThrottle2() + getThrottle1() - THROTTLE_MIN_2 - THROTTLE_MIN_1) / (THROTTLE_MAX_1 + THROTTLE_MAX_2 - THROTTLE_MIN_1 - THROTTLE_MIN_2);
-}
-
 void drive_standby(void)
 {
     controlInverters(true);

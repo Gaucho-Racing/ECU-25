@@ -97,4 +97,9 @@
     */
     bool ACUWarning(ACU_Status_MsgTwo *acuMsgTwo);
 
+    float getThrottle1();
+    float getThrottle2();
+    float getBrakeTravel();
+    float getPedalTravel();
+
 #endif // UTILS_H
