@@ -54,9 +54,19 @@
     void setSoftwareLatch(bool close);
 
     /**
+    Checks for BSE APPS violation
+     */
+    bool checkBSEAPPSviolation(float throttle1, float throttle2, float getPedalTravel, float brake);
+
+    /**
      Checks for apps violation given the throttles, throttle request, and brake signal
      */
     bool checkBSEAPPSviolation(float throttle1, float throttle2, float pedalTravel, float brake);
+
+    /**
+    Validate torque request to AMK motors and manage heat
+     */
+    void validateForwardTorqueRequest(int16_t* tqr);
 
     /**
     Parses the message in question to see if there are any errors.
