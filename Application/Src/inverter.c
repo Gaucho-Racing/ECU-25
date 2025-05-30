@@ -21,7 +21,7 @@ void sendInverterCommand(void)
         lastInverterPingMillis = millis();
 
         writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&globalInverterSettings[0].driveEnable, 1);
-        writeDtiMessage(MSG_DTI_CONTROL_5, (uint8_t*)globalInverterSettings[0].acCurrent, 2);
+        writeDtiMessage(MSG_DTI_CONTROL_5, (uint8_t*)&globalInverterSettings[0].acCurrent, 2);
 
         writeMessage(PrimaryBusCAN, MSG_INVERTER_COMMAND, GR_GR_INVERTER_1, (uint8_t*)&globalInverterSettings[1], 7);
         writeMessage(PrimaryBusCAN, MSG_INVERTER_COMMAND, GR_GR_INVERTER_2, (uint8_t*)&globalInverterSettings[2], 7);
