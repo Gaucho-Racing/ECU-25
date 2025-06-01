@@ -66,7 +66,7 @@ bool checkBSEAPPSviolation(float throttle1, float throttle2, float getPedalTrave
 
 float vehicleSpeedMPH(void)
 {
-    return ((globalInverterData.msgOne.erpm / MOTOR_POLE_PAIRS) * 2 * M_PI * WHEEL_RADIUS_IN) / (GEAR_RATIO * 1056.0);  // TODO: Where did 1056 come from?
+    return (globalInverterData.msgOne.erpm / MOTOR_POLE_PAIRS) * M_TWOPI * WHEEL_RADIUS_IN / (GEAR_RATIO * MPH_TO_INCH_PER_MIN_CONV);
 }
 
 void sendBseAppsViolationMessage(void)
