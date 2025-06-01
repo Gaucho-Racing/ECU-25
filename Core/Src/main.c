@@ -145,7 +145,7 @@ int main(void)
     drive_active_power();
 
     // Already exists in stateMachine but copied over for cool factor
-    if (globalStatus.ECUState != ERRORSTATE)
+    if (globalStatus.ECUState == ERRORSTATE)  // Just to see the red
     {
         HAL_GPIO_WritePin(TSSI_G_CONTROL_GPIO_Port, TSSI_G_CONTROL_Pin, GPIO_PIN_SET);
         HAL_GPIO_WritePin(TSSI_R_CONTROL_GPIO_Port, TSSI_R_CONTROL_Pin, GPIO_PIN_RESET);
