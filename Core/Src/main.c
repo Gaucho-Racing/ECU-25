@@ -157,7 +157,7 @@ int main(void)
     //  ;
     //}
     //LOGOMATIC("%d\n", analogRead(BSE_SIGNAL));
-    HAL_Delay(100);
+    HAL_Delay(150);
   }
   /* USER CODE END 3 */
 }
