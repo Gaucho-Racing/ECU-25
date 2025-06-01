@@ -155,8 +155,8 @@ int main(void)
         sendBseAppsViolationMessage();
     }
     uint16_t rearThrottleRequest = (uint16_t)(pedalTravel * MAX_CURRENT_REAR * 10) << 8;
-    writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveActive, 1);
-    writeDtiMessage(MSG_DTI_CONTROL_1, (uint8_t*)&rearThrottleRequest, 2);
+//    writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveActive, 1);
+//    writeDtiMessage(MSG_DTI_CONTROL_5, (uint8_t*)&rearThrottleRequest, 2);
 
     float x = (getThrottle2() - getThrottle1() * 1.9932988878 - 0.125125991408) / getThrottle2();
     x *= 100;
