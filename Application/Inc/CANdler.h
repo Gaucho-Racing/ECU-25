@@ -5,8 +5,6 @@
 
     extern volatile uint8_t globalSteeringStatusRegenButtonMap;
 
-    void handleDtiCANMessage(uint16_t msgID, uint8_t* data, uint32_t length);
-
     /**
     Takes in all CAN messages and handles them as they need to be handled.
     The identifiers can represent which bus the packet came in on, if that is needed.
@@ -19,6 +17,7 @@
     @param length Length of the binary data array
     */
     void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t length);
+    void handleDtiCANMessage(uint16_t msgID, uint8_t* data, uint32_t length);
 
     typedef enum {
         PrimaryBusCAN = (uint8_t)0,

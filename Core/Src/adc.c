@@ -77,8 +77,8 @@ void MX_ADC1_Init(void)
   hadc1.Init.DMAContinuousRequests = ENABLE;
   hadc1.Init.Overrun = ADC_OVR_DATA_PRESERVED;
   hadc1.Init.OversamplingMode = ENABLE;
-  hadc1.Init.Oversampling.Ratio = ADC_OVERSAMPLING_RATIO_8;
-  hadc1.Init.Oversampling.RightBitShift = ADC_RIGHTBITSHIFT_3;
+  hadc1.Init.Oversampling.Ratio = ADC_OVERSAMPLING_RATIO_256;
+  hadc1.Init.Oversampling.RightBitShift = ADC_RIGHTBITSHIFT_8;
   hadc1.Init.Oversampling.TriggeredMode = ADC_TRIGGEREDMODE_SINGLE_TRIGGER;
   hadc1.Init.Oversampling.OversamplingStopReset = ADC_REGOVERSAMPLING_CONTINUED_MODE;
   if (HAL_ADC_Init(&hadc1) != HAL_OK)
@@ -152,7 +152,7 @@ void MX_ADC1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN ADC1_Init 2 */
-  HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);   // TODO Make sure to add this to other boards where ADC is used
+  HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
   if(HAL_ADC_Start_DMA(&hadc1, (uint32_t *)adcBuffers.adc1buf, 6) != HAL_OK) {
     Error_Handler();
   }
@@ -250,7 +250,7 @@ void MX_ADC2_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN ADC2_Init 2 */
-  HAL_ADCEx_Calibration_Start(&hadc2, ADC_SINGLE_ENDED);  // TODO Make sure to add this to other boards where ADC is used
+  HAL_ADCEx_Calibration_Start(&hadc2, ADC_SINGLE_ENDED);
   if(HAL_ADC_Start_DMA(&hadc2, (uint32_t *)adcBuffers.adc2buf, 5) != HAL_OK) {
     Error_Handler();
   }

@@ -36,7 +36,7 @@ FDCAN_TxHeaderTypeDef TxHeader = {
     .MessageMarker = 0 // also change this to a real address if you change fifo control
 };
 
-void writeDtiMessage(uint16_t msgID, uint8_t data[], uint32_t len)  // TODO Copy over when ready
+void writeDtiMessage(uint16_t msgID, uint8_t data[], uint32_t len)
 {
     TxHeader.Identifier = msgID;
     TxHeader.DataLength = len;
@@ -95,7 +95,7 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
             Error_Handler();
         }
 
-        if ((RxHeader.Identifier & ~0xF00) == 0x2016) // TODO Copy out when ready
+        if ((RxHeader.Identifier & ~0xF00) == 0x2016)
         {
             handleDtiCANMessage(RxHeader.Identifier, RxData, RxHeader.DataLength);
         }

@@ -126,8 +126,28 @@ int main(void)
     /* USER CODE BEGIN 3 */
     //drive_active_power();
 
-    LOGOMATIC("APPS1 is %d at %f\tAPPS2 is %d at %f\tBSE is %d at %f\n", analogRead(APPS1_SIGNAL), analogRead(APPS1_SIGNAL) * ADC_CONV, analogRead(APPS2_SIGNAL), analogRead(APPS2_SIGNAL) * ADC_CONV, analogRead(BSE_SIGNAL), analogRead(BSE_SIGNAL) * ADC_CONV);
+    //LOGOMATIC("APPS1 is %d at %f\tAPPS2 is %d at %f\tBSE is %d at %f\n", analogRead(APPS1_SIGNAL), analogRead(APPS1_SIGNAL) * ADC_CONV, analogRead(APPS2_SIGNAL), analogRead(APPS2_SIGNAL) * ADC_CONV, analogRead(BSE_SIGNAL), analogRead(BSE_SIGNAL) * ADC_CONV);
 
+    //LOGOMATIC("APPS 1, APPS 2\n");
+    float brakeTravel = getBrakeTravel();
+    float pedalTravel = getPedalTravel();
+    float throttle1 = getThrottle1();
+    float throttle2 = getThrottle2();
+    bool appsViolation = checkBSEAPPSviolation(throttle1, throttle2, pedalTravel, brakeTravel);
+    float x = (throttle2 - throttle1 * 1.91245 - 0.194428785) / throttle2;
+    x *= 100;
+    pedalTravel *= 100;
+    pedalTravel = pedalTravel < 5 ? 0 : pedalTravel - 5;
+    LOGOMATIC("%lf, %lf\n", pedalTravel, x);
+    LOGOMATIC(appsViolation ? "APPS VIOLATION\n" : "");
+    //TODO: FIX IMPLEMENTATION OF APPS DEADZONE, SHOULDN'T JUMP DIRECTLY TO 5
+    //TODO: FIX SCALING
+    //TODO: PUT MOTOR STUFF IN 100HZ INVERTER CONTROL LOOP
+    
+    //while(appsViolation){
+    //  ;
+    //}
+    //LOGOMATIC("%d\n", analogRead(BSE_SIGNAL));
     HAL_Delay(100);
   }
   /* USER CODE END 3 */
