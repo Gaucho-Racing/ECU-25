@@ -26,7 +26,7 @@ void sendInverterCommand(void)
         lastInverterPingMillis = millis();
 
         writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&globalInverterSettings[0].driveEnable, 1);
-        writeDtiMessage(MSG_DTI_CONTROL_1, (uint8_t*)&globalInverterSettings[0].acCurrent, 2);
+        writeDtiMessage(MSG_DTI_CONTROL_5, (uint8_t*)&globalInverterSettings[0].acCurrent, 2);
 
         //Check heat for first forward motor
         float deltaH =  0.01 * (globalInverterSettings[1].driveEnable * globalInverterSettings[1].acCurrent * globalInverterSettings[1].acCurrent - NOMINAL_CURRENT_FORWARD * NOMINAL_CURRENT_FORWARD);
