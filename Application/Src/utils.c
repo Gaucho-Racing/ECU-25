@@ -12,7 +12,6 @@
 #include "math.h"
 #include "inverter.h"
 #include "driving.h"
-#include "adc.h"
 
 uint32_t millis(void)
 {
@@ -48,7 +47,7 @@ bool checkBSEAPPSviolation(float throttle1, float throttle2, float getPedalTrave
     return fabs(throttle2 - throttle1 * 1.91245 - 0.194428785) > throttle2 * 0.1 || (brake >= BSE_DEADZONE && getPedalTravel >= 0.25);
 }
 
-void validateForwardTorqueRequest(int16_t* tqr)
+/*void validateForwardTorqueRequest(int16_t* tqr)
 {
     float deltaH;
     if(millis() - lastHeatCapacityUpdateMillis > 10){
@@ -58,16 +57,16 @@ void validateForwardTorqueRequest(int16_t* tqr)
         deltaH = millis() - lastHeatCapacityUpdateMillis;
     }
     lastHeatCapacityUpdateMillis = millis();
-    deltaH *=*   tqr**   tqr - MAX_CURRENT_FORWARD * MAX_CURRENT_FORWARD;
+    deltaH *=*   tqr**   tqr - NOMINAL_CURRENT_FORWARD * NOMINAL_CURRENT_FORWARD;
     heatCapacity += (heatCapacity + deltaH  > 0) ? deltaH : 0;
     if(heatCapacity > MAX_AMK_HEAT_CAP * 0.9 && *tqr > MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity/MAX_AMK_HEAT_CAP - 0.9) / 0.1)){
         *tqr = MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity/MAX_AMK_HEAT_CAP - 0.9) / 0.1);
     }
-}
+}*/
 
 float vehicleSpeedMPH(void)
 {
-    return ((globalInverterData.msgOne.erpm / MOTOR_POLE_PAIRS) * 2 * M_PI * WHEEL_RADIUS_IN) / (GEAR_RATIO * 1056.0);  // TODO: Where did 1056 come from?
+    return (globalInverterData.msgOne.erpm * M_TWOPI * WHEEL_RADIUS_IN) / (MOTOR_POLE_PAIRS * GEAR_RATIO * MPH_TO_INCH_PER_MIN_CONV);
 }
 
 void sendBseAppsViolationMessage(void)
@@ -138,25 +137,4 @@ bool ACUWarning(ACU_Status_MsgTwo *acuMsgTwo)
     }
 
     return false;
-}
-
-float getThrottle1()
-{
-    return analogRead(APPS1_SIGNAL) * ADC_CONV;
-}
-
-float getThrottle2()
-{
-    return analogRead(APPS2_SIGNAL) * ADC_CONV;
-}
-
-float getBrakeTravel()
-{
-    // TODO Check which signal
-    return (analogRead(BSE_SIGNAL) * ADC_CONV - BRAKE_MIN) / (BRAKE_MAX - BRAKE_MIN);
-}
-
-float getPedalTravel()
-{
-    return (getThrottle2() + getThrottle1() - THROTTLE_MIN_2 - THROTTLE_MIN_1) / (THROTTLE_MAX_1 + THROTTLE_MAX_2 - THROTTLE_MIN_1 - THROTTLE_MIN_2);
 }
