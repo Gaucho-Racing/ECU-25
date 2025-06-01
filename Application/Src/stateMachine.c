@@ -76,13 +76,16 @@ void stateMachineTick(void)
         break;
     }
 
+    // TODO Copy over when ready
     if (globalStatus.ECUState != ERRORSTATE)
     {
         HAL_GPIO_WritePin(TSSI_G_CONTROL_GPIO_Port, TSSI_G_CONTROL_Pin, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(TSSI_R_CONTROL_GPIO_Port, TSSI_R_CONTROL_Pin, GPIO_PIN_RESET);
     }
     else
     {
-//        HAL_GPIO_WritePin(TSSI_R_CONTROL_GPIO_Port, TSSI_R_CONTROL_Pin, ???); // FIXME Must flash
+        HAL_GPIO_WritePin(TSSI_G_CONTROL_GPIO_Port, TSSI_G_CONTROL_Pin, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(TSSI_R_CONTROL_GPIO_Port, TSSI_R_CONTROL_Pin, GPIO_PIN_SET);
     }
 
     StatusLump correctlyScaledValues = scaledECUStatusMsgForTx();
