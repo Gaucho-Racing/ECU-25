@@ -142,7 +142,7 @@ int main(void)
     LOGOMATIC(appsViolation ? "APPS VIOLATION\n" : "");
 
     // Already exists in stateMachine but copied over for cool factor
-        if (globalStatus.ECUState != ERRORSTATE)
+        /*if (globalStatus.ECUState != ERRORSTATE)
     {
         HAL_GPIO_WritePin(TSSI_G_CONTROL_GPIO_Port, TSSI_G_CONTROL_Pin, GPIO_PIN_SET);
         HAL_GPIO_WritePin(TSSI_R_CONTROL_GPIO_Port, TSSI_R_CONTROL_Pin, GPIO_PIN_RESET);
@@ -151,7 +151,7 @@ int main(void)
     {
         HAL_GPIO_WritePin(TSSI_G_CONTROL_GPIO_Port, TSSI_G_CONTROL_Pin, GPIO_PIN_RESET);
         HAL_GPIO_WritePin(TSSI_R_CONTROL_GPIO_Port, TSSI_R_CONTROL_Pin, GPIO_PIN_SET);
-    }
+    }*/
     
     //while(appsViolation){
     //  ;
