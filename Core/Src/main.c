@@ -137,7 +137,8 @@ int main(void)
     float x = (throttle2 - throttle1 * 1.9932988878 - 0.125125991408) / throttle2;
     x *= 100;
     pedalTravel *= 100;
-    //pedalTravel = pedalTravel < 5 ? 0 : pedalTravel - 5;
+    pedalTravel = pedalTravel < 5 ? 0 : pedalTravel - 5;
+    pedalTravel /= 0.95;
     LOGOMATIC("%lf, %lf, %lf, %lf\n", pedalTravel, throttle1, throttle2, x);
     LOGOMATIC(appsViolation ? "APPS VIOLATION\n" : "");
 
