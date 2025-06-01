@@ -134,15 +134,15 @@ int main(void)
     float throttle1 = getThrottle1();
     float throttle2 = getThrottle2();
     bool appsViolation = checkBSEAPPSviolation(throttle1, throttle2, pedalTravel, brakeTravel);
-    //float x = (throttle2 - throttle1 * 1.9932988878 - 0.125125991408) / throttle2;
+    float x = (throttle2 - throttle1 * 1.9932988878 - 0.125125991408) / throttle2;
     //x *= 100;
     pedalTravel *= 100;
     //pedalTravel = pedalTravel < 5 ? 0 : pedalTravel - 5;
-    LOGOMATIC("%lf, %lf, %lf\n", pedalTravel, throttle1, throttle2);
+    LOGOMATIC("%lf, %lf, %lf, %lf\n", pedalTravel, throttle1, throttle2, x);
     LOGOMATIC(appsViolation ? "APPS VIOLATION\n" : "");
 
     // Already exists in stateMachine but copied over for cool factor
-        /*if (globalStatus.ECUState != ERRORSTATE)
+    if (globalStatus.ECUState != ERRORSTATE)
     {
         HAL_GPIO_WritePin(TSSI_G_CONTROL_GPIO_Port, TSSI_G_CONTROL_Pin, GPIO_PIN_SET);
         HAL_GPIO_WritePin(TSSI_R_CONTROL_GPIO_Port, TSSI_R_CONTROL_Pin, GPIO_PIN_RESET);
@@ -151,7 +151,7 @@ int main(void)
     {
         HAL_GPIO_WritePin(TSSI_G_CONTROL_GPIO_Port, TSSI_G_CONTROL_Pin, GPIO_PIN_RESET);
         HAL_GPIO_WritePin(TSSI_R_CONTROL_GPIO_Port, TSSI_R_CONTROL_Pin, GPIO_PIN_SET);
-    }*/
+    }
     
     //while(appsViolation){
     //  ;
