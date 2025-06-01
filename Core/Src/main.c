@@ -129,18 +129,20 @@ int main(void)
     //LOGOMATIC("APPS1 is %d at %f\tAPPS2 is %d at %f\tBSE is %d at %f\n", analogRead(APPS1_SIGNAL), analogRead(APPS1_SIGNAL) * ADC_CONV, analogRead(APPS2_SIGNAL), analogRead(APPS2_SIGNAL) * ADC_CONV, analogRead(BSE_SIGNAL), analogRead(BSE_SIGNAL) * ADC_CONV);
 
     //LOGOMATIC("APPS 1, APPS 2\n");
-    float brakeTravel = getBrakeTravel();
-    float pedalTravel = getPedalTravel();
-    float throttle1 = getThrottle1();
-    float throttle2 = getThrottle2();
-    bool appsViolation = checkBSEAPPSviolation(throttle1, throttle2, pedalTravel, brakeTravel);
-    float x = (throttle2 - throttle1 * 1.9932988878 - 0.125125991408) / throttle2;
-    x *= 100;
-    pedalTravel *= 100;
-    pedalTravel = pedalTravel < 5 ? 0 : pedalTravel - 5;
-    pedalTravel /= 0.95;
-    LOGOMATIC("%lf, %lf, %lf, %lf\n", pedalTravel, throttle1, throttle2, x);
-    LOGOMATIC(appsViolation ? "APPS VIOLATION\n" : "");
+    // float brakeTravel = getBrakeTravel();
+    // float pedalTravel = getPedalTravel();
+    // float throttle1 = getThrottle1();
+    // float throttle2 = getThrottle2();
+    // bool appsViolation = checkBSEAPPSviolation(throttle1, throttle2, pedalTravel, brakeTravel);
+    // float x = (throttle2 - throttle1 * 1.9932988878 - 0.125125991408) / throttle2;
+    // x *= 100;
+    // pedalTravel *= 100;
+    // pedalTravel = pedalTravel < 5 ? 0 : pedalTravel - 5;
+    // pedalTravel /= 0.95;
+    // LOGOMATIC("%lf, %lf, %lf, %lf\n", pedalTravel, throttle1, throttle2, x);
+    // LOGOMATIC(appsViolation ? "APPS VIOLATION\n" : "");
+
+    drive_active_power();
 
     // Already exists in stateMachine but copied over for cool factor
     if (globalStatus.ECUState != ERRORSTATE)
