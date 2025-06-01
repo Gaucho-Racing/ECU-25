@@ -138,7 +138,7 @@ int main(void)
     x *= 100;
     pedalTravel *= 100;
     //pedalTravel = pedalTravel < 5 ? 0 : pedalTravel - 5;
-    LOGOMATIC("%lf, %lf, %lf, %lf\n", pedalTravel, throttle1, throttle2, x);
+    LOGOMATIC("%lf, %lf\n", throttle1, throttle2);
     LOGOMATIC(appsViolation ? "APPS VIOLATION\n" : "");
 
     // Already exists in stateMachine but copied over for cool factor
