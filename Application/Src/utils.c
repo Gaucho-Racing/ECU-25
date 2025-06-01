@@ -47,7 +47,7 @@ bool checkBSEAPPSviolation(float throttle1, float throttle2, float getPedalTrave
     return fabs(throttle2 - throttle1 * 1.91245 - 0.194428785) > throttle2 * 0.1 || (brake >= BSE_DEADZONE && getPedalTravel >= 0.25);
 }
 
-void validateForwardTorqueRequest(int16_t* tqr)
+/*void validateForwardTorqueRequest(int16_t* tqr)
 {
     float deltaH;
     if(millis() - lastHeatCapacityUpdateMillis > 10){
@@ -62,7 +62,7 @@ void validateForwardTorqueRequest(int16_t* tqr)
     if(heatCapacity > MAX_AMK_HEAT_CAP * 0.9 && *tqr > MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity/MAX_AMK_HEAT_CAP - 0.9) / 0.1)){
         *tqr = MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity/MAX_AMK_HEAT_CAP - 0.9) / 0.1);
     }
-}
+}*/
 
 float vehicleSpeedMPH(void)
 {

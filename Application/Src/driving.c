@@ -14,8 +14,8 @@
 
 volatile bool BSE_APPS_violation = false;
 
-volatile uint16_t heatCapacity = 0;
-volatile int32_t lastHeatCapacityUpdateMillis = BAD_TIME_Negative1;
+//volatile uint16_t heatCapacity = 0;
+//volatile int32_t lastHeatCapacityUpdateMillis = BAD_TIME_Negative1;
 
 
 static float getThrottle1()
@@ -103,7 +103,7 @@ void drive_active_power(void)
     uint16_t rearThrottleRequest = (uint16_t)(pedalTravel * MAX_CURRENT_REAR * 10) << 8;
     uint16_t forwardThrottleRequest = (uint16_t)(pedalTravel * MAX_CURRENT_FORWARD * 10) << 8;
 
-    validateForwardTorqueRequest((int16_t*)&forwardThrottleRequest);
+    //validateForwardTorqueRequest((int16_t*)&forwardThrottleRequest);
 
     globalInverterSettings[0].acCurrent = rearThrottleRequest;
     globalInverterSettings[1].acCurrent = forwardThrottleRequest;
@@ -137,7 +137,7 @@ void drive_active_regen(void)
     int16_t rearTorqueRequest = (int16_t)(getBrakeTravel() * MAX_CURRENT_REAR * -10) << 8;
     int16_t forwardTorqueRequest = (int16_t)(getPedalTravel() * MAX_CURRENT_FORWARD * 10) << 8;
 
-    validateForwardTorqueRequest(&forwardTorqueRequest);
+    //validateForwardTorqueRequest(&forwardTorqueRequest);
 
     globalInverterSettings[0].acCurrent = rearTorqueRequest;
     globalInverterSettings[1].acCurrent = forwardTorqueRequest;
