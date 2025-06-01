@@ -158,6 +158,10 @@ int main(void)
     writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveActive, 1);
     writeDtiMessage(MSG_DTI_CONTROL_1, (uint8_t*)&rearThrottleRequest, 2);
 
+    float x = (getThrottle2() - getThrottle1() * 1.9932988878 - 0.125125991408) / getThrottle2();
+    x *= 100;
+    LOGOMATIC("%lf, %lf, %lf, %lf\n", pedalTravel, getThrottle1(), getThrottle2(), x);
+
     // Already exists in stateMachine but copied over for cool factor
     if (globalStatus.ECUState != ERRORSTATE)
     {
@@ -234,7 +238,12 @@ void SystemClock_Config(void)
   */
 void Error_Handler(void)
 {
+  
   /* USER CODE BEGIN Error_Handler_Debug */
+
+  HAL_GPIO_WritePin(TSSI_G_CONTROL_GPIO_Port, TSSI_G_CONTROL_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(TSSI_R_CONTROL_GPIO_Port, TSSI_R_CONTROL_Pin, GPIO_PIN_SET);  // TODO Implement 2-5 Hz 50% flash
+
   __disable_irq();
 
   if (globalStatus.TractiveSystemVoltage >= TS_VOLTAGE_OFF_LIMIT)
