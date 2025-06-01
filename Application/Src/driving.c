@@ -64,7 +64,8 @@ void drive_active_power(void)
     float brakeTravel = getBrakeTravel();
     float pedalTravel = getPedalTravel();
 
-    if (checkBSEAPPSviolation(getThrottle1(), getThrottle2(), pedalTravel, brakeTravel)){
+    if (checkBSEAPPSviolation(getThrottle1(), getThrottle2(), pedalTravel, brakeTravel))
+    {
         controlInverters(0);   //0 for disable
         globalStatus.ECUState = DRIVE_STANDBY;
         BSE_APPS_violation = true;
