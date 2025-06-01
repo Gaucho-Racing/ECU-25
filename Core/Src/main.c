@@ -145,7 +145,7 @@ int main(void)
     drive_active_power();
 
     // Already exists in stateMachine but copied over for cool factor
-    if (globalStatus.ECUState == ERRORSTATE)  // Just to see the red
+    if (globalStatus.ECUState != ERRORSTATE)
     {
         HAL_GPIO_WritePin(TSSI_G_CONTROL_GPIO_Port, TSSI_G_CONTROL_Pin, GPIO_PIN_SET);
         HAL_GPIO_WritePin(TSSI_R_CONTROL_GPIO_Port, TSSI_R_CONTROL_Pin, GPIO_PIN_RESET);
@@ -153,7 +153,7 @@ int main(void)
     else
     {
         HAL_GPIO_WritePin(TSSI_G_CONTROL_GPIO_Port, TSSI_G_CONTROL_Pin, GPIO_PIN_RESET);
-        HAL_GPIO_WritePin(TSSI_R_CONTROL_GPIO_Port, TSSI_R_CONTROL_Pin, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(TSSI_R_CONTROL_GPIO_Port, TSSI_R_CONTROL_Pin, GPIO_PIN_SET);  // Implement 2-5 Hz 50% flash
     }
     
     //while(appsViolation){
