@@ -76,6 +76,15 @@ void stateMachineTick(void)
         break;
     }
 
+    if (globalStatus.ECUState != ERRORSTATE)
+    {
+        HAL_GPIO_WritePin(TSSI_G_CONTROL_GPIO_Port, TSSI_G_CONTROL_Pin, SET);
+    }
+    else
+    {
+//        HAL_GPIO_WritePin(TSSI_R_CONTROL_GPIO_Port, TSSI_R_CONTROL_Pin, ???); // FIXME Must flash
+    }
+
     StatusLump correctlyScaledValues = scaledECUStatusMsgForTx();
 
     if (HAL_GetTick() - lastECUStatusMsgTick > howOftenToSpamECUStatusMsgs)

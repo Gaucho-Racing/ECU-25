@@ -140,9 +140,6 @@ int main(void)
     pedalTravel = pedalTravel < 5 ? 0 : pedalTravel - 5;
     LOGOMATIC("%lf, %lf\n", pedalTravel, x);
     LOGOMATIC(appsViolation ? "APPS VIOLATION\n" : "");
-    //TODO: FIX IMPLEMENTATION OF APPS DEADZONE, SHOULDN'T JUMP DIRECTLY TO 5
-    //TODO: FIX SCALING
-    //TODO: PUT MOTOR STUFF IN 100HZ INVERTER CONTROL LOOP
     
     //while(appsViolation){
     //  ;
