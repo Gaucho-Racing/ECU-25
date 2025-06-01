@@ -134,11 +134,11 @@ int main(void)
     float throttle1 = getThrottle1();
     float throttle2 = getThrottle2();
     bool appsViolation = checkBSEAPPSviolation(throttle1, throttle2, pedalTravel, brakeTravel);
-    float x = (throttle2 - throttle1 * 1.91245 - 0.194428785) / throttle2;
-    x *= 100;
+    //float x = (throttle2 - throttle1 * 1.91245 - 0.194428785) / throttle2;
+    //x *= 100;
     pedalTravel *= 100;
-    pedalTravel = pedalTravel < 5 ? 0 : pedalTravel - 5;
-    LOGOMATIC("%lf, %lf\n", pedalTravel, x);
+    //pedalTravel = pedalTravel < 5 ? 0 : pedalTravel - 5;
+    LOGOMATIC("%lf, %lf, %lf\n", pedalTravel, throttle1, throttle2);
     LOGOMATIC(appsViolation ? "APPS VIOLATION\n" : "");
 
     // Already exists in stateMachine but copied over for cool factor
