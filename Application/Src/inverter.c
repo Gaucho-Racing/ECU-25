@@ -26,17 +26,17 @@ void sendInverterCommand(void)
         lastInverterPingMillis = millis();
 
         writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&globalInverterSettings[0].driveEnable, 1);
-        writeDtiMessage(MSG_DTI_CONTROL_5, (uint8_t*)&globalInverterSettings[0].acCurrent, 2);
+        writeDtiMessage(MSG_DTI_CONTROL_1, (uint8_t*)&globalInverterSettings[0].acCurrent, 2);
 
         //Check heat for first forward motor
-        float deltaH = globalInverterSettings[1].driveEnable * 0.1 * (globalInverterSettings[1].acCurrent * globalInverterSettings[1].acCurrent - MAX_CURRENT_FORWARD * MAX_CURRENT_FORWARD);
+        float deltaH =  0.1 * (globalInverterSettings[1].driveEnable * globalInverterSettings[1].acCurrent * globalInverterSettings[1].acCurrent - MAX_CURRENT_FORWARD * MAX_CURRENT_FORWARD);
         heatCapacity1 += (heatCapacity1 + deltaH  > 0) ? deltaH : 0;
         if(heatCapacity1 > MAX_AMK_HEAT_CAP * 0.9 && globalInverterSettings[1].acCurrent > MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity1/MAX_AMK_HEAT_CAP - 0.9) / 0.1)){
             globalInverterSettings[1].acCurrent = MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity1/MAX_AMK_HEAT_CAP - 0.9) / 0.1);
         }
 
         //Check heat for second motor
-        deltaH = globalInverterSettings[2].driveEnable * 0.1 * (globalInverterSettings[2].acCurrent * globalInverterSettings[2].acCurrent - MAX_CURRENT_FORWARD * MAX_CURRENT_FORWARD);
+        deltaH = 0.1 * (globalInverterSettings[2].driveEnable * globalInverterSettings[2].acCurrent * globalInverterSettings[2].acCurrent - MAX_CURRENT_FORWARD * MAX_CURRENT_FORWARD);
         heatCapacity2 += (heatCapacity2 + deltaH  > 0) ? deltaH : 0;
         if(heatCapacity2 > MAX_AMK_HEAT_CAP * 0.9 && globalInverterSettings[2].acCurrent > MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity2/MAX_AMK_HEAT_CAP - 0.9) / 0.1)){
             globalInverterSettings[2].acCurrent = MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity2/MAX_AMK_HEAT_CAP - 0.9) / 0.1);
