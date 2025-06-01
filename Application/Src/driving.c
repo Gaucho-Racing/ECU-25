@@ -81,7 +81,7 @@ void drive_active_power(void)
     uint16_t rearThrottleRequest = (uint16_t)(pedalTravel * MAX_CURRENT_REAR * 10) << 8;
     uint16_t forwardThrottleRequest = (uint16_t)(pedalTravel * MAX_CURRENT_FORWARD * 10) << 8;
 
-    validateForwardTorqueRequest(&forwardThrottleRequest);
+    validateForwardTorqueRequest((int16_t*)&forwardThrottleRequest);
 
     globalInverterSettings[0].acCurrent = rearThrottleRequest;
     globalInverterSettings[1].acCurrent = forwardThrottleRequest;
