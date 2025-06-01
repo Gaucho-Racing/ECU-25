@@ -154,7 +154,6 @@ int main(void)
         globalStatus.ECUState = DRIVE_STANDBY;
         BSE_APPS_violation = true;
         sendBseAppsViolationMessage();
-        return;
     }
     uint16_t rearThrottleRequest = (uint16_t)((pedalTravel - 0.05) / 0.95 * MAX_CURRENT_REAR * 10) << 8;
     uint16_t forwardThrottleRequest = (uint16_t)(((pedalTravel - 0.05) / 0.95 * MAX_CURRENT_FORWARD  + 327.69) * 100);
