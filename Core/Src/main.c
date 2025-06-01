@@ -119,6 +119,7 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  uint8_t driveActive = 1;
   while (1)
   {
     /* USER CODE END WHILE */
@@ -142,7 +143,23 @@ int main(void)
     // LOGOMATIC("%lf, %lf, %lf, %lf\n", pedalTravel, throttle1, throttle2, x);
     // LOGOMATIC(appsViolation ? "APPS VIOLATION\n" : "");
 
-    drive_active_power();
+    //drive_active_power();
+
+    float brakeTravel = getBrakeTravel();
+    float pedalTravel = getPedalTravel();
+
+    if (checkBSEAPPSviolation(getThrottle1(), getThrottle2(), pedalTravel, brakeTravel))
+    {
+        controlInverters(0);   //0 for disable
+        globalStatus.ECUState = DRIVE_STANDBY;
+        BSE_APPS_violation = true;
+        sendBseAppsViolationMessage();
+        return;
+    }
+    uint16_t rearThrottleRequest = (uint16_t)((pedalTravel - 0.05) / 0.95 * MAX_CURRENT_REAR * 10) << 8;
+    uint16_t forwardThrottleRequest = (uint16_t)(((pedalTravel - 0.05) / 0.95 * MAX_CURRENT_FORWARD  + 327.69) * 100);
+    writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveActive, 1);
+    writeDtiMessage(MSG_DTI_CONTROL_1, (uint8_t*)&rearThrottleRequest, 2);
 
     // Already exists in stateMachine but copied over for cool factor
     if (globalStatus.ECUState != ERRORSTATE)
