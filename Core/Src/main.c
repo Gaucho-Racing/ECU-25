@@ -135,7 +135,7 @@ int main(void)
     float throttle2 = getThrottle2();
     bool appsViolation = checkBSEAPPSviolation(throttle1, throttle2, pedalTravel, brakeTravel);
     float x = (throttle2 - throttle1 * 1.9932988878 - 0.125125991408) / throttle2;
-    //x *= 100;
+    x *= 100;
     pedalTravel *= 100;
     //pedalTravel = pedalTravel < 5 ? 0 : pedalTravel - 5;
     LOGOMATIC("%lf, %lf, %lf, %lf\n", pedalTravel, throttle1, throttle2, x);
