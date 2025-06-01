@@ -156,7 +156,6 @@ int main(void)
         sendBseAppsViolationMessage();
     }
     uint16_t rearThrottleRequest = (uint16_t)((pedalTravel - 0.05) / 0.95 * MAX_CURRENT_REAR * 10) << 8;
-    uint16_t forwardThrottleRequest = (uint16_t)(((pedalTravel - 0.05) / 0.95 * MAX_CURRENT_FORWARD  + 327.69) * 100);
     writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveActive, 1);
     writeDtiMessage(MSG_DTI_CONTROL_1, (uint8_t*)&rearThrottleRequest, 2);
 
@@ -169,7 +168,7 @@ int main(void)
     else
     {
         HAL_GPIO_WritePin(TSSI_G_CONTROL_GPIO_Port, TSSI_G_CONTROL_Pin, GPIO_PIN_RESET);
-        HAL_GPIO_WritePin(TSSI_R_CONTROL_GPIO_Port, TSSI_R_CONTROL_Pin, GPIO_PIN_SET);  // Implement 2-5 Hz 50% flash
+        HAL_GPIO_WritePin(TSSI_R_CONTROL_GPIO_Port, TSSI_R_CONTROL_Pin, GPIO_PIN_SET);  // TODO Implement 2-5 Hz 50% flash
     }
     
     //while(appsViolation){
