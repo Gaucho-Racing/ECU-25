@@ -150,7 +150,6 @@ int main(void)
 
     if (checkBSEAPPSviolation(getThrottle1(), getThrottle2(), pedalTravel, brakeTravel))
     {
-        controlInverters(0);   //0 for disable
         globalStatus.ECUState = DRIVE_STANDBY;
         BSE_APPS_violation = true;
         sendBseAppsViolationMessage();
