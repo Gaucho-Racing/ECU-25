@@ -78,7 +78,7 @@ void stateMachineTick(void)
 
     if (globalStatus.ECUState != ERRORSTATE)
     {
-        HAL_GPIO_WritePin(TSSI_G_CONTROL_GPIO_Port, TSSI_G_CONTROL_Pin, SET);
+        HAL_GPIO_WritePin(TSSI_G_CONTROL_GPIO_Port, TSSI_G_CONTROL_Pin, GPIO_PIN_SET);
     }
     else
     {
