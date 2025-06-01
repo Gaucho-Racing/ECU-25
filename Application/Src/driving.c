@@ -78,10 +78,10 @@ void drive_active_power(void)
 
     // Scale throttle request for CAN messaging
 
-    uint16_t rearThrottleRequest = (uint16_t)(pedalTravel * MAX_CURRENT_REAR * 10) << 8;
-    uint16_t forwardThrottleRequest = (uint16_t)(pedalTravel * MAX_CURRENT_FORWARD * 10) << 8;
+    uint16_t rearThrottleRequest = (uint16_t)((pedalTravel - 0.05) / 0.95 * MAX_CURRENT_REAR * 10) << 8;
+    uint16_t forwardThrottleRequest = (uint16_t)(((pedalTravel - 0.05) / 0.95 * MAX_CURRENT_FORWARD  + 327.69) * 100); // 65535/655.35 = 100
 
-    validateForwardTorqueRequest(&forwardThrottleRequest);
+    //validateForwardTorqueRequest((int16_t*)&forwardThrottleRequest);
 
     globalInverterSettings[0].acCurrent = rearThrottleRequest;
     globalInverterSettings[1].acCurrent = forwardThrottleRequest;
@@ -103,7 +103,7 @@ void drive_active_regen(void)
         sendBseAppsViolationMessage();
         return;
     }
-    else if (getPedalTravel() >= APPS_DEADZONE)
+    else if (pedalTravel >= APPS_DEADZONE)
     {
         globalStatus.ECUState = DRIVE_ACTIVE_POWER;
     }
@@ -112,10 +112,10 @@ void drive_active_regen(void)
         globalStatus.ECUState = DRIVE_ACTIVE_IDLE;
     }
 
-    int16_t rearTorqueRequest = (int16_t)(getBrakeTravel() * MAX_CURRENT_REAR * -10) << 8;
-    int16_t forwardTorqueRequest = (int16_t)(getPedalTravel() * MAX_CURRENT_FORWARD * 10) << 8;
+    int16_t rearTorqueRequest = (int16_t)(brakeTravel * MAX_CURRENT_REAR * -10) << 8;
+    int16_t forwardTorqueRequest = (int16_t)(brakeTravel * MAX_CURRENT_FORWARD * -10 + 327.69) * 100;
 
-    validateForwardTorqueRequest(&forwardTorqueRequest);
+    //validateForwardTorqueRequest(&forwardTorqueRequest);
 
     globalInverterSettings[0].acCurrent = rearTorqueRequest;
     globalInverterSettings[1].acCurrent = forwardTorqueRequest;
