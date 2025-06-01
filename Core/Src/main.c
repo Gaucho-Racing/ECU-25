@@ -154,7 +154,7 @@ int main(void)
         BSE_APPS_violation = true;
         sendBseAppsViolationMessage();
     }
-    uint16_t rearThrottleRequest = (uint16_t)((pedalTravel - 0.05) / 0.95 * MAX_CURRENT_REAR * 10) << 8;
+    uint16_t rearThrottleRequest = (uint16_t)(pedalTravel * MAX_CURRENT_REAR * 10) << 8;
     writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveActive, 1);
     writeDtiMessage(MSG_DTI_CONTROL_1, (uint8_t*)&rearThrottleRequest, 2);
 
