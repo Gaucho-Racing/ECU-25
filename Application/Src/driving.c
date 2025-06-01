@@ -75,6 +75,7 @@ void drive_active_power(void)
     else if (pedalTravel < APPS_DEADZONE)
     {
         globalStatus.ECUState = DRIVE_STANDBY;
+        return;
     }
 
     // Scale throttle request for CAN messaging
