@@ -57,7 +57,7 @@ bool checkBSEAPPSviolation(float throttle1, float throttle2, float getPedalTrave
         deltaH = millis() - lastHeatCapacityUpdateMillis;
     }
     lastHeatCapacityUpdateMillis = millis();
-    deltaH *=*   tqr**   tqr - MAX_CURRENT_FORWARD * MAX_CURRENT_FORWARD;
+    deltaH *=*   tqr**   tqr - NOMINAL_CURRENT_FORWARD * NOMINAL_CURRENT_FORWARD;
     heatCapacity += (heatCapacity + deltaH  > 0) ? deltaH : 0;
     if(heatCapacity > MAX_AMK_HEAT_CAP * 0.9 && *tqr > MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity/MAX_AMK_HEAT_CAP - 0.9) / 0.1)){
         *tqr = MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity/MAX_AMK_HEAT_CAP - 0.9) / 0.1);
