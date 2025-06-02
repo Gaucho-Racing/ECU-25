@@ -19,6 +19,7 @@
     #define BRAKE_MIN 0.0 // FIXME change when value is known
     #define BRAKE_MAX 5.0 // FIXME change when value is known
     #define MAX_CURRENT_REAR 240.0 // A
+    #define MAX_CURRENT_TESTING_AT_OWEN_AND_VAMSI_HOUSE 10.0
     #define MAX_CURRENT_FORWARD 105.0 // A
     #define NOMINAL_CURRENT_FORWARD 41.0 // A
 
