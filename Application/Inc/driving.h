@@ -14,7 +14,6 @@
     #define THROTTLE_MIN_1 0.315445f
     #define THROTTLE_MAX_1 0.443382562278f
 
-
     #define THROTTLE_MIN_2 0.7548975f
     #define THROTTLE_MAX_2 1.00845551601f
 
@@ -35,6 +34,7 @@
     #define GLOBALSTATUS_WHEEL_RPM_ADJUSTMENT 3276
 
     extern volatile bool BSE_APPS_violation;
+    extern volatile float minAmkHeatCapThrottlePercent;
     
     /**
     Vehicle Speed in MPH

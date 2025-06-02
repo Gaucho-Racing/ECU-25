@@ -46,15 +46,19 @@ bool checkBSEAPPSviolation(float throttle1, float throttle2, float getPedalTrave
     return fabs(throttle2 - throttle1 * 1.9932988878f - 0.125125991408f) > throttle2 * 0.1 || (brake >= BSE_DEADZONE && getPedalTravel >= 0.25f);
 }
 
-void validateForwardTorqueRequest(int16_t* tqr, uint16_t* heatCapacity)
+void validateForwardTorqueRequest(uint16_t* tqr, volatile uint16_t* heatCapacity)
 {
     float deltaH =  0.01f * *tqr * *tqr - NOMINAL_CURRENT_FORWARD * NOMINAL_CURRENT_FORWARD;
     *heatCapacity += (*heatCapacity + deltaH  > 0) ? deltaH : 0;
-    if (*heatCapacity > MAX_AMK_HEAT_CAP * 0.8f && *tqr > MAX_CURRENT_FORWARD * (1 - ((double)*heatCapacity/MAX_AMK_HEAT_CAP - 0.8f) / 0.1f))
+    float proportionOfMax = (1 - ((double)*heatCapacity/MAX_AMK_HEAT_CAP - minAmkHeatCapThrottlePercent) / 0.1f);
+    proportionOfMax = (proportionOfMax > 0) ? proportionOfMax : 0;
+    if (*heatCapacity > MAX_AMK_HEAT_CAP * minAmkHeatCapThrottlePercent && *tqr > MAX_CURRENT_FORWARD * proportionOfMax)
     {
-        *tqr = MAX_CURRENT_FORWARD * (1 - ((double)*heatCapacity/MAX_AMK_HEAT_CAP - 0.8f) / 0.1f);
+        *tqr = MAX_CURRENT_FORWARD * proportionOfMax;
     }
 }
+
+void validateRegenRequest(uint16_t* tqr, volatile uint16_t batteryHeatCapacity){}
 
 float vehicleSpeedMPH(void)
 {

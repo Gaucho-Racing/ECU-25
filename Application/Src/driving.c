@@ -23,6 +23,8 @@ volatile uint16_t heatCapacity1 = 0;
 
 volatile uint16_t heatCapacity2 = 0;
 
+volatile float maxAmkHeatCapPercent = 0.8;
+
 
 static float getThrottle1()
 {
