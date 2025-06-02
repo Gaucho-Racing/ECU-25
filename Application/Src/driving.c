@@ -100,7 +100,7 @@ void drive_active_power(void)
 
     // Scale throttle request for CAN messaging
 
-    uint16_t rearThrottleRequest = (uint16_t)((pedalTravel - 0.05) / 0.95 * MAX_CURRENT_REAR * 10) << 8;
+    uint16_t rearThrottleRequest = (uint16_t)((pedalTravel - 0.05) / 0.95 * MAX_CURRENT_REAR * 10);
     uint16_t forwardThrottleRequest = (uint16_t)(((pedalTravel - 0.05) / 0.95 * MAX_CURRENT_FORWARD  + 327.69) * 100); // 65535/655.35 = 100
 
     //validateForwardTorqueRequest((int16_t*)&forwardThrottleRequest);
