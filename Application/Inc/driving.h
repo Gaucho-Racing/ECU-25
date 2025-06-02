@@ -7,29 +7,29 @@
 
     #define DRIVE_ACTIVE_POWER_REGEN_INTERVAL_MS 10
 
-    #define APPS_DEADZONE 0.05
-    #define BSE_DEADZONE 0.05
+    #define APPS_DEADZONE 0.05f
+    #define BSE_DEADZONE 0.05f
     #define REGEN_MPH 5
 
-    #define THROTTLE_MIN_1 0.315445
-    #define THROTTLE_MAX_1 0.443382562278
+    #define THROTTLE_MIN_1 0.315445f
+    #define THROTTLE_MAX_1 0.443382562278f
 
 
-    #define THROTTLE_MIN_2 0.7548975
-    #define THROTTLE_MAX_2 1.00845551601
+    #define THROTTLE_MIN_2 0.7548975f
+    #define THROTTLE_MAX_2 1.00845551601f
 
-    #define BRAKE_MIN 0.0 // FIXME change when value is known
-    #define BRAKE_MAX 5.0 // FIXME change when value is known
-    #define MAX_CURRENT_REAR 240.0 // A
-    #define MAX_CURRENT_FORWARD 105.0 // A
-    #define NOMINAL_CURRENT_FORWARD 41.0 // A
+    #define BRAKE_MIN 0.0f // FIXME change when value is known
+    #define BRAKE_MAX 5.0f // FIXME change when value is known
+    #define MAX_CURRENT_REAR 240.0f // A
+    #define MAX_CURRENT_FORWARD 105.0f // A
+    #define NOMINAL_CURRENT_FORWARD 41.0f // A
 
     #define MAX_AMK_HEAT_CAP 11587
 
-    #define GEAR_RATIO (42.0 / 13.0)    // 42T driven and 13T driving
-    #define MOTOR_POLE_PAIRS 10.0
-    #define WHEEL_RADIUS_IN 8.0
-    #define MPH_TO_INCH_PER_MIN_CONV 1056.0
+    #define GEAR_RATIO (42.0f / 13.0f)    // 42T driven and 13T driving
+    #define MOTOR_POLE_PAIRS 10.0f
+    #define WHEEL_RADIUS_IN 8.0f
+    #define MPH_TO_INCH_PER_MIN_CONV 1056.0f
 
     #define POWERLEVEL_TORQUEMAP_RESET 0xFF
     #define GLOBALSTATUS_WHEEL_RPM_ADJUSTMENT 3276
