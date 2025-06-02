@@ -145,6 +145,7 @@ int main(void)
     // LOGOMATIC(appsViolation ? "APPS VIOLATION\n" : "");
 
     //drive_active_power();
+
     float brakeTravel = getBrakeTravel();
     float pedalTravel = getPedalTravel();
 
@@ -158,13 +159,19 @@ int main(void)
     uint16_t maxCurrent = (uint16_t)MAX_CURRENT_TESTING_AT_OWEN_AND_VAMSI_HOUSE * 10; // Keep as a safety metric I think
     writeDtiMessage(MSG_DTI_CONTROL_8, (uint8_t*)&maxCurrent, 2);
 
-    pedalTravel = pedalTravel < 0.05 ? 0 : (pedalTravel - 0.05) / 0.95;
-    uint16_t rearThrottleRequest = (uint16_t)(pedalTravel * MAX_CURRENT_TESTING_AT_OWEN_AND_VAMSI_HOUSE * 10) << 8;
+    pedalTravel = pedalTravel < 0.05f ? 0.0f : (pedalTravel - 0.05f) / 0.95f;
+    int16_t rearThrottleRequest = (int16_t)(pedalTravel * MAX_CURRENT_TESTING_AT_OWEN_AND_VAMSI_HOUSE * 10.0f)/* << 8*/;
+    uint8_t buff[2];
+    memcpy(buff, &rearThrottleRequest, 2);
+    uint8_t temp = buff[0];
+    buff[0] = buff[1];
+    buff[1] = temp;
+    LOGOMATIC("%lf", pedalTravel);
     writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveActive, 1);
-    writeDtiMessage(MSG_DTI_CONTROL_1, (uint8_t*)&rearThrottleRequest, 2);
+    writeDtiMessage(MSG_DTI_CONTROL_1, buff, 2);
 
-    float x = (getThrottle2() - getThrottle1() * 1.9932988878 - 0.125125991408) / getThrottle2();
-    x *= 100;
+    float x = (getThrottle2() - getThrottle1() * 1.9932988878f - 0.125125991408f) / getThrottle2();
+    x *= 100.0f;
     LOGOMATIC("%d\n", rearThrottleRequest);
 
     // Already exists in stateMachine but copied over for cool factor
@@ -183,7 +190,7 @@ int main(void)
     //  ;
     //}
     //LOGOMATIC("%d\n", analogRead(BSE_SIGNAL));
-    HAL_Delay(150);
+    // HAL_Delay(150);
   }
   /* USER CODE END 3 */
 }

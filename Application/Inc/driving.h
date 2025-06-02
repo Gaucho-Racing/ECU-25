@@ -5,23 +5,23 @@
 #ifndef DRIVING_H
     #define DRIVING_H
 
-    #define APPS_DEADZONE 0.05
-    #define BSE_DEADZONE 0.05
+    #define APPS_DEADZONE 0.05f
+    #define BSE_DEADZONE 0.05f
     #define REGEN_MPH 5
 
-    #define THROTTLE_MIN_1 0.315546357616
-    #define THROTTLE_MAX_1 0.441790519878
+    #define THROTTLE_MIN_1 0.315546357616f
+    #define THROTTLE_MAX_1 0.441790519878f
 
 
-    #define THROTTLE_MIN_2 0.755337748344
-    #define THROTTLE_MAX_2 1.00569877676
+    #define THROTTLE_MIN_2 0.755337748344f
+    #define THROTTLE_MAX_2 1.00569877676f
 
-    #define BRAKE_MIN 0.0 // FIXME change when value is known
-    #define BRAKE_MAX 5.0 // FIXME change when value is known
+    #define BRAKE_MIN 0.0f // FIXME change when value is known
+    #define BRAKE_MAX 5.0f // FIXME change when value is known
     #define MAX_CURRENT_REAR 240.0 // A
-    #define MAX_CURRENT_TESTING_AT_OWEN_AND_VAMSI_HOUSE 10.0
-    #define MAX_CURRENT_FORWARD 105.0 // A
-    #define NOMINAL_CURRENT_FORWARD 41.0 // A
+    #define MAX_CURRENT_TESTING_AT_OWEN_AND_VAMSI_HOUSE 10.0f
+    #define MAX_CURRENT_FORWARD 105.0f // A
+    #define NOMINAL_CURRENT_FORWARD 41.0f // A
 
     #define MAX_AMK_HEAT_CAP 11587
 
