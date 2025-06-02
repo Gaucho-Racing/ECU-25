@@ -12,10 +12,16 @@
 #include "msgIDs.h"
 #include "utils.h"
 
+// TODO Confirm DTI read message callback works correctly (check endianness of bytes, bits are fine)
+// TODO Mark all constants as floats so they do not become doubles
+
 volatile bool BSE_APPS_violation = false;
 
-//volatile uint16_t heatCapacity = 0;
-//volatile int32_t lastHeatCapacityUpdateMillis = BAD_TIME_Negative1;
+volatile int32_t lastDriveActiveCtrlMs = BAD_TIME_Negative1;
+
+volatile uint16_t heatCapacity1 = 0;
+
+volatile uint16_t heatCapacity2 = 0;
 
 
 static float getThrottle1()
@@ -41,7 +47,6 @@ static float getPedalTravel()
 
 void drive_standby(void)
 {
-    controlInverters(true);
 
     float pedalTravel = getPedalTravel();
 
@@ -52,20 +57,20 @@ void drive_standby(void)
 
     if (!BSE_APPS_violation && pedalTravel >= APPS_DEADZONE)
     {
+        controlInverters(true);
         globalStatus.ECUState = DRIVE_ACTIVE_POWER;
     }
 }
 
 void drive_active_idle(void)
 {
-    controlInverters(true);
 
     float brakeTravel = getBrakeTravel();
     float pedalTravel = getPedalTravel();
 
     if (checkBSEAPPSviolation(getThrottle1(), getThrottle2(), pedalTravel, brakeTravel))
     {  
-        controlInverters(0);   //0 for disable
+        controlInverters(false);   //false for disable
         globalStatus.ECUState = DRIVE_STANDBY;
         BSE_APPS_violation = true;
         sendBseAppsViolationMessage();
@@ -83,6 +88,10 @@ void drive_active_idle(void)
 
 void drive_active_power(void)
 {
+    if(millis() - lastDriveActiveCtrlMs < DRIVE_ACTIVE_POWER_REGEN_INTERVAL_MS){
+        return;
+    }
+    lastDriveActiveCtrlMs = millis();
     float brakeTravel = getBrakeTravel();
     float pedalTravel = getPedalTravel();
 
@@ -100,26 +109,56 @@ void drive_active_power(void)
 
     // Scale throttle request for CAN messaging
 
-    uint16_t rearThrottleRequest = (uint16_t)((pedalTravel - 0.05) / 0.95 * MAX_CURRENT_REAR * 10);
-    uint16_t forwardThrottleRequest = (uint16_t)(((pedalTravel - 0.05) / 0.95 * MAX_CURRENT_FORWARD  + 327.69) * 100); // 65535/655.35 = 100
+    //Owen said that current after 5% should start from 0, hence the following line, but the car might not even move from 0-5% current, so maybe review the following line later
+
+    uint16_t rearThrottleRequest = (uint16_t)((pedalTravel - 0.05f) / 0.95f * MAX_CURRENT_REAR);
+    uint16_t forwardThrottleRequest1 = (uint16_t)((pedalTravel - 0.05f) / 0.95f * MAX_CURRENT_FORWARD); // 65535/655.35 = 100
+    uint16_t forwardThrottleRequest2 = (uint16_t)((pedalTravel - 0.05f) / 0.95f * MAX_CURRENT_FORWARD); // 65535/655.35 = 100
+
+    float deltaH =  0.01f * forwardThrottleRequest1 * forwardThrottleRequest1 - NOMINAL_CURRENT_FORWARD * NOMINAL_CURRENT_FORWARD;
+    heatCapacity1 += (heatCapacity1 + deltaH  > 0) ? deltaH : 0;
+    if (heatCapacity1 > MAX_AMK_HEAT_CAP * 0.8f && forwardThrottleRequest1 > MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity1/MAX_AMK_HEAT_CAP - 0.8f) / 0.1f))
+    {
+        forwardThrottleRequest1 = MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity1/MAX_AMK_HEAT_CAP - 0.8f) / 0.1f);
+    }
+
+    //Check heat for second motor
+    deltaH = 0.01f * (forwardThrottleRequest2 * forwardThrottleRequest2 - NOMINAL_CURRENT_FORWARD * NOMINAL_CURRENT_FORWARD);
+    heatCapacity2 += (heatCapacity2 + deltaH  > 0) ? deltaH : 0;
+    if (heatCapacity2 > MAX_AMK_HEAT_CAP * 0.8f && forwardThrottleRequest2 > MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity2/MAX_AMK_HEAT_CAP - 0.8f) / 0.1f))
+    {
+        forwardThrottleRequest2 = MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity2/MAX_AMK_HEAT_CAP - 0.8f) / 0.1f);
+    }
+
+    //TODO: ADD MAX HEAT CAP ADJUSTMENT BASED ON COOLANT
+    //TODO Wait, how to handle one forward motor overheating but the other one being fine? Does the other one also get limited?
+
 
     //validateForwardTorqueRequest((int16_t*)&forwardThrottleRequest);
 
+    rearThrottleRequest *= 10;
+    forwardThrottleRequest1 = (forwardThrottleRequest1 + 327.69f) * 100;
+    forwardThrottleRequest2 = (forwardThrottleRequest2 + 327.69f) * 100;
+
     globalInverterSettings[0].acCurrent = rearThrottleRequest;
-    globalInverterSettings[1].acCurrent = forwardThrottleRequest;
-    globalInverterSettings[2].acCurrent = forwardThrottleRequest;
+    globalInverterSettings[1].acCurrent = forwardThrottleRequest1;
+    globalInverterSettings[2].acCurrent = forwardThrottleRequest2;
 
     sendInverterCommand();
 }
 
 void drive_active_regen(void)
 {
+    if(millis() - lastDriveActiveCtrlMs < DRIVE_ACTIVE_POWER_REGEN_INTERVAL_MS){
+        return;
+    }
+    lastDriveActiveCtrlMs = millis();
     float brakeTravel = getBrakeTravel();
     float pedalTravel = getPedalTravel();
 
     if(checkBSEAPPSviolation(getThrottle1(), getThrottle2(), pedalTravel, brakeTravel))
     {
-        controlInverters(0);
+        controlInverters(false);
         globalStatus.ECUState = DRIVE_STANDBY;
         BSE_APPS_violation = true;
         sendBseAppsViolationMessage();
@@ -134,14 +173,36 @@ void drive_active_regen(void)
         globalStatus.ECUState = DRIVE_ACTIVE_IDLE;
     }
 
-    int16_t rearTorqueRequest = (int16_t)(brakeTravel * MAX_CURRENT_REAR * -10) << 8;
-    int16_t forwardTorqueRequest = (int16_t)(brakeTravel * MAX_CURRENT_FORWARD * -10 + 327.69) * 100;
+    uint16_t rearThrottleRequest = (uint16_t)(brakeTravel * MAX_CURRENT_REAR);
+    uint16_t forwardThrottleRequest1 = (uint16_t)(brakeTravel * MAX_CURRENT_FORWARD); // 65535/655.35 = 100
+    uint16_t forwardThrottleRequest2 = (uint16_t)(brakeTravel * MAX_CURRENT_FORWARD); // 65535/655.35 = 100
+
+    float deltaH =  0.01f * forwardThrottleRequest1 * forwardThrottleRequest1 - NOMINAL_CURRENT_FORWARD * NOMINAL_CURRENT_FORWARD;
+    heatCapacity1 += (heatCapacity1 + deltaH  > 0) ? deltaH : 0;
+    if (heatCapacity1 > MAX_AMK_HEAT_CAP * 0.8f && forwardThrottleRequest1 > MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity1/MAX_AMK_HEAT_CAP - 0.8f) / 0.1f))
+    {
+        forwardThrottleRequest1 = MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity1/MAX_AMK_HEAT_CAP - 0.8f) / 0.1f);
+    }
+
+    //Check heat for second motor
+    deltaH = 0.01f * (forwardThrottleRequest2 * forwardThrottleRequest2 - NOMINAL_CURRENT_FORWARD * NOMINAL_CURRENT_FORWARD);
+    heatCapacity2 += (heatCapacity2 + deltaH  > 0) ? deltaH : 0;
+    if (heatCapacity2 > MAX_AMK_HEAT_CAP * 0.8f && forwardThrottleRequest2 > MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity2/MAX_AMK_HEAT_CAP - 0.8f) / 0.1f))
+    {
+        forwardThrottleRequest2 = MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity2/MAX_AMK_HEAT_CAP - 0.8f) / 0.1f);
+    }
+
+    //TODO: BATTERY HEAT MANAGEMENT FOR REGEN
 
     //validateForwardTorqueRequest(&forwardTorqueRequest);
 
-    globalInverterSettings[0].acCurrent = rearTorqueRequest;
-    globalInverterSettings[1].acCurrent = forwardTorqueRequest;
-    globalInverterSettings[2].acCurrent = forwardTorqueRequest;
+    rearThrottleRequest *= -10;
+    forwardThrottleRequest1 = (-1 * forwardThrottleRequest1 + 327.69f) * 100;
+    forwardThrottleRequest2 = (-1 * forwardThrottleRequest2 + 327.69f) * 100;
+
+    globalInverterSettings[0].acCurrent = rearThrottleRequest;
+    globalInverterSettings[1].acCurrent = forwardThrottleRequest1;
+    globalInverterSettings[2].acCurrent = forwardThrottleRequest2;
 
     sendInverterCommand();
 }

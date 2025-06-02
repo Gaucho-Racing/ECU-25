@@ -5,6 +5,8 @@
 #ifndef DRIVING_H
     #define DRIVING_H
 
+    #define DRIVE_ACTIVE_POWER_REGEN_INTERVAL_MS 10
+
     #define APPS_DEADZONE 0.05
     #define BSE_DEADZONE 0.05
     #define REGEN_MPH 5

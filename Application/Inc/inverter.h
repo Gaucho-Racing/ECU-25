@@ -6,8 +6,6 @@
 #ifndef INVERTER_H
     #define INVERTER_H
 
-    #define INVERTER_MINIMUM_SENDING_TIME_MS 10
-
     typedef struct {
         uint16_t acCurrent;
         uint16_t dcCurrent;
