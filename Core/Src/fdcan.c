@@ -48,10 +48,11 @@ void writeDtiMessage(uint16_t msgID, uint8_t data[], uint32_t len)
     TxHeader.FDFormat = FDCAN_CLASSIC_CAN;
 
     int temp;
-    for(uint16_t i = 0; i < len/2; ++i){
-      temp = data[i];
-      data[i] = data[len - i - 1];
-      data[len - i - 1] = temp;
+    for(uint16_t i = 0; i < len/2; ++i)
+    {
+        temp = data[i];
+        data[i] = data[len - i - 1];
+        data[len - i - 1] = temp;
     }
 
     if (HAL_FDCAN_AddMessageToTxFifoQ(handle, &TxHeader, data) != HAL_OK)
