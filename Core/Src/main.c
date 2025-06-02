@@ -143,9 +143,13 @@ int main(void)
     // pedalTravel /= 0.95;
     // LOGOMATIC("%lf, %lf, %lf, %lf\n", pedalTravel, throttle1, throttle2, x);
     // LOGOMATIC(appsViolation ? "APPS VIOLATION\n" : "");
+    
+    uint16_t maxCurrent = (uint16_t)MAX_CURRENT_TESTING_AT_OWEN_AND_VAMSI_HOUSE * 10; // Keep as a safety metric I think
+    writeDtiMessage(MSG_DTI_CONTROL_8, (uint8_t*)&maxCurrent, 2);
 
-    //drive_active_power();
+    drive_active_power();
 
+    /*
     float brakeTravel = getBrakeTravel();
     float pedalTravel = getPedalTravel();
 
@@ -166,6 +170,7 @@ int main(void)
     //uint8_t temp = buff[0];
     //buff[0] = buff[1];
     //buff[1] = temp;
+    /*
     LOGOMATIC("%lf", pedalTravel);
     writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveActive, 1);
     writeDtiMessage(MSG_DTI_CONTROL_1, rearThrottleRequest, 2);
@@ -193,6 +198,7 @@ int main(void)
     // HAL_Delay(150);
   }
   /* USER CODE END 3 */
+
 }
 
 /**
