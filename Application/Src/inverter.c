@@ -27,6 +27,4 @@ void controlInverters(bool driveEnable)
     globalInverterSettings[0].driveEnable = (uint8_t)driveEnable;
     globalInverterSettings[1].driveEnable = (uint8_t)driveEnable;
     globalInverterSettings[2].driveEnable = (uint8_t)driveEnable;
-
-    sendInverterCommand();
 }

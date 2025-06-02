@@ -64,7 +64,10 @@ void drive_standby(void)
 
 void drive_active_idle(void)
 {
-
+    if(millis() - lastDriveActiveCtrlMs < DRIVE_ACTIVE_POWER_REGEN_INTERVAL_MS){
+        return;
+    }
+    lastDriveActiveCtrlMs = millis();
     float brakeTravel = getBrakeTravel();
     float pedalTravel = getPedalTravel();
 
@@ -84,6 +87,13 @@ void drive_active_idle(void)
     {
         globalStatus.ECUState = DRIVE_ACTIVE_REGEN;
     }
+
+    globalInverterSettings[0].acCurrent = 0;
+    globalInverterSettings[1].acCurrent = 0;
+    globalInverterSettings[2].acCurrent = 0;
+
+    sendInverterCommand();
+
 }
 
 void drive_active_power(void)
@@ -104,7 +114,8 @@ void drive_active_power(void)
     }
     else if (pedalTravel < APPS_DEADZONE)
     {
-        globalStatus.ECUState = DRIVE_STANDBY;
+        globalStatus.ECUState = DRIVE_ACTIVE_IDLE;
+        return;
     }
 
     // Scale throttle request for CAN messaging
