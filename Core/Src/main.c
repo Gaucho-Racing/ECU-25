@@ -160,7 +160,7 @@ int main(void)
 
     float x = (getThrottle2() - getThrottle1() * 1.9932988878 - 0.125125991408) / getThrottle2();
     x *= 100;
-    LOGOMATIC("%lf, %d\n", pedalTravel, rearThrottleRequest);
+    //LOGOMATIC("%lf, %d\n", pedalTravel, rearThrottleRequest);
 
     // Already exists in stateMachine but copied over for cool factor
     if (globalStatus.ECUState == ERRORSTATE)
