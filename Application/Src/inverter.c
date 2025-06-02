@@ -9,6 +9,9 @@
 #include "customIDs.h"
 #include "driving.h"
 
+// TODO Confirm DTI read message callback works correctly (check endianness of bytes, bits are fine)
+// TODO Mark all constants as floats so they do not become doubles
+
 volatile InverterSettings globalInverterSettings[3] = {0};
 
 volatile DTI_Data globalInverterData = {0};
