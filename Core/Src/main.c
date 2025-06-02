@@ -161,14 +161,14 @@ int main(void)
 
     pedalTravel = pedalTravel < 0.05f ? 0.0f : (pedalTravel - 0.05f) / 0.95f;
     int16_t rearThrottleRequest = (int16_t)(pedalTravel * MAX_CURRENT_TESTING_AT_OWEN_AND_VAMSI_HOUSE * 10.0f)/* << 8*/;
-    uint8_t buff[2];
-    memcpy(buff, &rearThrottleRequest, 2);
-    uint8_t temp = buff[0];
-    buff[0] = buff[1];
-    buff[1] = temp;
+    //uint8_t buff[2];
+    //memcpy(buff, &rearThrottleRequest, 2);
+    //uint8_t temp = buff[0];
+    //buff[0] = buff[1];
+    //buff[1] = temp;
     LOGOMATIC("%lf", pedalTravel);
     writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveActive, 1);
-    writeDtiMessage(MSG_DTI_CONTROL_1, buff, 2);
+    writeDtiMessage(MSG_DTI_CONTROL_1, rearThrottleRequest, 2);
 
     float x = (getThrottle2() - getThrottle1() * 1.9932988878f - 0.125125991408f) / getThrottle2();
     x *= 100.0f;
