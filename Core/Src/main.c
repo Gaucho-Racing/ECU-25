@@ -160,7 +160,7 @@ int main(void)
     writeDtiMessage(MSG_DTI_CONTROL_8, (uint8_t*)&maxCurrent, 2);
 
     pedalTravel = pedalTravel < 0.05 ? 0 : (pedalTravel - 0.05) / 0.95;
-    uint16_t rearThrottleRequest = ((uint16_t)floorf(pedalTravel * 100 * 0.5) * 2) << 8;
+    uint16_t rearThrottleRequest = (uint16_t)(pedalTravel * 100) << 8;
     writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveActive, 1);
     writeDtiMessage(MSG_DTI_CONTROL_5, (uint8_t*)&rearThrottleRequest, 2);
 
