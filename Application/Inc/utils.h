@@ -66,7 +66,7 @@
     /**
     Validate torque request to AMK motors and manage heat
      */
-    void validateForwardTorqueRequest(int16_t* tqr);
+    void validateForwardTorqueRequest(int16_t* tqr, uint16_t* heatCapacity);
 
     /**
     Sends apps violation message

@@ -126,20 +126,8 @@ void drive_active_power(void)
     uint16_t forwardThrottleRequest1 = (uint16_t)((pedalTravel - 0.05f) / 0.95f * MAX_CURRENT_FORWARD); // 65535/655.35 = 100
     uint16_t forwardThrottleRequest2 = (uint16_t)((pedalTravel - 0.05f) / 0.95f * MAX_CURRENT_FORWARD); // 65535/655.35 = 100
 
-    float deltaH =  0.01f * forwardThrottleRequest1 * forwardThrottleRequest1 - NOMINAL_CURRENT_FORWARD * NOMINAL_CURRENT_FORWARD;
-    heatCapacity1 += (heatCapacity1 + deltaH  > 0) ? deltaH : 0;
-    if (heatCapacity1 > MAX_AMK_HEAT_CAP * 0.8f && forwardThrottleRequest1 > MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity1/MAX_AMK_HEAT_CAP - 0.8f) / 0.1f))
-    {
-        forwardThrottleRequest1 = MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity1/MAX_AMK_HEAT_CAP - 0.8f) / 0.1f);
-    }
-
-    //Check heat for second motor
-    deltaH = 0.01f * (forwardThrottleRequest2 * forwardThrottleRequest2 - NOMINAL_CURRENT_FORWARD * NOMINAL_CURRENT_FORWARD);
-    heatCapacity2 += (heatCapacity2 + deltaH  > 0) ? deltaH : 0;
-    if (heatCapacity2 > MAX_AMK_HEAT_CAP * 0.8f && forwardThrottleRequest2 > MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity2/MAX_AMK_HEAT_CAP - 0.8f) / 0.1f))
-    {
-        forwardThrottleRequest2 = MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity2/MAX_AMK_HEAT_CAP - 0.8f) / 0.1f);
-    }
+    validateForwardTorqueRequest(&forwardThrottleRequest1, &heatCapacity1);
+    validateForwardTorqueRequest(&forwardThrottleRequest2, &heatCapacity2);
 
     //TODO: ADD MAX HEAT CAP ADJUSTMENT BASED ON COOLANT
     //TODO Wait, how to handle one forward motor overheating but the other one being fine? Does the other one also get limited?
@@ -188,20 +176,8 @@ void drive_active_regen(void)
     uint16_t forwardThrottleRequest1 = (uint16_t)(brakeTravel * MAX_CURRENT_FORWARD); // 65535/655.35 = 100
     uint16_t forwardThrottleRequest2 = (uint16_t)(brakeTravel * MAX_CURRENT_FORWARD); // 65535/655.35 = 100
 
-    float deltaH =  0.01f * forwardThrottleRequest1 * forwardThrottleRequest1 - NOMINAL_CURRENT_FORWARD * NOMINAL_CURRENT_FORWARD;
-    heatCapacity1 += (heatCapacity1 + deltaH  > 0) ? deltaH : 0;
-    if (heatCapacity1 > MAX_AMK_HEAT_CAP * 0.8f && forwardThrottleRequest1 > MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity1/MAX_AMK_HEAT_CAP - 0.8f) / 0.1f))
-    {
-        forwardThrottleRequest1 = MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity1/MAX_AMK_HEAT_CAP - 0.8f) / 0.1f);
-    }
-
-    //Check heat for second motor
-    deltaH = 0.01f * (forwardThrottleRequest2 * forwardThrottleRequest2 - NOMINAL_CURRENT_FORWARD * NOMINAL_CURRENT_FORWARD);
-    heatCapacity2 += (heatCapacity2 + deltaH  > 0) ? deltaH : 0;
-    if (heatCapacity2 > MAX_AMK_HEAT_CAP * 0.8f && forwardThrottleRequest2 > MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity2/MAX_AMK_HEAT_CAP - 0.8f) / 0.1f))
-    {
-        forwardThrottleRequest2 = MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity2/MAX_AMK_HEAT_CAP - 0.8f) / 0.1f);
-    }
+    validateForwardTorqueRequest(&forwardThrottleRequest1, &heatCapacity1);
+    validateForwardTorqueRequest(&forwardThrottleRequest2, &heatCapacity2);
 
     //TODO: BATTERY HEAT MANAGEMENT FOR REGEN
 

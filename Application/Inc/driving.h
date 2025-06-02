@@ -35,8 +35,6 @@
     #define GLOBALSTATUS_WHEEL_RPM_ADJUSTMENT 3276
 
     extern volatile bool BSE_APPS_violation;
-    extern volatile uint16_t heatCapacity;
-    extern volatile int32_t lastHeatCapacityUpdateMillis;
     
     /**
     Vehicle Speed in MPH

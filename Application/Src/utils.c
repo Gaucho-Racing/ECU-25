@@ -42,25 +42,17 @@ void setSoftwareLatch(bool close)
 
 bool checkBSEAPPSviolation(float throttle1, float throttle2, float getPedalTravel, float brake)
 {
-    // End to end factor: 1.886089, offset = 0.2053413
     //Checks 2 * APPS_1 is within 10% of APPS_2 and break + throttle at the same time
     return fabs(throttle2 - throttle1 * 1.9932988878f - 0.125125991408f) > throttle2 * 0.1 || (brake >= BSE_DEADZONE && getPedalTravel >= 0.25f);
 }
 
-void validateForwardTorqueRequest(int16_t* tqr)
+void validateForwardTorqueRequest(int16_t* tqr, uint16_t* heatCapacity)
 {
-    float deltaH;
-    if(millis() - lastHeatCapacityUpdateMillis > 10){
-        deltaH = 0.01;
-    }
-    else{
-        deltaH = (millis() - lastHeatCapacityUpdateMillis) / 1000;
-    }
-    lastHeatCapacityUpdateMillis = millis();
-    deltaH *= *tqr * *tqr - NOMINAL_CURRENT_FORWARD * NOMINAL_CURRENT_FORWARD;
-    heatCapacity += (heatCapacity + deltaH  > 0) ? deltaH : 0;
-    if(heatCapacity > MAX_AMK_HEAT_CAP * 0.8 && *tqr > MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity/MAX_AMK_HEAT_CAP - 0.8) / 0.1)){
-        *tqr = MAX_CURRENT_FORWARD * (1 - ((double)heatCapacity/MAX_AMK_HEAT_CAP - 0.8) / 0.1);
+    float deltaH =  0.01f * *tqr * *tqr - NOMINAL_CURRENT_FORWARD * NOMINAL_CURRENT_FORWARD;
+    *heatCapacity += (*heatCapacity + deltaH  > 0) ? deltaH : 0;
+    if (*heatCapacity > MAX_AMK_HEAT_CAP * 0.8f && *tqr > MAX_CURRENT_FORWARD * (1 - ((double)*heatCapacity/MAX_AMK_HEAT_CAP - 0.8f) / 0.1f))
+    {
+        *tqr = MAX_CURRENT_FORWARD * (1 - ((double)*heatCapacity/MAX_AMK_HEAT_CAP - 0.8f) / 0.1f);
     }
 }
 
