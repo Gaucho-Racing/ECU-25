@@ -114,7 +114,7 @@ void drive_active_regen(void)
         globalStatus.ECUState = DRIVE_ACTIVE_IDLE;
     }
 
-    int16_t rearTorqueRequest = (int16_t)(brakeTravel * MAX_CURRENT_REAR * -10) << 8;
+    int16_t rearTorqueRequest = (int16_t)(brakeTravel * MAX_CURRENT_REAR * -10);
     int16_t forwardTorqueRequest = (int16_t)(brakeTravel * MAX_CURRENT_FORWARD * -10 + 327.69) * 100;
 
     //validateForwardTorqueRequest(&forwardTorqueRequest);

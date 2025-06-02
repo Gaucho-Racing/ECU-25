@@ -25,10 +25,10 @@
 
     #define MAX_AMK_HEAT_CAP 11587
 
-    #define GEAR_RATIO 3.55
-    #define MOTOR_POLE_PAIRS 10.0
-    #define WHEEL_RADIUS_IN 8.0 // inches
-    #define MPH_TO_INCH_PER_MIN_CONV 1056.0
+    #define GEAR_RATIO 3.55f
+    #define MOTOR_POLE_PAIRS 10.0f
+    #define WHEEL_RADIUS_IN 8.0f // inches
+    #define MPH_TO_INCH_PER_MIN_CONV 1056.0f
 
     #define POWERLEVEL_TORQUEMAP_RESET 0xFF
     #define GLOBALSTATUS_WHEEL_RPM_ADJUSTMENT 3276
