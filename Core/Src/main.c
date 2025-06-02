@@ -144,7 +144,6 @@ int main(void)
     // LOGOMATIC(appsViolation ? "APPS VIOLATION\n" : "");
 
     //drive_active_power();
-
     float brakeTravel = getBrakeTravel();
     float pedalTravel = getPedalTravel();
 
