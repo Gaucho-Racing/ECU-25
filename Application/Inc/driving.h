@@ -24,7 +24,7 @@
 
     #define MAX_AMK_HEAT_CAP 11587
 
-    #define GEAR_RATIO 3.55
+    #define GEAR_RATIO (42.0 / 13.0)    // 42T driven and 13T driving
     #define MOTOR_POLE_PAIRS 10.0
     #define WHEEL_RADIUS_IN 8.0
     #define MPH_TO_INCH_PER_MIN_CONV 1056.0
