@@ -105,6 +105,14 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 
         if ((RxHeader.Identifier & ~0xF00) == 0x2016)
         {
+            uint8_t temp;
+            for(uint16_t i = 0; i < RxHeader.DataLength / 2; ++i) // Because DTI
+            {
+                temp = RxData[i];
+                RxData[i] = RxData[RxHeader.DataLength - i - 1];
+                RxData[RxHeader.DataLength - i - 1] = temp;
+            }
+
             handleDtiCANMessage(RxHeader.Identifier, RxData, RxHeader.DataLength);
         }
         else

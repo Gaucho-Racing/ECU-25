@@ -19,14 +19,6 @@ volatile bool globalRTDstate = 0;
 
 void handleDtiCANMessage(uint16_t msgID, uint8_t* data, uint32_t length)
 {
-    uint8_t temp;
-    for(uint16_t i = 0; i < length / 2; ++i)
-    {
-        temp = data[i];
-        data[i] = data[length - i - 1];
-        data[length - i - 1] = temp;
-    }
-
     LOGOMATIC("Recieved a CAN message from the DTI!\nMessage ID: %d\tLength: %ld", msgID, length);
 
     if (length != 8) {
