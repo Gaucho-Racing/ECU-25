@@ -25,8 +25,8 @@
     #define THROTTLE_MAX_2 1.00845551601f
     */
 
-    #define BRAKE_MIN 0.0f // FIXME change when value is known
-    #define BRAKE_MAX 5.0f // FIXME change when value is known
+    #define BRAKE_MIN 0 // FIXME change when value is known
+    #define BRAKE_MAX 4096 // FIXME change when value is known
     #define MAX_CURRENT_REAR 240.0f // A
     #define MAX_CURRENT_FORWARD 105.0f // A
     #define NOMINAL_CURRENT_FORWARD 41.0f // A

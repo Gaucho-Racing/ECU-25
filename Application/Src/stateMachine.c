@@ -118,10 +118,10 @@ StatusLump scaledECUStatusMsgForTx(void)
     scaledStatus.FRWheelRPM = scaledStatus.FRWheelRPM * 10 + 32768;
     scaledStatus.RLWheelRPM = scaledStatus.RLWheelRPM * 10 + 32768;
     scaledStatus.RRWheelRPM = scaledStatus.RRWheelRPM * 10 + 32768;
-    scaledStatus.APPS1_SIGNAL = (scaledStatus.APPS1_SIGNAL - THROTTLE_MIN_1) / THROTTLE_MAX_1 * 65535;
-    scaledStatus.APPS2_SIGNAL = (scaledStatus.APPS2_SIGNAL - THROTTLE_MIN_2) / THROTTLE_MAX_2 * 65535;
-    //scaledStatus.BRAKE_FORCE = (scaledStatus.BRAKE_FORCE - ) /  * 65535;
-    //scaledStatus.BRAKE_PRESSURE = (scaledStatus.BRAKE_PRESSURE - ) /  * 65535;
+    scaledStatus.APPS1_SIGNAL = 65535 * (scaledStatus.APPS1_SIGNAL - THROTTLE_MIN_1) / THROTTLE_MAX_1; // Don't reverse multiplication here
+    scaledStatus.APPS2_SIGNAL = 65535 * (scaledStatus.APPS2_SIGNAL - THROTTLE_MIN_2) / THROTTLE_MAX_2;
+    //scaledStatus.BRAKE_FORCE = ;
+    //scaledStatus.BRAKE_PRESSURE = ;
 
     return scaledStatus;
 }
