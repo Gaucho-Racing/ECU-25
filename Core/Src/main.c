@@ -120,7 +120,6 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  uint8_t driveActive = 1;
   while (1)
   {
     /* USER CODE END WHILE */
@@ -164,13 +163,13 @@ int main(void)
     writeDtiMessage(MSG_DTI_CONTROL_8, (uint8_t*)&maxCurrent, 2);
 
     pedalTravel = pedalTravel < 0.05f ? 0.0f : (pedalTravel - 0.05f) / 0.95f;
-    int16_t rearThrottleRequest = (int16_t)(pedalTravel * MAX_CURRENT_TESTING_AT_OWEN_AND_VAMSI_HOUSE * 10.0f)/* << 8*/;
+    int16_t rearThrottleRequest = (int16_t)(pedalTravel * MAX_CURRENT_TESTING_AT_OWEN_AND_VAMSI_HOUSE * 10.0f) << 8;
     //uint8_t buff[2];
     //memcpy(buff, &rearThrottleRequest, 2);
     //uint8_t temp = buff[0];
     //buff[0] = buff[1];
     //buff[1] = temp;
-    /*
+    
     LOGOMATIC("%lf", pedalTravel);
     writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&driveActive, 1);
     writeDtiMessage(MSG_DTI_CONTROL_1, rearThrottleRequest, 2);
@@ -196,9 +195,9 @@ int main(void)
     //}
     //LOGOMATIC("%d\n", analogRead(BSE_SIGNAL));
     // HAL_Delay(150);
+    */
   }
   /* USER CODE END 3 */
-
 }
 
 /**
