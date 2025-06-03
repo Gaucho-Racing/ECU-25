@@ -39,7 +39,7 @@ extern ADC_HandleTypeDef hadc2;
 /* USER CODE BEGIN Private defines */
 
 #define ADC_MAX 0x0FFF
-#define ADC_CONV 0.0005
+#define ADC_CONV 0.0005f
 
 /* USER CODE END Private defines */
 
