@@ -25,10 +25,10 @@
 
     #define MAX_AMK_HEAT_CAP 11587
 
-    #define GEAR_RATIO (42f / 13f)    // 42T driven and 13T driving
-    #define MOTOR_POLE_PAIRS 10f
-    #define WHEEL_RADIUS_IN 8f
-    #define MPH_TO_INCH_PER_MIN_CONV 1056f
+    #define GEAR_RATIO (42 / 13)    // 42T driven and 13T driving
+    #define MOTOR_POLE_PAIRS 10
+    #define WHEEL_RADIUS_IN 8
+    #define MPH_TO_INCH_PER_MIN_CONV 1056
 
     #define POWERLEVEL_TORQUEMAP_RESET 0xFF
     #define GLOBALSTATUS_WHEEL_RPM_ADJUSTMENT 3276
