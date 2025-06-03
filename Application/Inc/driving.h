@@ -11,11 +11,19 @@
     #define BSE_DEADZONE 0.05f
     #define REGEN_MPH 5
 
+    #define THROTTLE_MIN_1 631
+    #define THROTTLE_MAX_1 887
+
+    #define THROTTLE_MIN_2 1510
+    #define THROTTLE_MAX_2 2017
+
+    /*
     #define THROTTLE_MIN_1 0.315445f
     #define THROTTLE_MAX_1 0.443382562278f
 
     #define THROTTLE_MIN_2 0.7548975f
     #define THROTTLE_MAX_2 1.00845551601f
+    */
 
     #define BRAKE_MIN 0.0f // FIXME change when value is known
     #define BRAKE_MAX 5.0f // FIXME change when value is known

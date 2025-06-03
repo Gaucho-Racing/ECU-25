@@ -58,7 +58,7 @@ void validateForwardTorqueRequest(uint16_t* tqr, volatile uint16_t* heatCapacity
     }
 }
 
-void validateRegenRequest(uint16_t* tqr, volatile uint16_t batteryHeatCapacity){}
+void validateRegenRequest(uint16_t* tqr, volatile uint16_t* batteryHeatCapacity){}
 
 float vehicleSpeedMPH(void)
 {

@@ -72,7 +72,7 @@
     /**
     TODO: Implement this
      */
-    void validateRegenRequest(uint16_t* tqr, volatile uint16_t batteryHeatCapacity);
+    void validateRegenRequest(uint16_t* tqr, volatile uint16_t* batteryHeatCapacity);
 
     /**
     Sends apps violation message

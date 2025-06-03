@@ -26,25 +26,31 @@ volatile uint16_t heatCapacity2 = 0;
 volatile float minAmkHeatCapThrottlePercent = 0.8;
 
 
-static float getThrottle1()
+static uint16_t getThrottle1()
 {
-    return analogRead(APPS1_SIGNAL) * ADC_CONV;
+    //TODO: FINISH FIXING THIS COOKED ASS SHIT
+    float
+    globalStatus.APPS1_SIGNAL = (analogRead(APPS1_SIGNAL) - THROTTLE_MIN_1) / THROTTLE_MAX_1;
+    return globalStatus.APPS1_SIGNAL;
 }
 
-static float getThrottle2()
+static uint16_t getThrottle2()
 {
-    return analogRead(APPS2_SIGNAL) * ADC_CONV;
+    globalStatus.APPS2_SIGNAL = (analogRead(APPS2_SIGNAL) - THROTTLE_MIN_2) / THROTTLE_MAX_2;
+    return globalStatus.APPS2_SIGNAL;
 }
 
-static float getBrakeTravel()
+static uint16_t getBrakeTravel()
 {
     // TODO Check which signal
+    globalStatus.APPS1_SIGNAL = (analogRead(APPS1_SIGNAL) - THROTTLE_MIN_1) / THROTTLE_MAX_1;
+    return globalStatus.APPS1_SIGNAL;
     return (analogRead(BSE_SIGNAL) * ADC_CONV - BRAKE_MIN) / (BRAKE_MAX - BRAKE_MIN);
 }
 
-static float getPedalTravel()
+static float getPedalTravel(uint16_t throttle1, uint16_t throttle2)
 {
-    return (getThrottle2() + getThrottle1() - THROTTLE_MIN_2 - THROTTLE_MIN_1) / (THROTTLE_MAX_1 + THROTTLE_MAX_2 - THROTTLE_MIN_1 - THROTTLE_MIN_2);
+    return (float)(throttle1 + throttle2 - THROTTLE_MIN_2 - THROTTLE_MIN_1) / (THROTTLE_MAX_1 + THROTTLE_MAX_2 - THROTTLE_MIN_1 - THROTTLE_MIN_2);
 }
 
 void drive_standby(void)

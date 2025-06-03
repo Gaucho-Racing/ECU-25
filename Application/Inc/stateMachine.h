@@ -36,12 +36,17 @@
             int16_t FLWheelRPM;
             int16_t RRWheelRPM;
             int16_t RLWheelRPM;
+            uint16_t APPS1_SIGNAL;
+            uint16_t APPS2_SIGNAL;
+            uint16_t BRAKE_PRESSURE;
+            uint16_t BRAKE_FORCE;
         };
 
         struct {
             uint8_t ECUStatusMsgOne[8];
             uint8_t ECUStatusMsgTwo[8];
             uint8_t ECUStatusMsgThree[4];
+            uint8_t ECUPedalDataMsg[8];
         };
     } StatusLump;
 
