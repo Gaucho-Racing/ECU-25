@@ -101,7 +101,7 @@ void stateMachineTick(void)
         LOGOMATIC("--Global Status Dump--\n");
 
         writeMessage(DataBusCAN, MSG_ECU_PING_INFORMATION, GR_STEERING_WHEEL, correctlyScaledValues.StatusBits, 3);
-        writeMessage(DataBusCAN, MSG_ECU_PEDALS_DATA, GR_TCM, correctlyScaledValues.ECUPedalDataMsg, 8);
+        //writeMessage(DataBusCAN, MSG_ECU_PEDALS_DATA, GR_TCM, correctlyScaledValues.ECUPedalDataMsg, 8);
     }
 }
 
@@ -118,10 +118,10 @@ StatusLump scaledECUStatusMsgForTx(void)
     scaledStatus.FRWheelRPM = scaledStatus.FRWheelRPM * 10 + 32768;
     scaledStatus.RLWheelRPM = scaledStatus.RLWheelRPM * 10 + 32768;
     scaledStatus.RRWheelRPM = scaledStatus.RRWheelRPM * 10 + 32768;
-    scaledStatus.APPS_1 /= 655.35f;
-    scaledStatus.APPS_2 /= 655.35f;
-    scaledStatus.BRAKE_PRESSURE *= 655.35;
-    scaledStatus.BRAKE_FORCE *= 655.35;
+    scaledStatus.APPS1_SIGNAL = (scaledStatus.APPS1_SIGNAL - THROTTLE_MIN_1) / THROTTLE_MAX_1 * 65535;
+    scaledStatus.APPS2_SIGNAL = (scaledStatus.APPS2_SIGNAL - THROTTLE_MIN_2) / THROTTLE_MAX_2 * 65535;
+    //scaledStatus.BRAKE_FORCE = (scaledStatus.BRAKE_FORCE - ) /  * 65535;
+    //scaledStatus.BRAKE_PRESSURE = (scaledStatus.BRAKE_PRESSURE - ) /  * 65535;
 
     return scaledStatus;
 }

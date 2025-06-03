@@ -43,7 +43,7 @@ void setSoftwareLatch(bool close)
 bool checkBSEAPPSviolation(float throttle1, float throttle2, float getPedalTravel, float brake)
 {
     //Checks 2 * APPS_1 is within 10% of APPS_2 and break + throttle at the same time
-    return fabs(throttle2 - throttle1 * 1.9932988878f - 0.125125991408f) > throttle2 * 0.1 || (brake >= BSE_DEADZONE && getPedalTravel >= 0.25f);
+    return fabs(throttle2 - throttle1 * 1.9932988878f - 250.251982816f) > throttle2 * 0.1f || (brake >= BSE_DEADZONE && getPedalTravel >= 0.25f);
 }
 
 void validateForwardTorqueRequest(uint16_t* tqr, volatile uint16_t* heatCapacity)

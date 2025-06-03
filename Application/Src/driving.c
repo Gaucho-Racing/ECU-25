@@ -25,32 +25,19 @@ volatile uint16_t heatCapacity2 = 0;
 
 volatile float minAmkHeatCapThrottlePercent = 0.8;
 
-
-static uint16_t getThrottle1()
-{
-    //TODO: FINISH FIXING THIS COOKED ASS SHIT
-    float
-    globalStatus.APPS1_SIGNAL = (analogRead(APPS1_SIGNAL) - THROTTLE_MIN_1) / THROTTLE_MAX_1;
-    return globalStatus.APPS1_SIGNAL;
-}
-
-static uint16_t getThrottle2()
-{
-    globalStatus.APPS2_SIGNAL = (analogRead(APPS2_SIGNAL) - THROTTLE_MIN_2) / THROTTLE_MAX_2;
-    return globalStatus.APPS2_SIGNAL;
-}
-
 static uint16_t getBrakeTravel()
 {
     // TODO Check which signal
-    globalStatus.APPS1_SIGNAL = (analogRead(APPS1_SIGNAL) - THROTTLE_MIN_1) / THROTTLE_MAX_1;
-    return globalStatus.APPS1_SIGNAL;
-    return (analogRead(BSE_SIGNAL) * ADC_CONV - BRAKE_MIN) / (BRAKE_MAX - BRAKE_MIN);
+    globalStatus.BRAKE_FORCE = analogRead(/*Change this*/BSE_SIGNAL);
+    globalStatus.BRAKE_PRESSURE = analogRead(/*Change this*/BSE_SIGNAL);
+    return analogRead(BSE_SIGNAL);
 }
 
-static float getPedalTravel(uint16_t throttle1, uint16_t throttle2)
+static float getPedalTravel()
 {
-    return (float)(throttle1 + throttle2 - THROTTLE_MIN_2 - THROTTLE_MIN_1) / (THROTTLE_MAX_1 + THROTTLE_MAX_2 - THROTTLE_MIN_1 - THROTTLE_MIN_2);
+    globalStatus.APPS1_SIGNAL = analogRead(APPS1_SIGNAL);
+    globalStatus.APPS2_SIGNAL = analogRead(APPS2_SIGNAL);
+    return (float)(globalStatus.APPS1_SIGNAL + globalStatus.APPS2_SIGNAL - THROTTLE_MIN_2 - THROTTLE_MIN_1) / (THROTTLE_MAX_1 + THROTTLE_MAX_2 - THROTTLE_MIN_1 - THROTTLE_MIN_2);
 }
 
 void drive_standby(void)
@@ -79,7 +66,7 @@ void drive_active_idle(void)
     float brakeTravel = getBrakeTravel();
     float pedalTravel = getPedalTravel();
 
-    if (checkBSEAPPSviolation(getThrottle1(), getThrottle2(), pedalTravel, brakeTravel))
+    if (checkBSEAPPSviolation(globalStatus.APPS1_SIGNAL, globalStatus.APPS2_SIGNAL, pedalTravel, brakeTravel))
     {  
         controlInverters(false);   //false for disable
         globalStatus.ECUState = DRIVE_STANDBY;
@@ -113,8 +100,8 @@ void drive_active_power(void)
     float brakeTravel = getBrakeTravel();
     float pedalTravel = getPedalTravel();
 
-    if (checkBSEAPPSviolation(getThrottle1(), getThrottle2(), pedalTravel, brakeTravel)){
-        controlInverters(0);   //0 for disable
+    if (checkBSEAPPSviolation(globalStatus.APPS1_SIGNAL, globalStatus.APPS2_SIGNAL, pedalTravel, brakeTravel)){
+        controlInverters(false);   //0 for disable
         globalStatus.ECUState = DRIVE_STANDBY;
         BSE_APPS_violation = true;
         sendBseAppsViolationMessage();
@@ -163,7 +150,7 @@ void drive_active_regen(void)
     float brakeTravel = getBrakeTravel();
     float pedalTravel = getPedalTravel();
 
-    if(checkBSEAPPSviolation(getThrottle1(), getThrottle2(), pedalTravel, brakeTravel))
+    if(checkBSEAPPSviolation(globalStatus.APPS1_SIGNAL, globalStatus.APPS2_SIGNAL, pedalTravel, brakeTravel))
     {
         controlInverters(false);
         globalStatus.ECUState = DRIVE_STANDBY;
