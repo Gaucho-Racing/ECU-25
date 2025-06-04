@@ -62,7 +62,7 @@ void drive_active_idle(void)
     if(millis() - lastDriveActiveCtrlMs < DRIVE_ACTIVE_POWER_REGEN_INTERVAL_MS){
         return;
     }
-    
+
     lastDriveActiveCtrlMs = millis();
     float brakeTravel = getBrakeTravel();
     float pedalTravel = getPedalTravel();
@@ -78,10 +78,12 @@ void drive_active_idle(void)
     else if (pedalTravel >= APPS_DEADZONE)
     {
         globalStatus.ECUState = DRIVE_ACTIVE_POWER;
+        return;
     }
     else if (pedalTravel < APPS_DEADZONE && vehicleSpeedMPH() > REGEN_MPH && getBits(globalSteeringStatusRegenButtonMap, 0, 4) != 0)
     {
         globalStatus.ECUState = DRIVE_ACTIVE_REGEN;
+        return;
     }
 
     globalInverterSettings[0].acCurrent = 0;
@@ -162,10 +164,12 @@ void drive_active_regen(void)
     else if (pedalTravel >= APPS_DEADZONE)
     {
         globalStatus.ECUState = DRIVE_ACTIVE_POWER;
+        return;
     }
     else if (vehicleSpeedMPH() < REGEN_MPH || getBits(globalSteeringStatusRegenButtonMap, 0, 4) == 0)
     {
         globalStatus.ECUState = DRIVE_ACTIVE_IDLE;
+        return;
     }
 
     uint16_t rearThrottleRequest = (uint16_t)(brakeTravel * MAX_CURRENT_REAR);
