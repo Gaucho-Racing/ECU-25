@@ -40,16 +40,16 @@ void setSoftwareLatch(bool close)
     }
 }
 
-bool checkBSEAPPSviolation(float throttle1, float throttle2, float getPedalTravel, float brake)
+bool checkBSEAPPSviolation(uint16_t throttle1, uint16_t throttle2, float pedalTravel, float brake)
 {
     //Checks 2 * APPS_1 is within 10% of APPS_2 and break + throttle at the same time
-    return fabs(throttle2 - throttle1 * 1.9932988878f - 250.251982816f) > throttle2 * 0.1f || (brake >= BSE_DEADZONE && getPedalTravel >= 0.25f);
+    return fabs(throttle2 - throttle1 * 1.9932988878f - 250.251982816f) > throttle2 * 0.1f || (brake >= BSE_DEADZONE && pedalTravel >= 0.25f);
 }
 
 void validateForwardTorqueRequest(uint16_t* tqr, volatile uint16_t* heatCapacity)
 {
     float deltaH =  0.01f * *tqr * *tqr - NOMINAL_CURRENT_FORWARD * NOMINAL_CURRENT_FORWARD;
-    *heatCapacity += (*heatCapacity + deltaH  > 0) ? deltaH : 0;
+    *heatCapacity += (*heatCapacity + deltaH  > 0) ? deltaH : -1 * *heatCapacity;
     float proportionOfMax = (1 - ((double)*heatCapacity/MAX_AMK_HEAT_CAP - minAmkHeatCapThrottlePercent) / 0.1f);
     proportionOfMax = (proportionOfMax > 0) ? proportionOfMax : 0;
     if (*heatCapacity > MAX_AMK_HEAT_CAP * minAmkHeatCapThrottlePercent && *tqr > MAX_CURRENT_FORWARD * proportionOfMax)
@@ -58,7 +58,19 @@ void validateForwardTorqueRequest(uint16_t* tqr, volatile uint16_t* heatCapacity
     }
 }
 
-void validateRegenRequest(uint16_t* tqr, volatile uint16_t* batteryHeatCapacity){}
+void validateRegenRequest(uint16_t* fwdTqr1, uint16_t* fwdTqr2, uint16_t* rTqr, volatile uint16_t* batteryHeatCapacity){
+    uint16_t tqr = *fwdTqr1 + *fwdTqr2 + *rTqr;
+    float deltaH =  0.01f * tqr * tqr - NOMINAL_REGEN_CURRENT * NOMINAL_REGEN_CURRENT;
+    *batteryHeatCapacity += (*batteryHeatCapacity + deltaH  > 0) ? deltaH : -1 * *batteryHeatCapacity;
+    float proportionOfMax = (1 - ((double)*batteryHeatCapacity/MAX_BAT_HEAT_CAP - minBatHeatCapThrottlePercent) / 0.1f);
+    proportionOfMax = (proportionOfMax > 0) ? proportionOfMax : 0;
+    if (*batteryHeatCapacity > MAX_AMK_HEAT_CAP * minAmkHeatCapThrottlePercent && tqr > MAX_CURRENT_FORWARD * proportionOfMax)
+    {
+        *fwdTqr1 *= proportionOfMax;
+        *fwdTqr2 *= proportionOfMax;
+        *rTqr *= proportionOfMax;
+    }
+}
 
 float vehicleSpeedMPH(void)
 {

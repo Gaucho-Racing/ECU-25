@@ -30,8 +30,11 @@
     #define MAX_CURRENT_REAR 240.0f // A
     #define MAX_CURRENT_FORWARD 105.0f // A
     #define NOMINAL_CURRENT_FORWARD 41.0f // A
+    #define NOMINAL_REGEN_CURRENT 10.0f // FIXME change when value is known
+
 
     #define MAX_AMK_HEAT_CAP 11587
+    #define MAX_BAT_HEAT_CAP 10000 // FIXME change when value is known
 
     #define GEAR_RATIO (42.0f / 13.0f)    // 42T driven and 13T driving
     #define MOTOR_POLE_PAIRS 10.0f
@@ -43,6 +46,7 @@
 
     extern volatile bool BSE_APPS_violation;
     extern volatile float minAmkHeatCapThrottlePercent;
+    extern volatile float minBatHeatCapThrottlePercent;
     
     /**
     Vehicle Speed in MPH

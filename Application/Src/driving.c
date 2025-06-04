@@ -23,7 +23,11 @@ volatile uint16_t heatCapacity1 = 0;
 
 volatile uint16_t heatCapacity2 = 0;
 
-volatile float minAmkHeatCapThrottlePercent = 0.8;
+volatile uint16_t batteryHeatCapacity = 0;
+
+volatile float minAmkHeatCapThrottlePercent = 0.8f;
+
+volatile float minBatHeatCapThrottlePercent = 0.8f;
 
 static uint16_t getBrakeTravel()
 {
@@ -179,7 +183,9 @@ void drive_active_regen(void)
     validateForwardTorqueRequest(&forwardThrottleRequest1, &heatCapacity1);
     validateForwardTorqueRequest(&forwardThrottleRequest2, &heatCapacity2);
 
-    //TODO: BATTERY HEAT MANAGEMENT FOR REGEN
+    validateRegenRequest(&rearThrottleRequest, &forwardThrottleRequest1, &forwardThrottleRequest2, &batteryHeatCapacity);
+    
+    //I'm assuming that reverse current heat management applies equally to all motors since it is for the battery.
 
     //validateForwardTorqueRequest(&forwardTorqueRequest);
 

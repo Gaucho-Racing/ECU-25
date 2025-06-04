@@ -55,14 +55,10 @@
 
     /**
     Checks for BSE APPS violation
+    Checks for apps violation given the throttles, throttle request, and brake signal
      */
-    bool checkBSEAPPSviolation(float throttle1, float throttle2, float getPedalTravel, float brake);
-
-    /**
-     Checks for apps violation given the throttles, throttle request, and brake signal
-     */
-    bool checkBSEAPPSviolation(float throttle1, float throttle2, float pedalTravel, float brake);
-
+    bool checkBSEAPPSviolation(uint16_t throttle1, uint16_t throttle2, float pedalTravel, float brake);
+    
     /**
     Validate torque request to AMK motors and manage heat
      */
@@ -70,9 +66,9 @@
 
 
     /**
-    TODO: Implement this
+    Validate regen request (negative current) and manage the battery heat capacity
      */
-    void validateRegenRequest(uint16_t* tqr, volatile uint16_t* batteryHeatCapacity);
+    void validateRegenRequest(uint16_t* fwdTqr1, uint16_t* fwdTqr2, uint16_t* rTqr, volatile uint16_t* batteryHeatCapacity);
 
     /**
     Sends apps violation message
