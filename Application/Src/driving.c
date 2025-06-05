@@ -98,9 +98,11 @@ void drive_active_idle(void)
 
 void drive_active_power(void)
 {
-    if(millis() - lastDriveActiveCtrlMs < DRIVE_ACTIVE_POWER_REGEN_INTERVAL_MS){
+    if (millis() - lastDriveActiveCtrlMs < DRIVE_ACTIVE_POWER_REGEN_INTERVAL_MS)
+    {
         return;
     }
+
     lastDriveActiveCtrlMs = millis();
     float brakeTravel = getBrakeTravel();
     float pedalTravel = getPedalTravel();
