@@ -50,26 +50,21 @@ void validateForwardTorqueRequest(uint16_t* tqr, volatile uint16_t* heatCapacity
 {
     float deltaH =  0.01f * *tqr * *tqr - NOMINAL_CURRENT_FORWARD * NOMINAL_CURRENT_FORWARD;
     *heatCapacity += (*heatCapacity + deltaH  > 0) ? deltaH : -1 * *heatCapacity;
-    float proportionOfMax = (1 - ((double)*heatCapacity/MAX_AMK_HEAT_CAP - minAmkHeatCapThrottlePercent) / 0.1f);
-    proportionOfMax = (proportionOfMax > 0) ? proportionOfMax : 0;
+    float proportionOfMax = (1 - ((float)*heatCapacity/MAX_AMK_HEAT_CAP - minAmkHeatCapThrottlePercent) / 0.1f);
+    proportionOfMax = (proportionOfMax < 0) ? 0 : proportionOfMax;
     if (*heatCapacity > MAX_AMK_HEAT_CAP * minAmkHeatCapThrottlePercent && *tqr > MAX_CURRENT_FORWARD * proportionOfMax)
     {
         *tqr = MAX_CURRENT_FORWARD * proportionOfMax;
     }
 }
 
-void validateRegenRequest(uint16_t* fwdTqr1, uint16_t* fwdTqr2, uint16_t* rTqr, volatile uint16_t* batteryHeatCapacity){
-    uint16_t tqr = *fwdTqr1 + *fwdTqr2 + *rTqr;
-    float deltaH =  0.01f * tqr * tqr - NOMINAL_REGEN_CURRENT * NOMINAL_REGEN_CURRENT;
-    *batteryHeatCapacity += (*batteryHeatCapacity + deltaH  > 0) ? deltaH : -1 * *batteryHeatCapacity;
-    float proportionOfMax = (1 - ((double)*batteryHeatCapacity/MAX_BAT_HEAT_CAP - minBatHeatCapThrottlePercent) / 0.1f);
-    proportionOfMax = (proportionOfMax > 0) ? proportionOfMax : 0;
-    if (*batteryHeatCapacity > MAX_AMK_HEAT_CAP * minAmkHeatCapThrottlePercent && tqr > MAX_CURRENT_FORWARD * proportionOfMax)
-    {
-        *fwdTqr1 *= proportionOfMax;
-        *fwdTqr2 *= proportionOfMax;
-        *rTqr *= proportionOfMax;
-    }
+void validateRegenRequest(uint16_t* fwdTqr1, uint16_t* fwdTqr2, uint16_t* rTqr){
+    float throttlePercent = (1 - (float)(globalStatus.MaxCellTemp - MIN_BAT_TEMP_REGEN_THROTTLE) / 3);
+    throttlePercent = throttlePercent < 0 ? 0 : throttlePercent;
+    throttlePercent = throttlePercent > 1 ? 1 : throttlePercent;
+    *fwdTqr1 *= throttlePercent;
+    *fwdTqr2 *= throttlePercent;
+    *rTqr *= throttlePercent;
 }
 
 float vehicleSpeedMPH(void)

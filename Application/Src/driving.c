@@ -27,8 +27,6 @@ volatile uint16_t batteryHeatCapacity = 0;
 
 volatile float minAmkHeatCapThrottlePercent = 0.8f;
 
-volatile float minBatHeatCapThrottlePercent = 0.8f;
-
 static uint16_t getBrakeTravel()
 {
     // TODO Check which signal
@@ -134,9 +132,6 @@ void drive_active_power(void)
     //TODO: ADD MAX HEAT CAP ADJUSTMENT BASED ON COOLANT
     //TODO Wait, how to handle one forward motor overheating but the other one being fine? Does the other one also get limited?
 
-
-    //validateForwardTorqueRequest((int16_t*)&forwardThrottleRequest);
-
     rearThrottleRequest *= 10;
     forwardThrottleRequest1 = (forwardThrottleRequest1 + 327.69f) * 100;
     forwardThrottleRequest2 = (forwardThrottleRequest2 + 327.69f) * 100;
@@ -183,11 +178,9 @@ void drive_active_regen(void)
     validateForwardTorqueRequest(&forwardThrottleRequest1, &heatCapacity1);
     validateForwardTorqueRequest(&forwardThrottleRequest2, &heatCapacity2);
 
-    validateRegenRequest(&rearThrottleRequest, &forwardThrottleRequest1, &forwardThrottleRequest2, &batteryHeatCapacity);
+    validateRegenRequest(&rearThrottleRequest, &forwardThrottleRequest1, &forwardThrottleRequest2);
     
     //I'm assuming that reverse current heat management applies equally to all motors since it is for the battery.
-
-    //validateForwardTorqueRequest(&forwardTorqueRequest);
 
     rearThrottleRequest *= -10;
     forwardThrottleRequest1 = (-1 * forwardThrottleRequest1 + 327.69f) * 100;

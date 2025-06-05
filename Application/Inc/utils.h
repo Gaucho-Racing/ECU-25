@@ -68,7 +68,7 @@
     /**
     Validate regen request (negative current) and manage the battery heat capacity
      */
-    void validateRegenRequest(uint16_t* fwdTqr1, uint16_t* fwdTqr2, uint16_t* rTqr, volatile uint16_t* batteryHeatCapacity);
+    void validateRegenRequest(uint16_t* fwdTqr1, uint16_t* fwdTqr2, uint16_t* rTqr);
 
     /**
     Sends apps violation message

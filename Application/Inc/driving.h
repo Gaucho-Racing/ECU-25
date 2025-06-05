@@ -34,7 +34,7 @@
 
 
     #define MAX_AMK_HEAT_CAP 11587
-    #define MAX_BAT_HEAT_CAP 10000 // FIXME change when value is known
+    #define MIN_BAT_TEMP_REGEN_THROTTLE 57 // C
 
     #define GEAR_RATIO (42.0f / 13.0f)    // 42T driven and 13T driving
     #define MOTOR_POLE_PAIRS 10.0f
@@ -46,7 +46,6 @@
 
     extern volatile bool BSE_APPS_violation;
     extern volatile float minAmkHeatCapThrottlePercent;
-    extern volatile float minBatHeatCapThrottlePercent;
     
     /**
     Vehicle Speed in MPH
