@@ -118,6 +118,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    LOGOMATIC("%d\n", globalStatus.ECUState);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
