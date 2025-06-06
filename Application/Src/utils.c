@@ -59,7 +59,7 @@ void validateForwardTorqueRequest(uint16_t* tqr, volatile uint16_t* heatCapacity
 }
 
 void validateRegenRequest(uint16_t* fwdTqr1, uint16_t* fwdTqr2, uint16_t* rTqr){
-    float throttlePercent = (1 - (float)(globalStatus.MaxCellTemp - MIN_BAT_TEMP_REGEN_THROTTLE) / 3);
+    float throttlePercent = (1 - (float)(globalStatus.MaxCellTemp - MIN_BAT_TEMP_REGEN_THROTTLE) / 5);
     throttlePercent = throttlePercent < 0 ? 0 : throttlePercent;
     throttlePercent = throttlePercent > 1 ? 1 : throttlePercent;
     *fwdTqr1 *= throttlePercent;
