@@ -102,7 +102,7 @@ void stateMachineTick(void)
 
         //writeMessage(DataBusCAN, MSG_DASH_WARNING_FLAGS, GR_DASH_PANEL, /*FIXME*/);
         writeMessage(DataBusCAN, MSG_ECU_PING_INFORMATION, GR_STEERING_WHEEL, correctlyScaledValues.StatusBits, 3);
-        writeMessage(DataBusCAN, MSG_ECU_PEDALS_DATA, GR_TCM, correctlyScaledValues.ECUPedalDataMsg, 8);
+        //writeMessage(DataBusCAN, MSG_ECU_PEDALS_DATA, GR_TCM, correctlyScaledValues.ECUPedalDataMsg, 8);
     }
 }
 
