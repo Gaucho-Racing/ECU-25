@@ -16,6 +16,8 @@
 volatile uint8_t errorFlagBitsCan = 0;
 volatile uint8_t globalSteeringStatusRegenButtonMap = 0;
 volatile bool globalRTDstate = 0;
+volatile bool invalidRTD = 0;
+volatile bool prevTS_ON = 1;
 
 void handleDtiCANMessage(uint16_t msgID, uint8_t* data, uint32_t length)
 {
@@ -303,7 +305,10 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             switch(globalStatus.ECUState)
             {
                 case GLV_ON:
-                    if (ts_on)
+                    if(!ts_on){
+                        prevTS_ON = 0;
+                    }
+                    if (ts_on && !prevTS_ON)
                     {
                         globalStatus.ECUState = PRECHARGE_ENGAGED;
                     }
@@ -314,6 +319,26 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                     if (!ts_on)
                     {
                         globalStatus.ECUState = GLV_ON;
+                    }
+                    writeMessage(PrimaryBusCAN, MSG_ACU_PRECHARGE, GR_ACU, (uint8_t*)&ts_on, 1);
+                    
+                    break;
+
+                case PRECHARGING:
+                    if(rtd){
+                        invalidRTD = true;
+                    }
+                    break;
+
+
+                case PRECHARGE_COMPLETE:
+                    if (rtd && !invalidRTD && analogRead(BRAKE_F_SIGNAL) > 100 && analogRead(BRAKE_R_SIGNAL) > 100)
+                    {
+                        globalStatus.ECUState = DRIVE_STANDBY;
+                    }
+                    else if(!rtd && invalidRTD)
+                    {
+                        invalidRTD = false;
                     }
 
                     break;
@@ -327,14 +352,6 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                         writeMessage(DataBusCAN, MSG_DEBUG_2_0, GR_DASH_PANEL, (uint8_t*) "RTD Button Error. Please press brake before RTD", 47);
                     }
                     
-                    break;
-
-                case PRECHARGE_COMPLETE:
-                    if (rtd && analogRead(BRAKE_F_SIGNAL) > 100 && analogRead(BRAKE_R_SIGNAL) > 100)
-                    {
-                        globalStatus.ECUState = DRIVE_STANDBY;
-                    }
-
                     break;
 
                 default:
