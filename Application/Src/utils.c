@@ -12,6 +12,7 @@
 #include "math.h"
 #include "inverter.h"
 #include "driving.h"
+#include "adc.h"
 
 uint32_t millis(void)
 {
@@ -141,3 +142,19 @@ bool ACUWarning(ACU_Status_MsgTwo *acuMsgTwo)
 
     return false;
 }
+
+uint16_t getBrakeTravel()
+{
+    // TODO Check which signal
+    globalStatus.BRAKE_FORCE = analogRead(/*Change this*/BSE_SIGNAL);
+    globalStatus.BRAKE_PRESSURE = analogRead(/*Change this*/BSE_SIGNAL);
+    return analogRead(BSE_SIGNAL);
+}
+
+float getPedalTravel()
+{
+    globalStatus.APPS1_SIGNAL = analogRead(APPS1_SIGNAL);
+    globalStatus.APPS2_SIGNAL = analogRead(APPS2_SIGNAL);
+    return (float)(globalStatus.APPS1_SIGNAL + globalStatus.APPS2_SIGNAL - THROTTLE_MIN_2 - THROTTLE_MIN_1) / (THROTTLE_MAX_1 + THROTTLE_MAX_2 - THROTTLE_MIN_1 - THROTTLE_MIN_2);
+}
+

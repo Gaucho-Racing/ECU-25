@@ -64,6 +64,8 @@
      */
     void validateForwardTorqueRequest(uint16_t* tqr, volatile uint16_t* heatCapacity);
 
+    uint16_t getBrakeTravel();
+    float getPedalTravel();
 
     /**
     Validate regen request (negative current) and manage the battery heat capacity
