@@ -17,6 +17,17 @@
     #define THROTTLE_MIN_2 1510
     #define THROTTLE_MAX_2 2017
 
+    //FIXME: CHANGE THE FOLLOWING MIN AND MAX VALUES WHEN THEY ARE KNOWN
+
+    #define BSE_MIN 0
+    #define BSE_MAX 4095
+
+    #define BRAKE_F_MIN 0
+    #define BRAKE_F_MAX 4095
+
+    #define BRAKE_R_MIN 0
+    #define BRAKE_R_MAX 4095
+
     /*
     #define THROTTLE_MIN_1 0.315445f
     #define THROTTLE_MAX_1 0.443382562278f
@@ -24,12 +35,11 @@
     #define THROTTLE_MIN_2 0.7548975f
     #define THROTTLE_MAX_2 1.00845551601f
     */
-
-    #define BRAKE_MIN 0 // FIXME change when value is known
-    #define BRAKE_MAX 4096 // FIXME change when value is known
+   
     #define MAX_CURRENT_REAR 240.0f // A
     #define MAX_CURRENT_FORWARD 105.0f // A
     #define NOMINAL_CURRENT_FORWARD 41.0f // A
+    #define MAX_REVERSE_CURRENT 40.0f // A
 
 
     #define MAX_AMK_HEAT_CAP 11587

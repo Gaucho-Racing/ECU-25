@@ -26,6 +26,8 @@ uint16_t lastECUStatusMsgTick = 0;
 
 static const uint16_t howOftenToSpamECUStatusMsgs = 35;
 
+//TODO: MAKE ENCODERS ACTUALLY DO SOMETHING
+
 void stateMachineTick(void)
 {
     if (numberOfBadMessages > BAD_MESSAGE_LIMIT)
@@ -102,7 +104,7 @@ void stateMachineTick(void)
 
         //writeMessage(DataBusCAN, MSG_DASH_WARNING_FLAGS, GR_DASH_PANEL, /*FIXME*/);
         writeMessage(DataBusCAN, MSG_ECU_PING_INFORMATION, GR_STEERING_WHEEL, correctlyScaledValues.StatusBits, 3);
-        //writeMessage(DataBusCAN, MSG_ECU_PEDALS_DATA, GR_TCM, correctlyScaledValues.ECUPedalDataMsg, 8);
+        //writeMessage(DataBusCAN, MSG_ECU_PEDALS_DATA, GR_TCM, correctlyScaledValues.ECUPedalDataMsg, 10);
     }
 }
 
@@ -121,8 +123,9 @@ StatusLump scaledECUStatusMsgForTx(void)
     scaledStatus.RRWheelRPM = scaledStatus.RRWheelRPM * 10 + 32768;
     scaledStatus.APPS1_SIGNAL = 65535 * (scaledStatus.APPS1_SIGNAL - THROTTLE_MIN_1) / THROTTLE_MAX_1; // Don't reverse multiplication here
     scaledStatus.APPS2_SIGNAL = 65535 * (scaledStatus.APPS2_SIGNAL - THROTTLE_MIN_2) / THROTTLE_MAX_2;
-    //scaledStatus.BRAKE_FORCE = ;
-    //scaledStatus.BRAKE_PRESSURE = ;
+    scaledStatus.BSE_SIGNAL = 65535 * (scaledStatus.APPS2_SIGNAL - BSE_MIN) / BSE_MAX;
+    scaledStatus.BRAKE_F_SIGNAL = 65535 * (scaledStatus.APPS2_SIGNAL - BRAKE_F_MIN) / BRAKE_F_MAX;
+    scaledStatus.BRAKE_R_SIGNAL = 65535 * (scaledStatus.APPS2_SIGNAL - BRAKE_R_MIN) / BRAKE_R_MAX;
 
     return scaledStatus;
 }

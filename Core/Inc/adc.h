@@ -53,12 +53,12 @@ typedef enum {
     BSPD_SIGNAL,
     APPS1_SIGNAL,
     APPS2_SIGNAL,
-    BRAKE_R_SIGNAL,
-    BRAKE_F_SIGNAL,
+    BRAKE_R_SIGNAL, // Pressure
+    BRAKE_F_SIGNAL, // Pressure
 // ADC2
     IMD_SENSE,
     AMS_SENSE,
-    BSE_SIGNAL,
+    BSE_SIGNAL, // Force
     BSPD_SENSE,
     STEERING_ANGLE,
 } AnalogSignal;

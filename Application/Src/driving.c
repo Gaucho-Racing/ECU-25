@@ -23,16 +23,15 @@ volatile uint16_t heatCapacity1 = 0;
 
 volatile uint16_t heatCapacity2 = 0;
 
-volatile uint16_t batteryHeatCapacity = 0;
-
 volatile float minAmkHeatCapThrottlePercent = 0.8f;
 
 static uint16_t getBrakeTravel()
 {
     // TODO Check which signal
-    globalStatus.BRAKE_FORCE = analogRead(/*Change this*/BSE_SIGNAL);
-    globalStatus.BRAKE_PRESSURE = analogRead(/*Change this*/BSE_SIGNAL);
-    return analogRead(BSE_SIGNAL);
+    globalStatus.BSE_SIGNAL = analogRead(BSE_SIGNAL);
+    globalStatus.BRAKE_F_SIGNAL = analogRead(BRAKE_F_SIGNAL);
+    globalStatus.BRAKE_R_SIGNAL = analogRead(BRAKE_F_SIGNAL);
+    return (float)(globalStatus.BSE_SIGNAL - BSE_MIN) / (BSE_MAX - BSE_MIN);
 }
 
 static float getPedalTravel()
@@ -125,8 +124,8 @@ void drive_active_power(void)
     //Owen said that current after 5% should start from 0, hence the following line, but the car might not even move from 0-5% current, so maybe review the following line later
 
     uint16_t rearThrottleRequest = (uint16_t)((pedalTravel - 0.05f) / 0.95f * MAX_CURRENT_REAR);
-    uint16_t forwardThrottleRequest1 = (uint16_t)((pedalTravel - 0.05f) / 0.95f * MAX_CURRENT_FORWARD); // 65535/655.35 = 100
-    uint16_t forwardThrottleRequest2 = (uint16_t)((pedalTravel - 0.05f) / 0.95f * MAX_CURRENT_FORWARD); // 65535/655.35 = 100
+    uint16_t forwardThrottleRequest1 = (uint16_t)((pedalTravel - 0.05f) / 0.95f * MAX_CURRENT_FORWARD);
+    uint16_t forwardThrottleRequest2 = (uint16_t)((pedalTravel - 0.05f) / 0.95f * MAX_CURRENT_FORWARD);
 
     validateForwardTorqueRequest(&forwardThrottleRequest1, &heatCapacity1);
     validateForwardTorqueRequest(&forwardThrottleRequest2, &heatCapacity2);
@@ -174,8 +173,8 @@ void drive_active_regen(void)
     }
 
     uint16_t rearThrottleRequest = (uint16_t)(brakeTravel * MAX_CURRENT_REAR);
-    uint16_t forwardThrottleRequest1 = (uint16_t)(brakeTravel * MAX_CURRENT_FORWARD); // 65535/655.35 = 100
-    uint16_t forwardThrottleRequest2 = (uint16_t)(brakeTravel * MAX_CURRENT_FORWARD); // 65535/655.35 = 100
+    uint16_t forwardThrottleRequest1 = (uint16_t)(brakeTravel * MAX_CURRENT_FORWARD);
+    uint16_t forwardThrottleRequest2 = (uint16_t)(brakeTravel * MAX_CURRENT_FORWARD);
 
     validateForwardTorqueRequest(&forwardThrottleRequest1, &heatCapacity1);
     validateForwardTorqueRequest(&forwardThrottleRequest2, &heatCapacity2);
