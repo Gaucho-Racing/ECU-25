@@ -23,8 +23,6 @@ volatile uint16_t heatCapacity1 = 0;
 
 volatile uint16_t heatCapacity2 = 0;
 
-volatile uint16_t batteryHeatCapacity = 0;
-
 volatile float minAmkHeatCapThrottlePercent = 0.8f;
 
 void drive_standby(void)

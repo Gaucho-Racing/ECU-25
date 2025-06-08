@@ -30,6 +30,7 @@
     #define MAX_CURRENT_REAR 240.0f // A
     #define MAX_CURRENT_FORWARD 105.0f // A
     #define NOMINAL_CURRENT_FORWARD 41.0f // A
+    #define MAX_REVERSE_CURRENT 40.0 // A
 
 
     #define MAX_AMK_HEAT_CAP 11587
