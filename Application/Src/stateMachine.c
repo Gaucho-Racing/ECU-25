@@ -123,7 +123,7 @@ StatusLump scaledECUStatusMsgForTx(void)
     scaledStatus.RRWheelRPM = scaledStatus.RRWheelRPM * 10 + 32768;
     scaledStatus.APPS1_SIGNAL = 65535 * (scaledStatus.APPS1_SIGNAL - THROTTLE_MIN_1) / THROTTLE_MAX_1; // Don't reverse multiplication here
     scaledStatus.APPS2_SIGNAL = 65535 * (scaledStatus.APPS2_SIGNAL - THROTTLE_MIN_2) / THROTTLE_MAX_2;
-    scaledStatus.BSE_SIGNAL = 65535 * (scaledStatus.APPS2_SIGNAL - BSE_MIN) / BSE_MAX;
+    scaledStatus.AUX_SIGNAL = 65535 * (scaledStatus.APPS2_SIGNAL - BSE_MIN) / BSE_MAX;
     scaledStatus.BRAKE_F_SIGNAL = 65535 * (scaledStatus.APPS2_SIGNAL - BRAKE_F_MIN) / BRAKE_F_MAX;
     scaledStatus.BRAKE_R_SIGNAL = 65535 * (scaledStatus.APPS2_SIGNAL - BRAKE_R_MIN) / BRAKE_R_MAX;
 
