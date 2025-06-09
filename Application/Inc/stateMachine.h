@@ -38,7 +38,7 @@
             int16_t RLWheelRPM;
             uint16_t APPS1_SIGNAL;
             uint16_t APPS2_SIGNAL;
-            uint16_t BSE_SIGNAL;
+            uint16_t AUX_SIGNAL;
             uint16_t BRAKE_F_SIGNAL;
             uint16_t BRAKE_R_SIGNAL;
         };
