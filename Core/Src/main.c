@@ -122,7 +122,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    LOGOMATIC("F: %d\n", analogRead(BRAKE_F_SIGNAL));
+    LOGOMATIC("F: %d\n", analogRead(AUX_SIGNAL));
     HAL_Delay(250);
   }
   /* USER CODE END 3 */
