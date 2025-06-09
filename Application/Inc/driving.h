@@ -19,14 +19,14 @@
 
     //FIXME: CHANGE THE FOLLOWING MIN AND MAX VALUES WHEN THEY ARE KNOWN
 
-    #define BSE_MIN 0
-    #define BSE_MAX 4095
+    #define BSE_MIN 0f
+    #define BSE_MAX 4095f
 
-    #define BRAKE_F_MIN 0
-    #define BRAKE_F_MAX 4095
+    #define BRAKE_F_MIN 0f
+    #define BRAKE_F_MAX 4095f
 
-    #define BRAKE_R_MIN 0
-    #define BRAKE_R_MAX 4095
+    #define BRAKE_R_MIN 0f
+    #define BRAKE_R_MAX 4095f
 
     /*
     #define THROTTLE_MIN_1 0.315445f
