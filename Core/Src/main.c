@@ -30,6 +30,7 @@
 #include "pinging.h"
 #include "msgIDs.h"
 #include "utils.h"
+#include "driving.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -121,8 +122,8 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    stateMachineTick();
-    pingSchedule();
+    LOGOMATIC("%f\n", getBrakeTravel());
+    HAL_Delay(250);
   }
   /* USER CODE END 3 */
 }
