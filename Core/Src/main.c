@@ -122,10 +122,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    globalStatus.BSE_SIGNAL = analogRead(BSE_SIGNAL);
-    globalStatus.BRAKE_F_SIGNAL = analogRead(BRAKE_F_SIGNAL);
-    globalStatus.BRAKE_R_SIGNAL = analogRead(BRAKE_F_SIGNAL);
-    LOGOMATIC("%f\n", (globalStatus.BSE_SIGNAL - BSE_MIN) / (BSE_MAX - BSE_MIN));
+    LOGOMATIC("%d\n", analogRead(BSE_SIGNAL));
     HAL_Delay(250);
   }
   /* USER CODE END 3 */
