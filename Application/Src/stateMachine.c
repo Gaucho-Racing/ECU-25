@@ -86,6 +86,7 @@ void stateMachineTick(void)
         writeMessage(PrimaryBusCAN, MSG_ECU_STATUS_2, GR_ALL, (uint8_t*)correctlyScaledValues.ECUStatusMsgTwo, 8);
         writeMessage(PrimaryBusCAN, MSG_ECU_STATUS_3, GR_ALL, (uint8_t*)correctlyScaledValues.ECUStatusMsgThree, 4);
         writeMessage(PrimaryBusCAN, MSG_DASH_WARNING_FLAGS, GR_DASH_PANEL, (uint8_t*)&BSE_APPS_violation, 1);
+//      writeMessage(PrimaryBusCAN, MSG_DASH_CONFIG, GR_DASH_PANEL, NULL, 7); // FIXME Someone set something up please
         writeMessage(DataBusCAN, MSG_ECU_PEDALS_DATA, GR_TCM, correctlyScaledValues.ECUPedalDataMsg, 10);
 
         lastECUStatusMsgTick = HAL_GetTick();
