@@ -19,8 +19,8 @@
 
     //FIXME: CHANGE THE FOLLOWING MIN AND MAX VALUES WHEN THEY ARE KNOWN
 
-    #define BSE_MIN 0
-    #define BSE_MAX 4095
+    #define AUX_MIN 0
+    #define AUX_MAX 4095
 
     #define BRAKE_F_MIN 0
     #define BRAKE_F_MAX 4095
