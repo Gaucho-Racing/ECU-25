@@ -12,10 +12,10 @@
 
 // If you change pingIDs you must update PINGCOUNT
 const uint8_t pingIDs[] = {GR_ACU,
-                           GR_GR_INVERTER_1,
+                           GR_GR_INVERTER_1,    // Should this be DTI?
                            GR_GR_INVERTER_2,
-                           GR_GR_INVERTER_3,
-                           GR_GR_INVERTER_4,
+                           GR_GR_INVERTER_3,    // Maybe not a thing depending on if DTI is included
+                           GR_GR_INVERTER_4,    // Not a thing
                            GR_FAN_CONTROLLER_1,
                            GR_FAN_CONTROLLER_2,
                            GR_FAN_CONTROLLER_3,
