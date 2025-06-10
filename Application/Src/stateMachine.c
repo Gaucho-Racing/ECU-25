@@ -102,7 +102,7 @@ void stateMachineTick(void)
         LOGOMATIC("RL Wheel RPM %d\n", correctlyScaledValues.RLWheelRPM);
         LOGOMATIC("--Global Status Dump--\n");
 
-        writeMessage(DataBusCAN, MSG_DASH_WARNING_FLAGS, GR_DASH_PANEL, /*FIXME*/);
+        writeMessage(DataBusCAN, MSG_DASH_WARNING_FLAGS, GR_DASH_PANEL, (uint8_t*)&BSE_APPS_violation, 1);
         writeMessage(DataBusCAN, MSG_ECU_PEDALS_DATA, GR_TCM, correctlyScaledValues.ECUPedalDataMsg, 10);
     }
 }
