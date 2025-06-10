@@ -121,11 +121,6 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
-    //uint8_t test = 'h';
-    //writeMessage(PrimaryBusCAN, MSG_DASH_WARNING_FLAGS, GR_DASH_PANEL, &test, 1);
-    //HAL_Delay(500);
-
       stateMachineTick();
       pingSchedule();
   }
