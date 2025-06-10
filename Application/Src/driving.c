@@ -30,7 +30,7 @@ static uint16_t getBrakeTravel()
     globalStatus.AUX_SIGNAL = analogRead(AUX_SIGNAL);           // Brake pedal force (BSE_SIGNAL is a useless float)
     globalStatus.BRAKE_F_SIGNAL = analogRead(BRAKE_F_SIGNAL);   // Brake pressure F
     globalStatus.BRAKE_R_SIGNAL = analogRead(BRAKE_R_SIGNAL);   // Brake pressure R
-    return (float)(globalStatus.AUX_SIGNAL - BSE_MIN) / (BSE_MAX - BSE_MIN);
+    return (float)(globalStatus.AUX_SIGNAL - AUX_MIN) / (AUX_MAX - AUX_MIN);
 }
 
 static float getPedalTravel()

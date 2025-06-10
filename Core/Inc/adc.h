@@ -49,7 +49,7 @@ void MX_ADC2_Init(void);
 /* USER CODE BEGIN Prototypes */
 typedef enum {
 // ADC1
-    AUX_SIGNAL = 0,
+    AUX_SIGNAL = 0, // Force
     BSPD_SIGNAL,
     APPS1_SIGNAL,
     APPS2_SIGNAL,
@@ -58,7 +58,7 @@ typedef enum {
 // ADC2
     IMD_SENSE,
     AMS_SENSE,
-    BSE_SIGNAL, // Force
+    BSE_SIGNAL, // Who knows
     BSPD_SENSE,
     STEERING_ANGLE,
 } AnalogSignal;
