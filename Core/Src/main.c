@@ -121,8 +121,9 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-      stateMachineTick();
-      pingSchedule();
+    uint8_t* test = "Please?";
+    writeMessage(PrimaryBusCAN, MSG_DEBUG_2_0, GR_DASH_PANEL, &test, 8);
+    HAL_Delay(500);
   }
   /* USER CODE END 3 */
 }
