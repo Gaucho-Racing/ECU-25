@@ -26,7 +26,15 @@ uint16_t lastECUStatusMsgTick = 0;
 
 static const uint16_t howOftenToSpamECUStatusMsgs = 35;
 
-//TODO: MAKE ENCODERS ACTUALLY DO SOMETHING
+bool determineSignalForDashLEDs(AnalogSignal sig)
+{
+    return analogRead(sig) < (((2 << 16) * 2) / 3.3f);
+    //                             ^       ^       ^
+    //                             |       |       Reference voltage
+    //                             |       Analog input voltage threshold
+    //                             2^(Number of bits in ADC)
+}
+
 
 void stateMachineTick(void)
 {
@@ -82,11 +90,14 @@ void stateMachineTick(void)
 
     if (HAL_GetTick() - lastECUStatusMsgTick > howOftenToSpamECUStatusMsgs)
     {
+        uint8_t dashConfigMsg[7] = {0};     // Other bytes not used
+        dashConfigMsg[0] = determineSignalForDashLEDs(AMS_SENSE) | (determineSignalForDashLEDs(IMD_SENSE) << 1) | (determineSignalForDashLEDs(BSPD_SENSE) << 2);
+        writeMessage(PrimaryBusCAN, MSG_DASH_CONFIG, GR_DASH_PANEL, dashConfigMsg, 7);
+
         writeMessage(PrimaryBusCAN, MSG_ECU_STATUS_1, GR_ALL, (uint8_t*)correctlyScaledValues.ECUStatusMsgOne, 8);
         writeMessage(PrimaryBusCAN, MSG_ECU_STATUS_2, GR_ALL, (uint8_t*)correctlyScaledValues.ECUStatusMsgTwo, 8);
         writeMessage(PrimaryBusCAN, MSG_ECU_STATUS_3, GR_ALL, (uint8_t*)correctlyScaledValues.ECUStatusMsgThree, 4);
         writeMessage(PrimaryBusCAN, MSG_DASH_WARNING_FLAGS, GR_DASH_PANEL, (uint8_t*)&BSE_APPS_violation, 1);
-//      writeMessage(PrimaryBusCAN, MSG_DASH_CONFIG, GR_DASH_PANEL, NULL, 7); // FIXME Someone set something up please
         writeMessage(DataBusCAN, MSG_ECU_PEDALS_DATA, GR_TCM, correctlyScaledValues.ECUPedalDataMsg, 10);
 
         lastECUStatusMsgTick = HAL_GetTick();
