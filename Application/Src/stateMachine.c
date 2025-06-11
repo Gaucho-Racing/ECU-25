@@ -195,17 +195,10 @@ void ts_discharge_off(void)
     }
 }
 
-void reflash_tune(void) // TODO Currently a stub, may decide to use CAN for updating settings (on each boot)
+void reflash_tune(void)
 {
+    // Legacy, controlled via encoders and reflashing and such
     globalStatus.ECUState = GLV_ON;
-    return;
-
-    // Planned reading and parsing of SD card contents into settings
-
-    // if (true /*Flash error*/)
-    // {
-    //     globalStatus.ECUState = ERRORSTATE;
-    // }
 }
 
 void error(void)

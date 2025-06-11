@@ -68,7 +68,11 @@
     /**
     Validate regen request (negative current) and manage the battery heat capacity
      */
+    #ifdef ENABLE_THREE_MOTORS
     void validateRegenRequest(uint16_t* fwdTqr1, uint16_t* fwdTqr2, uint16_t* rTqr);
+    #else
+    void validateRegenRequest(uint16_t* rTqr);
+    #endif
 
     /**
     Sends apps violation message

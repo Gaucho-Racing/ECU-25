@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "main.h"
 #include "CANdler.h"
 #include "stateMachine.h"
 #include "msgIDs.h"
@@ -54,7 +55,6 @@ void handleDtiCANMessage(uint16_t msgID, uint8_t* data, uint32_t length)
             break;
 
         default:
-            //LOGOMATIC("Called to handle a DTI message... but it was not the right message ID (%d)\n", msgID);
             return;
     }
 }
@@ -307,10 +307,11 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             switch(globalStatus.ECUState)
             {
                 case GLV_ON:
-                    if(!ts_on){
+                    if (!ts_on)
+                    {
                         prevTS_ON = 0;
                     }
-                    if (ts_on && !prevTS_ON)
+                    else if (!prevTS_ON)
                     {
                         globalStatus.ECUState = PRECHARGE_ENGAGED;
                     }
@@ -327,7 +328,8 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                     break;
 
                 case PRECHARGING:
-                    if(rtd){
+                    if (rtd)
+                    {
                         invalidRTD = true;
                     }
                     break;
@@ -350,7 +352,8 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                     {
                         globalStatus.ECUState = PRECHARGE_COMPLETE;
                     }
-                    else if(globalRTDstate){
+                    else if(globalRTDstate)
+                    {
                         writeMessage(DataBusCAN, MSG_DEBUG_2_0, GR_DASH_PANEL, (uint8_t*) "RTD Button Error. Please press brake before RTD", 47);
                     }
                     
@@ -403,7 +406,6 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             /* Do not write to these values elsewhere! */
             globalSteeringStatusRegenButtonMap = msgSteer->regenButtonMap;
-            // Handle buttons / regen here
             break;
 
         case MSG_SAM_BRAKE_IR:

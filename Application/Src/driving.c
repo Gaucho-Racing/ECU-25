@@ -42,11 +42,11 @@ static float getPedalTravel()
 
 void drive_standby(void)
 {
-
     float pedalTravel = getPedalTravel();
 
     //escape condition for BSE_APPS_violation according to rules
-    if(BSE_APPS_violation && pedalTravel < APPS_DEADZONE){
+    if (BSE_APPS_violation && pedalTravel < APPS_DEADZONE)
+    {
         BSE_APPS_violation = false;
     }
 
@@ -59,7 +59,8 @@ void drive_standby(void)
 
 void drive_active_idle(void)
 {
-    if(millis() - lastDriveActiveCtrlMs < DRIVE_ACTIVE_POWER_REGEN_INTERVAL_MS){
+    if (millis() - lastDriveActiveCtrlMs < DRIVE_ACTIVE_POWER_REGEN_INTERVAL_MS)
+    {
         return;
     }
 
@@ -105,7 +106,8 @@ void drive_active_power(void)
     float brakeTravel = getBrakeTravel();
     float pedalTravel = getPedalTravel();
 
-    if (checkBSEAPPSviolation(globalStatus.APPS1_SIGNAL, globalStatus.APPS2_SIGNAL, pedalTravel, brakeTravel)){
+    if (checkBSEAPPSviolation(globalStatus.APPS1_SIGNAL, globalStatus.APPS2_SIGNAL, pedalTravel, brakeTravel))
+    {
         controlInverters(false);   //0 for disable
         globalStatus.ECUState = DRIVE_STANDBY;
         BSE_APPS_violation = true;
@@ -123,36 +125,46 @@ void drive_active_power(void)
     //Owen said that current after 5% should start from 0, hence the following line, but the car might not even move from 0-5% current, so maybe review the following line later
 
     uint16_t rearThrottleRequest = (uint16_t)((pedalTravel - 0.05f) / 0.95f * MAX_CURRENT_REAR);
+
+    #ifdef ENABLE_THREE_MOTORS
     uint16_t forwardThrottleRequest1 = (uint16_t)((pedalTravel - 0.05f) / 0.95f * MAX_CURRENT_FORWARD);
     uint16_t forwardThrottleRequest2 = (uint16_t)((pedalTravel - 0.05f) / 0.95f * MAX_CURRENT_FORWARD);
-
     validateForwardTorqueRequest(&forwardThrottleRequest1, &heatCapacity1);
     validateForwardTorqueRequest(&forwardThrottleRequest2, &heatCapacity2);
+    #endif
 
     //TODO: ADD MAX HEAT CAP ADJUSTMENT BASED ON COOLANT
     //TODO Wait, how to handle one forward motor overheating but the other one being fine? Does the other one also get limited?
 
     rearThrottleRequest *= 10;
+
+    #ifdef ENABLE_THREE_MOTORS
     forwardThrottleRequest1 = (forwardThrottleRequest1 + 327.69f) * 100;
     forwardThrottleRequest2 = (forwardThrottleRequest2 + 327.69f) * 100;
+    #endif
 
     globalInverterSettings[0].acCurrent = rearThrottleRequest;
+
+    #ifdef ENABLE_THREE_MOTORS
     globalInverterSettings[1].acCurrent = forwardThrottleRequest1;
     globalInverterSettings[2].acCurrent = forwardThrottleRequest2;
+    #endif
 
     sendInverterCommand();
 }
 
 void drive_active_regen(void)
 {
-    if(millis() - lastDriveActiveCtrlMs < DRIVE_ACTIVE_POWER_REGEN_INTERVAL_MS){
+    if (millis() - lastDriveActiveCtrlMs < DRIVE_ACTIVE_POWER_REGEN_INTERVAL_MS)
+    {
         return;
     }
+
     lastDriveActiveCtrlMs = millis();
     float brakeTravel = getBrakeTravel();
     float pedalTravel = getPedalTravel();
 
-    if(checkBSEAPPSviolation(globalStatus.APPS1_SIGNAL, globalStatus.APPS2_SIGNAL, pedalTravel, brakeTravel))
+    if (checkBSEAPPSviolation(globalStatus.APPS1_SIGNAL, globalStatus.APPS2_SIGNAL, pedalTravel, brakeTravel))
     {
         controlInverters(false);
         globalStatus.ECUState = DRIVE_STANDBY;
@@ -172,23 +184,35 @@ void drive_active_regen(void)
     }
 
     uint16_t rearThrottleRequest = (uint16_t)(brakeTravel * MAX_CURRENT_REAR);
+
+    #ifdef ENABLE_THREE_MOTORS
     uint16_t forwardThrottleRequest1 = (uint16_t)(brakeTravel * MAX_CURRENT_FORWARD);
     uint16_t forwardThrottleRequest2 = (uint16_t)(brakeTravel * MAX_CURRENT_FORWARD);
-
     validateForwardTorqueRequest(&forwardThrottleRequest1, &heatCapacity1);
     validateForwardTorqueRequest(&forwardThrottleRequest2, &heatCapacity2);
+    #endif
 
+    #ifdef ENABLE_THREE_MOTORS
     validateRegenRequest(&rearThrottleRequest, &forwardThrottleRequest1, &forwardThrottleRequest2);
+    #else
+    validateRegenRequest(&rearThrottleRequest);
+    #endif
     
     //I'm assuming that reverse current heat management applies equally to all motors since it is for the battery.
 
     rearThrottleRequest *= -10;
+
+    #ifdef ENABLE_THREE_MOTORS
     forwardThrottleRequest1 = (-1 * forwardThrottleRequest1 + 327.69f) * 100;
     forwardThrottleRequest2 = (-1 * forwardThrottleRequest2 + 327.69f) * 100;
+    #endif
 
     globalInverterSettings[0].acCurrent = rearThrottleRequest;
+
+    #ifdef ENABLE_THREE_MOTORS
     globalInverterSettings[1].acCurrent = forwardThrottleRequest1;
     globalInverterSettings[2].acCurrent = forwardThrottleRequest2;
+    #endif
 
     sendInverterCommand();
 }

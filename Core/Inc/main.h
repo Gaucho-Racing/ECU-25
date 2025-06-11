@@ -96,6 +96,12 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN Private defines */
 
+// Undefined if one motor, controlled in `main.h`
+#define ENABLE_THREE_MOTORS
+
+// Uncomment to return to a 1 motor car
+// #undef ENABLE_THREE_MOTORS
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

@@ -112,6 +112,12 @@ int main(void)
   // 10us ticks
   HAL_SetTickFreq(TICK_FREQ);
   LOGOMATIC("--Boot Finished at Tick %lu--\n", HAL_GetTick());
+
+  #ifdef ENABLE_THREE_MOTORS
+  LOGOMATIC("Setup for 3 motors\n");
+  #else
+  LOGOMATIC("Setup for 1 motor\n");
+  #endif
   /* USER CODE END 2 */
 
   /* Infinite loop */
