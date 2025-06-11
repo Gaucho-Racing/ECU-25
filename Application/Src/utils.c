@@ -60,27 +60,16 @@ void validateForwardTorqueRequest(uint16_t* tqr, volatile uint16_t* heatCapacity
 }
 #endif
 
-#ifdef ENABLE_THREE_MOTORS
 void validateRegenRequest(uint16_t* fwdTqr1, uint16_t* fwdTqr2, uint16_t* rTqr)
-#else
-void validateRegenRequest(uint16_t* rTqr)
-#endif
 {
-    #ifdef ENABLE_THREE_MOTORS
     float throttlePercent = 1 - (float)(*fwdTqr1 + *fwdTqr2 + *rTqr)/MAX_REVERSE_CURRENT;
-    #else
-    float throttlePercent = 1 - (float)(*rTqr)/MAX_REVERSE_CURRENT;
-    #endif
 
     throttlePercent = throttlePercent < 0 ? 0 : throttlePercent;
     throttlePercent = throttlePercent > 1 ? 1 : throttlePercent;
     throttlePercent *= (1 - (float)(globalStatus.MaxCellTemp - MIN_BAT_TEMP_REGEN_THROTTLE) / 5);
 
-    #ifdef ENABLE_THREE_MOTORS
     *fwdTqr1 *= throttlePercent;
     *fwdTqr2 *= throttlePercent;
-    #endif
-
     *rTqr *= throttlePercent;
 }
 

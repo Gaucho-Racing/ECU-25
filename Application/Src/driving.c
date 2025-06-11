@@ -190,13 +190,12 @@ void drive_active_regen(void)
     uint16_t forwardThrottleRequest2 = (uint16_t)(brakeTravel * MAX_CURRENT_FORWARD);
     validateForwardTorqueRequest(&forwardThrottleRequest1, &heatCapacity1);
     validateForwardTorqueRequest(&forwardThrottleRequest2, &heatCapacity2);
+    #else
+    uint16_t forwardThrottleRequest1 = 0;
+    uint16_t forwardThrottleRequest2 = 0;
     #endif
 
-    #ifdef ENABLE_THREE_MOTORS
     validateRegenRequest(&rearThrottleRequest, &forwardThrottleRequest1, &forwardThrottleRequest2);
-    #else
-    validateRegenRequest(&rearThrottleRequest);
-    #endif
     
     //I'm assuming that reverse current heat management applies equally to all motors since it is for the battery.
 
