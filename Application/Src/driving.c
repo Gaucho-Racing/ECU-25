@@ -25,7 +25,7 @@ volatile uint16_t heatCapacity2 = 0;
 
 volatile float minAmkHeatCapThrottlePercent = 0.8f;
 
-static uint16_t getBrakeTravel()
+static uint16_t getRegenPercent() // THIS IS NOT ACTUALLY BRAKE TRAVEL, PRESSURE SENSORS CAPTURE BRAKE TRAVEL
 {
     globalStatus.AUX_SIGNAL = analogRead(AUX_SIGNAL);           // Brake pedal force (BSE_SIGNAL is a useless float)
     globalStatus.BRAKE_F_SIGNAL = analogRead(BRAKE_F_SIGNAL);   // Brake pressure F
@@ -65,10 +65,10 @@ void drive_active_idle(void)
     }
 
     lastDriveActiveCtrlMs = millis();
-    float brakeTravel = getBrakeTravel();
+    float regenPercent = getRegenPercent();
     float pedalTravel = getPedalTravel();
 
-    if (checkBSEAPPSviolation(globalStatus.APPS1_SIGNAL, globalStatus.APPS2_SIGNAL, pedalTravel, brakeTravel))
+    if (checkBSEAPPSviolation(globalStatus.APPS1_SIGNAL, globalStatus.APPS2_SIGNAL, pedalTravel, regenPercent))
     {  
         controlInverters(false);   //false for disable
         globalStatus.ECUState = DRIVE_STANDBY;
@@ -103,10 +103,10 @@ void drive_active_power(void)
     }
 
     lastDriveActiveCtrlMs = millis();
-    float brakeTravel = getBrakeTravel();
+    float regenPercent = getRegenPercent();
     float pedalTravel = getPedalTravel();
 
-    if (checkBSEAPPSviolation(globalStatus.APPS1_SIGNAL, globalStatus.APPS2_SIGNAL, pedalTravel, brakeTravel))
+    if (checkBSEAPPSviolation(globalStatus.APPS1_SIGNAL, globalStatus.APPS2_SIGNAL, pedalTravel, regenPercent))
     {
         controlInverters(false);   //0 for disable
         globalStatus.ECUState = DRIVE_STANDBY;
@@ -137,11 +137,8 @@ void drive_active_power(void)
     //TODO Wait, how to handle one forward motor overheating but the other one being fine? Does the other one also get limited?
 
     rearThrottleRequest *= 10;
-
-    #ifdef ENABLE_THREE_MOTORS
     forwardThrottleRequest1 = (forwardThrottleRequest1 + 327.69f) * 100;
     forwardThrottleRequest2 = (forwardThrottleRequest2 + 327.69f) * 100;
-    #endif
 
     globalInverterSettings[0].acCurrent = rearThrottleRequest;
 
@@ -161,10 +158,10 @@ void drive_active_regen(void)
     }
 
     lastDriveActiveCtrlMs = millis();
-    float brakeTravel = getBrakeTravel();
+    float regenPercent = getRegenPercent();
     float pedalTravel = getPedalTravel();
 
-    if (checkBSEAPPSviolation(globalStatus.APPS1_SIGNAL, globalStatus.APPS2_SIGNAL, pedalTravel, brakeTravel))
+    if (checkBSEAPPSviolation(globalStatus.APPS1_SIGNAL, globalStatus.APPS2_SIGNAL, pedalTravel, regenPercent))
     {
         controlInverters(false);
         globalStatus.ECUState = DRIVE_STANDBY;
@@ -183,11 +180,11 @@ void drive_active_regen(void)
         return;
     }
 
-    uint16_t rearThrottleRequest = (uint16_t)(brakeTravel * MAX_CURRENT_REAR);
+    uint16_t rearThrottleRequest = (uint16_t)(regenPercent * MAX_CURRENT_REAR);
 
     #ifdef ENABLE_THREE_MOTORS
-    uint16_t forwardThrottleRequest1 = (uint16_t)(brakeTravel * MAX_CURRENT_FORWARD);
-    uint16_t forwardThrottleRequest2 = (uint16_t)(brakeTravel * MAX_CURRENT_FORWARD);
+    uint16_t forwardThrottleRequest1 = (uint16_t)(regenPercent * MAX_CURRENT_FORWARD);
+    uint16_t forwardThrottleRequest2 = (uint16_t)(regenPercent * MAX_CURRENT_FORWARD);
     validateForwardTorqueRequest(&forwardThrottleRequest1, &heatCapacity1);
     validateForwardTorqueRequest(&forwardThrottleRequest2, &heatCapacity2);
     #else
@@ -200,11 +197,8 @@ void drive_active_regen(void)
     //I'm assuming that reverse current heat management applies equally to all motors since it is for the battery.
 
     rearThrottleRequest *= -10;
-
-    #ifdef ENABLE_THREE_MOTORS
     forwardThrottleRequest1 = (-1 * forwardThrottleRequest1 + 327.69f) * 100;
     forwardThrottleRequest2 = (-1 * forwardThrottleRequest2 + 327.69f) * 100;
-    #endif
 
     globalInverterSettings[0].acCurrent = rearThrottleRequest;
 

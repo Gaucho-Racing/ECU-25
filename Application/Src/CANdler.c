@@ -336,7 +336,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
 
                 case PRECHARGE_COMPLETE:
-                    if (rtd && !invalidRTD && analogRead(BRAKE_F_SIGNAL) > 100 && analogRead(BRAKE_R_SIGNAL) > 100)
+                    if (rtd && !invalidRTD && pressingBrake())
                     {
                         globalStatus.ECUState = DRIVE_STANDBY;
                     }

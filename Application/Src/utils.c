@@ -12,6 +12,7 @@
 #include "math.h"
 #include "inverter.h"
 #include "driving.h"
+#include "adc.h"
 
 uint32_t millis(void)
 {
@@ -71,6 +72,10 @@ void validateRegenRequest(uint16_t* fwdTqr1, uint16_t* fwdTqr2, uint16_t* rTqr)
     *fwdTqr1 *= throttlePercent;
     *fwdTqr2 *= throttlePercent;
     *rTqr *= throttlePercent;
+}
+
+bool pressingBrake(){
+    return (analogRead(BRAKE_F_SIGNAL) - BRAKE_F_MIN > BSE_DEADZONE * (BRAKE_F_MAX - BRAKE_F_MIN)) && (analogRead(BRAKE_R_SIGNAL) - BRAKE_R_MIN > BSE_DEADZONE * (BRAKE_R_MAX - BRAKE_R_MIN));
 }
 
 float vehicleSpeedMPH(void)
