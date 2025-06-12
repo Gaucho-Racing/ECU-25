@@ -118,6 +118,9 @@ int main(void)
   #else
   LOGOMATIC("Setup for 1 motor\n");
   #endif
+
+  uint8_t * fakeData;
+  *(fakeData) = 1;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -128,6 +131,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
       stateMachineTick();
+      writeMessage(PrimaryBusCAN, MSG_DEBUG_2_0, GR_DASH_PANEL, (uint8_t*)"Cooked", 6); // Delete ts :sob:
       pingSchedule();
   }
   /* USER CODE END 3 */
