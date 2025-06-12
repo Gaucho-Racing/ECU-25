@@ -89,6 +89,7 @@ void writeMessage(BusCAN bus, uint16_t msgID, uint8_t destID, uint8_t data[], ui
         LOGOMATIC("Could not add msg to transmission FIFO queue\n");
         Error_Handler();
     }
+    LOGOMATIC("Msg written to dash\n");
 }
 
 void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
