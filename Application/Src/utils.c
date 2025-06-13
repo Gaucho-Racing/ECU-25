@@ -76,7 +76,8 @@ void validateRegenRequest(uint16_t* fwdTqr1, uint16_t* fwdTqr2, uint16_t* rTqr)
     *rTqr *= throttlePercent;
 }
 
-bool pressingBrake(){
+bool pressingBrake(void)
+{
     return (analogRead(BRAKE_F_SIGNAL) - BRAKE_F_MIN > BSE_DEADZONE * (BRAKE_F_MAX - BRAKE_F_MIN)) && (analogRead(BRAKE_R_SIGNAL) - BRAKE_R_MIN > BSE_DEADZONE * (BRAKE_R_MAX - BRAKE_R_MIN));
 }
 
