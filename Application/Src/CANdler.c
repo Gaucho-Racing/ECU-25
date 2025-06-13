@@ -127,6 +127,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             ACU_Status_MsgTwo* acuMsgTwo = (ACU_Status_MsgTwo*)data;
             globalStatus.MaxCellTemp = (uint8_t)(acuMsgTwo->Max_Cell_Temp * 0.25);
+        
 
             // errorFlagBitsCan logic
             if (ACUError(acuMsgTwo) && (errorFlagBitsCan == 0 || errorFlagBitsCan == 2))
@@ -296,9 +297,9 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             Dash_Status_Msg *dashStatusMsg = (Dash_Status_Msg*)data;
-            bool ts_on = dashStatusMsg->TSButtonData < 0;
-            bool rtd = !globalRTDstate && dashStatusMsg->RTDButtonData < 0;
-            globalRTDstate = dashStatusMsg->RTDButtonData < 0;
+            bool ts_on = dashStatusMsg->TSButtonData > 0;
+            bool rtd = !globalRTDstate && dashStatusMsg->RTDButtonData > 0;
+            globalRTDstate = dashStatusMsg->RTDButtonData > 0;
 
             HAL_GPIO_WritePin(RTD_CONTROL_GPIO_Port, RTD_CONTROL_Pin, rtd);
 

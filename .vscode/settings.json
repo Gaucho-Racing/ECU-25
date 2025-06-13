@@ -7,5 +7,6 @@
         "*.ioc": "restructuredtext",
         "*.s": "code-text-binary",
         "*.svd": "restructuredtext"
-    }
+    },
+    "cortex-debug.variableUseNaturalFormat": false
 }

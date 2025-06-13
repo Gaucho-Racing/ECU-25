@@ -21,12 +21,12 @@ uint32_t millis(void)
 
 bool getBit(uint8_t number, uint8_t indexFromLeft)
 {
-    return (number >> (7 - indexFromLeft)) & 0x1;
+    return (number >> ( indexFromLeft)) & 0x1;
 }
 
 uint8_t getBits(uint8_t number, uint8_t indexFromLeft, uint8_t length)
 {
-    return (number >> (8 - indexFromLeft - length)) & ((1 << length) - 1);
+    return (number >> ( indexFromLeft - length)) & ((1 << length) - 1); //second half is the bitmask first half is the field 
 }
 
 void setSoftwareLatch(bool close)
@@ -81,24 +81,25 @@ void sendBseAppsViolationMessage(void)
 
 bool ACUError(ACU_Status_MsgTwo *acuMsgTwo)
 {
-    uint8_t notableBits = getBits(acuMsgTwo->Error_Warning_Bits, 0, 5);
+    // uint8_t notableBits = getBits(acuMsgTwo->Error_Warning_Bits, 0, 5);
 
-    if (notableBits != 0x0)
-    {
-        char dashMsg[9];
-        snprintf(dashMsg, 9, "ACUErr%hhX", notableBits);
-        writeMessage(PrimaryBusCAN, MSG_DEBUG_2_0, GR_DASH_PANEL, (uint8_t*)dashMsg, 8);  // Not sending '\0'
+    // if (notableBits != 0x0)
+    // {
+    //     char dashMsg[9];
+    //     snprintf(dashMsg, 9, "ACUErr%hhX", notableBits);
+    //     writeMessage(PrimaryBusCAN, MSG_DEBUG_2_0, GR_DASH_PANEL, (uint8_t*)dashMsg, 8);  // Not sending '\0'
 
-        char steeringMsg[16];
-        snprintf(steeringMsg, 16, "ACU Error -- %hhX", notableBits);
-        writeMessage(DataBusCAN, MSG_DEBUG_FD, GR_STEERING_WHEEL, (uint8_t*)steeringMsg, 15);   // Not sending '\0'
+    //     char steeringMsg[16];
+    //     snprintf(steeringMsg, 16, "ACU Error -- %hhX", notableBits);
+    //     writeMessage(DataBusCAN, MSG_DEBUG_FD, GR_STEERING_WHEEL, (uint8_t*)steeringMsg, 15);   // Not sending '\0'
 
-        LOGOMATIC("ACU Error -- %hhX", notableBits);
+    //     LOGOMATIC("ACU Error -- %hhX", notableBits);
 
-        return acuMsgTwo->SDC_Voltage < 50;
-    }
+    //     return acuMsgTwo->SDC_Voltage < 50;
+    // }
 
-    return acuMsgTwo->SDC_Voltage < 50;
+    // return acuMsgTwo->SDC_Voltage < 50;
+    return 0;
 }
 
 bool GRIError(Inverter_Status_Msg_Three *msgGriThree)
