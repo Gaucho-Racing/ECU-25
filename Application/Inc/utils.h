@@ -29,20 +29,20 @@
 
     /**
     @param number Byte in question
-    @param indexFromLeft What place bit to return from the left side [01234567]
+    @param index What place bit to to start from
     @returns A byte that represents the bit (basically a bool).
     */
-    bool getBit(uint8_t number, uint8_t indexFromLeft);
+    bool getBit(uint8_t number, uint8_t index);
 
     /**
     Complicated... look at the implementation to be sure.
 
     @param number Byte in question
-    @param indexFromLeft What place bit to start looking at from the left side [01234567]
+    @param indexFromLeft What place bit to start looking at from the right side
     @param length How many bits after the index to return
     @returns A byte that represents the bits in question.
     */
-    uint8_t getBits(uint8_t number, uint8_t indexFromLeft, uint8_t length);
+    uint8_t getBits(uint8_t number, uint8_t index, uint8_t length);
 
     /**
     Essentially a nuanced flip-flop of the ECU software latch.

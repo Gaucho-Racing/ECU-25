@@ -19,14 +19,16 @@ uint32_t millis(void)
     return HAL_GetTick() * (1000 / TICK_FREQ);
 }
 
-bool getBit(uint8_t number, uint8_t indexFromLeft)
+//0 indexed LSB first
+bool getBit(uint8_t number, uint8_t index)
 {
-    return getBits(number, indexFromLeft, 1);   // Equivalent to `(number >> (7 - indexFromLeft)) & 0x1`
+    return getBits(number, index, 1);   // Equivalent to `(number >> index) & 0x1
 }
 
-uint8_t getBits(uint8_t number, uint8_t indexFromLeft, uint8_t length)
+//0 indexed LSB first
+uint8_t getBits(uint8_t number, uint8_t index, uint8_t length)
 {
-    return (number >> (8 - indexFromLeft - length)) & ((1 << length) - 1);
+    return (number >> index) & ((1 << length) - 1);
 }
 
 void setSoftwareLatch(bool close)
