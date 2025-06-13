@@ -102,6 +102,7 @@ void stateMachineTick(void)
 
         lastECUStatusMsgTick = HAL_GetTick();
 
+        #ifdef ADVANCED_LOGGING
         LOGOMATIC("\n--Global Status Dump--\nECU State %d\n", correctlyScaledValues.ECUState);
         LOGOMATIC("Status Bits 1 %X%X%X\n", correctlyScaledValues.StatusBits[0], correctlyScaledValues.StatusBits[1], correctlyScaledValues.StatusBits[2]);
         LOGOMATIC("Power Level & Torque Map %X\n", correctlyScaledValues.PowerLevelTorqueMap);
@@ -115,6 +116,7 @@ void stateMachineTick(void)
         LOGOMATIC("RR Wheel RPM %d\n", correctlyScaledValues.RRWheelRPM);
         LOGOMATIC("RL Wheel RPM %d\n", correctlyScaledValues.RLWheelRPM);
         LOGOMATIC("--Global Status Dump--\n");
+        #endif
     }
 }
 
