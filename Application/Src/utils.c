@@ -21,7 +21,7 @@ uint32_t millis(void)
 
 bool getBit(uint8_t number, uint8_t indexFromLeft)
 {
-    return (number >> (7 - indexFromLeft)) & 0x1;
+    return getBits(number, indexFromLeft, 1);   // Equivalent to `(number >> (7 - indexFromLeft)) & 0x1`
 }
 
 uint8_t getBits(uint8_t number, uint8_t indexFromLeft, uint8_t length)
