@@ -5,6 +5,7 @@
 
     #define HOW_LONG_TSDISCHARGE_UNTIL_ERROR_MS 5000
     #define TS_VOLTAGE_OFF_LIMIT 60
+    #define SDC_MIN_SHUTDOWN 50
     #define BAD_MESSAGE_LIMIT 3
     #define BAD_TIME_Negative1 -1
 
