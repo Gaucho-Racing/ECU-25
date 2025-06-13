@@ -22,7 +22,9 @@ volatile bool prevTS_ON = 1;
 
 void handleDtiCANMessage(uint16_t msgID, uint8_t* data, uint32_t length)
 {
+    #ifdef ADVANCED_LOGGING
     LOGOMATIC("Recieved a CAN message from the DTI!\nMessage ID: %d\tLength: %ld", msgID, length);
+    #endif
 
     if (length != 8) {
         numberOfBadMessages++;
@@ -438,7 +440,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             break;
 
-        #ifdef LOGOMATIC_ENABLED
+        #ifdef ADVANCED_LOGGING
             default:
                 LOGOMATIC("Got msg %X from %X of length %d", msgID, srcID, (int)length);
                 return;
