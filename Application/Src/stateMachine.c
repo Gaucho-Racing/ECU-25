@@ -29,10 +29,10 @@ static const uint16_t howOftenToSpamECUStatusMsgs = 35;
 bool determineSignalForDashLEDs(AnalogSignal sig)
 {
     return analogRead(sig) >= (((2 << 16) * 0.4f) / 3.3f);
-    //                             ^       ^       ^
-    //                             |       |       Reference voltage
-    //                             |       Analog input voltage threshold
-    //                             2^(Number of bits in ADC)
+    //                           ^          ^       ^
+    //                           |          |       Reference voltage
+    //                           |          Analog input voltage threshold
+    //                           2^(Number of bits in ADC)
 }
 
 
