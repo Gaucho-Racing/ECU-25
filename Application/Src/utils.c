@@ -107,10 +107,10 @@ bool ACUError(ACU_Status_MsgTwo *acuMsgTwo)
 
         LOGOMATIC("ACU Error -- %hhX", notableBits);
 
-        return acuMsgTwo->SDC_Voltage < 50;
+        return 1;
     }
 
-    return acuMsgTwo->SDC_Voltage < 50;
+    return acuMsgTwo->SDC_Voltage < SDC_MIN_SHUTDOWN;
 }
 
 bool GRIError(Inverter_Status_Msg_Three *msgGriThree)
