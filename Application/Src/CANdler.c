@@ -179,7 +179,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                         globalStatus.ECUState = PRECHARGE_COMPLETE;
                     }
 
-                    break;
+                    // Theres not supposed to be a break here !!!!
 
                 default:
                     if (getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 1) == 0x0 || ((getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 2) == 0x00) && globalStatus.ECUState != PRECHARGING))
@@ -190,7 +190,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             }
 
             //If ACU software latch ever opens or IR- ever opens while IR+ is closed, something has gone wrong
-            if (/*getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 3) == 0x00 ||*/ getBits(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 1, 2) == 0x01)
+            if ((getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 3) == 0x00 && globalStatus.ECUState > GLV_ON && globalStatus.ECUState <= DRIVE_ACTIVE_REGEN) || getBits(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 1, 2) == 0x01)
             {
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
