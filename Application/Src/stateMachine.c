@@ -24,7 +24,7 @@ volatile uint8_t numberOfBadMessages = 0;
 int32_t dischargeStartMillis = BAD_TIME_Negative1;
 uint32_t lastECUStatusMsgTick = 0;
 
-static const uint16_t howOftenToSpamECUStatusMsgs = 35;
+static const uint16_t howOftenToSpamECUStatusMsgs = 50;
 
 bool determineSignalForDashLEDs(AnalogSignal sig)
 {
