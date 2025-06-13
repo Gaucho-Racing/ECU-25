@@ -1415,10 +1415,7 @@ void LL_ADC_INJ_StructInit(LL_ADC_INJ_InitTypeDef *pADC_InjInitStruct)
 /**
   * @}
   */
-<<<<<<< HEAD
 
-=======
 #else
 typedef int make_iso_c_compilers_happy;
->>>>>>> refs/remotes/origin/master
 #endif /* USE_FULL_LL_DRIVER */
