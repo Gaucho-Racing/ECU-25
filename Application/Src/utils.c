@@ -94,7 +94,7 @@ void sendBseAppsViolationMessage(void)
 
 bool ACUError(ACU_Status_MsgTwo *acuMsgTwo)
 {
-    uint8_t errorBits = getBits(acuMsgTwo->Error_Warning_Bits, 0, 5);
+    uint8_t errorBits = acuMsgTwo->Error_Warning_Bits > 0;
 
     if (errorBits != 0x0)
     {
