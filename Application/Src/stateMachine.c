@@ -24,7 +24,17 @@ volatile uint8_t numberOfBadMessages = 0;
 int32_t dischargeStartMillis = BAD_TIME_Negative1;
 uint16_t lastECUStatusMsgTick = 0;
 
-static const uint16_t howOftenToSpamECUStatusMsgs = 250;    // Might change
+static const uint16_t howOftenToSpamECUStatusMsgs = 35;
+
+bool determineSignalForDashLEDs(AnalogSignal sig)
+{
+    return analogRead(sig) < (((2 << 16) * 2) / 3.3f);
+    //                             ^       ^       ^
+    //                             |       |       Reference voltage
+    //                             |       Analog input voltage threshold
+    //                             2^(Number of bits in ADC)
+}
+
 
 void stateMachineTick(void)
 {
@@ -80,9 +90,15 @@ void stateMachineTick(void)
 
     if (HAL_GetTick() - lastECUStatusMsgTick > howOftenToSpamECUStatusMsgs)
     {
+        uint8_t dashConfigMsg[7] = {0};     // Other bytes not used
+        dashConfigMsg[0] = determineSignalForDashLEDs(AMS_SENSE) | (determineSignalForDashLEDs(IMD_SENSE) << 1) | (determineSignalForDashLEDs(BSPD_SENSE) << 2);
+        writeMessage(PrimaryBusCAN, MSG_DASH_CONFIG, GR_DASH_PANEL, dashConfigMsg, 7);
+
         writeMessage(PrimaryBusCAN, MSG_ECU_STATUS_1, GR_ALL, (uint8_t*)correctlyScaledValues.ECUStatusMsgOne, 8);
         writeMessage(PrimaryBusCAN, MSG_ECU_STATUS_2, GR_ALL, (uint8_t*)correctlyScaledValues.ECUStatusMsgTwo, 8);
         writeMessage(PrimaryBusCAN, MSG_ECU_STATUS_3, GR_ALL, (uint8_t*)correctlyScaledValues.ECUStatusMsgThree, 4);
+        writeMessage(PrimaryBusCAN, MSG_DASH_WARNING_FLAGS, GR_DASH_PANEL, (uint8_t*)&BSE_APPS_violation, 1);
+        writeMessage(DataBusCAN, MSG_ECU_PEDALS_DATA, GR_TCM, correctlyScaledValues.ECUPedalDataMsg, 10);
 
         lastECUStatusMsgTick = HAL_GetTick();
 
@@ -99,8 +115,6 @@ void stateMachineTick(void)
         LOGOMATIC("RR Wheel RPM %d\n", correctlyScaledValues.RRWheelRPM);
         LOGOMATIC("RL Wheel RPM %d\n", correctlyScaledValues.RLWheelRPM);
         LOGOMATIC("--Global Status Dump--\n");
-
-        writeMessage(DataBusCAN, MSG_ECU_PING_INFORMATION, GR_STEERING_WHEEL, correctlyScaledValues.StatusBits, 3);
     }
 }
 
@@ -109,14 +123,19 @@ StatusLump scaledECUStatusMsgForTx(void)
     StatusLump scaledStatus = globalStatus;
 
     scaledStatus.MaxCellTemp *= 4;
-    scaledStatus.AccumulatorStateOfCharge = (uint8_t)(scaledStatus.AccumulatorStateOfCharge * 51.0 / 20.0);
-    scaledStatus.GLVStateOfCharge *= (uint8_t)(scaledStatus.GLVStateOfCharge * 51.0 / 20.0);
+    scaledStatus.AccumulatorStateOfCharge = (uint8_t)(scaledStatus.AccumulatorStateOfCharge * 51.0f / 20.0f);
+    scaledStatus.GLVStateOfCharge *= (uint8_t)(scaledStatus.GLVStateOfCharge * 51.0f / 20.0f);
     scaledStatus.TractiveSystemVoltage *= 100;
     scaledStatus.VehicleSpeed *= 100;
     scaledStatus.FLWheelRPM = scaledStatus.FLWheelRPM * 10 + 32768;
     scaledStatus.FRWheelRPM = scaledStatus.FRWheelRPM * 10 + 32768;
     scaledStatus.RLWheelRPM = scaledStatus.RLWheelRPM * 10 + 32768;
     scaledStatus.RRWheelRPM = scaledStatus.RRWheelRPM * 10 + 32768;
+    scaledStatus.APPS1_SIGNAL = 65535 * (scaledStatus.APPS1_SIGNAL - THROTTLE_MIN_1) / THROTTLE_MAX_1; // Don't reverse multiplication here
+    scaledStatus.APPS2_SIGNAL = 65535 * (scaledStatus.APPS2_SIGNAL - THROTTLE_MIN_2) / THROTTLE_MAX_2;
+    scaledStatus.AUX_SIGNAL = 65535 * (scaledStatus.APPS2_SIGNAL - AUX_MIN) / AUX_MAX;
+    scaledStatus.BRAKE_F_SIGNAL = 65535 * (scaledStatus.APPS2_SIGNAL - BRAKE_F_MIN) / BRAKE_F_MAX;
+    scaledStatus.BRAKE_R_SIGNAL = 65535 * (scaledStatus.APPS2_SIGNAL - BRAKE_R_MIN) / BRAKE_R_MAX;
 
     return scaledStatus;
 }
@@ -176,17 +195,10 @@ void ts_discharge_off(void)
     }
 }
 
-void reflash_tune(void) // TODO Currently a stub, may decide to use CAN for updating settings (on each boot)
+void reflash_tune(void)
 {
+    // Legacy, controlled via encoders and reflashing and such
     globalStatus.ECUState = GLV_ON;
-    return;
-
-    // Planned reading and parsing of SD card contents into settings
-
-    // if (true /*Flash error*/)
-    // {
-    //     globalStatus.ECUState = ERRORSTATE;
-    // }
 }
 
 void error(void)

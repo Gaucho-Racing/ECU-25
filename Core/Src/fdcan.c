@@ -36,9 +36,42 @@ FDCAN_TxHeaderTypeDef TxHeader = {
     .MessageMarker = 0 // also change this to a real address if you change fifo control
 };
 
-void writeMessage(BusCAN bus, uint16_t msgID, uint8_t destID, uint8_t data[], uint32_t len) {
+void writeDtiMessage(uint16_t msgID, uint8_t data[], uint32_t length)
+{
+    TxHeader.Identifier = msgID;
+    TxHeader.DataLength = length;
+
+    TxHeader.IdType = FDCAN_EXTENDED_ID;
+
+    FDCAN_HandleTypeDef *handle;
+    handle = &hfdcan1;
+    TxHeader.FDFormat = FDCAN_CLASSIC_CAN;
+
+    uint8_t temp;
+    for(uint16_t i = 0; i < length / 2; ++i)
+    {
+        temp = data[i];
+        data[i] = data[length - i - 1];
+        data[length - i - 1] = temp;
+    }
+
+    if (HAL_FDCAN_GetTxFifoFreeLevel(handle) == 0)
+    {
+        LOGOMATIC("\n\n---FDCAN Tx FIFO is full!---\n\n");
+    }
+    else if (HAL_FDCAN_AddMessageToTxFifoQ(handle, &TxHeader, data) != HAL_OK)
+    {
+        LOGOMATIC("Could not add msg to transmission FIFO queue\n");
+        Error_Handler();
+    }
+}
+
+void writeMessage(BusCAN bus, uint16_t msgID, uint8_t destID, uint8_t data[], uint32_t length)
+{
     TxHeader.Identifier = (LOCAL_GR_ID << 20) | (msgID << 8) | destID;
-    TxHeader.DataLength = len;
+    TxHeader.DataLength = length;
+
+    TxHeader.IdType = FDCAN_EXTENDED_ID;
 
     FDCAN_HandleTypeDef *handle;
     switch(bus)
@@ -55,7 +88,11 @@ void writeMessage(BusCAN bus, uint16_t msgID, uint8_t destID, uint8_t data[], ui
             return;
     }
 
-    if(HAL_FDCAN_AddMessageToTxFifoQ(handle, &TxHeader, data) != HAL_OK)
+    if (HAL_FDCAN_GetTxFifoFreeLevel(handle) == 0)
+    {
+        LOGOMATIC("\n\n---FDCAN Tx FIFO is full!---\n\n");
+    }
+    else if (HAL_FDCAN_AddMessageToTxFifoQ(handle, &TxHeader, data) != HAL_OK)
     {
         LOGOMATIC("Could not add msg to transmission FIFO queue\n");
         Error_Handler();
@@ -74,10 +111,22 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
             Error_Handler();
         }
 
-        uint16_t msgID = (RxHeader.Identifier & 0x00FFF00) >> 8;
-        uint8_t srcID  = (RxHeader.Identifier & 0xFF00000) >> 20;
-        handleCANMessage(msgID, srcID, RxData, RxHeader.DataLength);
-        // We can add the uint32_t timestamp to the handler if needed with RxHeader.RxTimestamp, but no need as of right now
+        if ((RxHeader.Identifier & ~0xF00) == 0x2016)
+        {
+            uint8_t temp;
+            for(uint16_t i = 0; i < RxHeader.DataLength / 2; ++i) // Because DTI
+            {
+                temp = RxData[i];
+                RxData[i] = RxData[RxHeader.DataLength - i - 1];
+                RxData[RxHeader.DataLength - i - 1] = temp;
+            }
+
+            handleDtiCANMessage(RxHeader.Identifier, RxData, RxHeader.DataLength);
+        }
+        else
+        {
+            handleCANMessage((RxHeader.Identifier & 0x00FFF00) >> 8, (RxHeader.Identifier & 0xFF00000) >> 20, RxData, RxHeader.DataLength);
+        }
 
         if (HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0) != HAL_OK)
         {

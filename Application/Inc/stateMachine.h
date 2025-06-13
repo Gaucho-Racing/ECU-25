@@ -4,6 +4,7 @@
     #define STATEMACHINE_H
 
     #define HOW_LONG_TSDISCHARGE_UNTIL_ERROR_MS 5000
+    #define SDC_MIN_SHUTDOWN 50
     #define TS_VOLTAGE_OFF_LIMIT 60
     #define BAD_MESSAGE_LIMIT 3
     #define BAD_TIME_Negative1 -1
@@ -30,18 +31,27 @@
             uint8_t MaxCellTemp;
             uint8_t AccumulatorStateOfCharge;
             uint8_t GLVStateOfCharge;
+
             uint16_t TractiveSystemVoltage;
             uint16_t VehicleSpeed;
             int16_t FRWheelRPM;
             int16_t FLWheelRPM;
+
             int16_t RRWheelRPM;
             int16_t RLWheelRPM;
+
+            uint16_t APPS1_SIGNAL;
+            uint16_t APPS2_SIGNAL;
+            uint16_t AUX_SIGNAL;
+            uint16_t BRAKE_F_SIGNAL;
+            uint16_t BRAKE_R_SIGNAL;
         };
 
         struct {
             uint8_t ECUStatusMsgOne[8];
             uint8_t ECUStatusMsgTwo[8];
             uint8_t ECUStatusMsgThree[4];
+            uint8_t ECUPedalDataMsg[10];
         };
     } StatusLump;
 

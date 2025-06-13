@@ -2,13 +2,11 @@
 
 ## Todo
 ### Urgent
-:construction: [CANSniffer-25](https://github.com/Gaucho-Racing/CANSniffer-25) testing
-
-:eyes: Motor testing
+:construction: AMK testing
 ### Delayed
 :point_right: Integration testing
 
-:warning: Correctness testing
+:warning: Copy over DTI and throttle code from [`dtiMotorTest`](../../tree/dtiMotorTest)
 ### Stretch
 :x: Torque vectoring
 
@@ -55,3 +53,5 @@ Run each of the tools independently:
 * ARM toolchain - `arm-none-eabi-gcc --version`
 * openocd - `openocd --version`
 * ninja - `ninja --version`
+
+`LOGOMATIC` is also your friend, but it only works for CMake preset `Debug`

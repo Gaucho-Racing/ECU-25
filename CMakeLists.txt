@@ -24,6 +24,8 @@ endif()
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_compile_definitions(LOGOMATIC_ENABLED)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -u _printf_float")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -u _printf_float")
 endif()
 
 # Set the project name

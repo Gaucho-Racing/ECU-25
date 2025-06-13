@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "main.h"
 #include "CANdler.h"
 #include "stateMachine.h"
 #include "msgIDs.h"
@@ -16,6 +17,47 @@
 volatile uint8_t errorFlagBitsCan = 0;
 volatile uint8_t globalSteeringStatusRegenButtonMap = 0;
 volatile bool globalRTDstate = 0;
+volatile bool invalidRTD = 0;
+volatile bool prevTS_ON = 1;
+
+void handleDtiCANMessage(uint16_t msgID, uint8_t* data, uint32_t length)
+{
+    LOGOMATIC("Recieved a CAN message from the DTI!\nMessage ID: %d\tLength: %ld", msgID, length);
+
+    if (length != 8) {
+        numberOfBadMessages++;
+        return;
+    } else {
+        numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
+    }
+
+    switch(msgID)
+    {
+        case MSG_DTI_DATA_1:
+            globalInverterData.msgOne = *(DTI_Data_Msg_One*)data;
+            globalStatus.VehicleSpeed = (uint16_t)vehicleSpeedMPH();
+            break;
+
+        case MSG_DTI_DATA_2:
+            globalInverterData.msgTwo = *(DTI_Data_Msg_Two*)data;
+            break;
+
+        case MSG_DTI_DATA_3:
+            globalInverterData.msgThree = *(DTI_Data_Msg_Three*)data;
+            break;
+
+        case MSG_DTI_DATA_4:
+            globalInverterData.msgFour = *(DTI_Data_Msg_Four*)data;
+            break;
+
+        case MSG_DTI_DATA_5:
+            globalInverterData.msgFive = *(DTI_Data_Msg_Five*)data;
+            break;
+
+        default:
+            return;
+    }
+}
 
 void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t length)
 {
@@ -265,7 +307,11 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             switch(globalStatus.ECUState)
             {
                 case GLV_ON:
-                    if (ts_on)
+                    if (!ts_on)
+                    {
+                        prevTS_ON = 0;
+                    }
+                    else if (!prevTS_ON)
                     {
                         globalStatus.ECUState = PRECHARGE_ENGAGED;
                     }
@@ -277,6 +323,27 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                     {
                         globalStatus.ECUState = GLV_ON;
                     }
+                    writeMessage(PrimaryBusCAN, MSG_ACU_PRECHARGE, GR_ACU, (uint8_t*)&ts_on, 1);
+                    
+                    break;
+
+                case PRECHARGING:
+                    if (rtd)
+                    {
+                        invalidRTD = true;
+                    }
+                    break;
+
+
+                case PRECHARGE_COMPLETE:
+                    if (rtd && !invalidRTD && pressingBrake())
+                    {
+                        globalStatus.ECUState = DRIVE_STANDBY;
+                    }
+                    else if(!rtd && invalidRTD)
+                    {
+                        invalidRTD = false;
+                    }
 
                     break;
 
@@ -285,17 +352,11 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                     {
                         globalStatus.ECUState = PRECHARGE_COMPLETE;
                     }
-                    else if(globalRTDstate){
+                    else if(globalRTDstate)
+                    {
                         writeMessage(DataBusCAN, MSG_DEBUG_2_0, GR_DASH_PANEL, (uint8_t*) "RTD Button Error. Please press brake before RTD", 47);
                     }
-                    break;
-
-                case PRECHARGE_COMPLETE:
-                    if (rtd && analogRead(BRAKE_F_SIGNAL) > 100 && analogRead(BRAKE_R_SIGNAL) > 100)
-                    {
-                        globalStatus.ECUState = DRIVE_STANDBY;
-                    }
-
+                    
                     break;
 
                 default:
@@ -345,68 +406,6 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             /* Do not write to these values elsewhere! */
             globalSteeringStatusRegenButtonMap = msgSteer->regenButtonMap;
-            // Handle buttons / regen here
-            break;
-
-        case MSG_DTI_DATA_1:
-            if (length != 8) {
-                numberOfBadMessages++;
-                return;
-            } else {
-                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
-            }
-
-            globalInverterData.msgOne = *(DTI_Data_Msg_One*)data;
-            globalStatus.VehicleSpeed = (uint16_t)vehicleSpeedMPH();
-
-            break;
-
-        case MSG_DTI_DATA_2:
-            if (length != 8) {
-                numberOfBadMessages++;
-                return;
-            } else {
-                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
-            }
-
-            globalInverterData.msgTwo = *(DTI_Data_Msg_Two*)data;
-
-            break;
-
-        case MSG_DTI_DATA_3:
-            if (length != 8) {
-                numberOfBadMessages++;
-                return;
-            } else {
-                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
-            }
-
-            globalInverterData.msgThree = *(DTI_Data_Msg_Three*)data;
-
-            break;
-
-        case MSG_DTI_DATA_4:
-            if (length != 8) {
-                numberOfBadMessages++;
-                return;
-            } else {
-                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
-            }
-
-            globalInverterData.msgFour = *(DTI_Data_Msg_Four*)data;
-
-            break;
-
-        case MSG_DTI_DATA_5:
-            if (length != 8) {
-                numberOfBadMessages++;
-                return;
-            } else {
-                numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
-            }
-
-            globalInverterData.msgFive = *(DTI_Data_Msg_Five*)data;
-
             break;
 
         case MSG_SAM_BRAKE_IR:

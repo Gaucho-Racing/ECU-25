@@ -39,6 +39,7 @@ extern ADC_HandleTypeDef hadc2;
 /* USER CODE BEGIN Private defines */
 
 #define ADC_MAX 0x0FFF
+#define ADC_CONV 0.0005f
 
 /* USER CODE END Private defines */
 
@@ -48,16 +49,16 @@ void MX_ADC2_Init(void);
 /* USER CODE BEGIN Prototypes */
 typedef enum {
 // ADC1
-    AUX_SIGNAL = 0,
+    AUX_SIGNAL = 0, // Force
     BSPD_SIGNAL,
     APPS1_SIGNAL,
     APPS2_SIGNAL,
-    BRAKE_R_SIGNAL,
-    BRAKE_F_SIGNAL,
+    BRAKE_R_SIGNAL, // Pressure
+    BRAKE_F_SIGNAL, // Pressure
 // ADC2
     IMD_SENSE,
     AMS_SENSE,
-    BSE_SIGNAL,
+    BSE_SIGNAL, // Who knows
     BSPD_SENSE,
     STEERING_ANGLE,
 } AnalogSignal;

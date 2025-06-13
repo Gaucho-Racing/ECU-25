@@ -12,16 +12,16 @@
 
 // If you change pingIDs you must update PINGCOUNT
 const uint8_t pingIDs[] = {GR_ACU,
+                           #ifdef ENABLE_THREE_MOTORS
                            GR_GR_INVERTER_1,
                            GR_GR_INVERTER_2,
-                           GR_GR_INVERTER_3,
-                           GR_GR_INVERTER_4,
+                           #endif
                            GR_FAN_CONTROLLER_1,
                            GR_FAN_CONTROLLER_2,
                            GR_FAN_CONTROLLER_3,
                            GR_FAN_CONTROLLER_4,
                            GR_DASH_PANEL,
-                           GR_STEERING_WHEEL};
+                           GR_STEERING_WHEEL};  // TODO May need to remove steering, or change it to accomodate the sam board
 // If you change pingIDs you must update PINGCOUNT
 
 uint32_t pingTimes[PINGCOUNT] = {0};
