@@ -180,7 +180,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                     }
 
                     // DO NOT DELETE THIS FALLTHROUGH
-                    __attribute__((fallthrough))__attribute__((fallthrough));
+                    __attribute__((fallthrough));
                     // Theres not supposed to be a break here !!!! Stop adding it back
 
                 default:
