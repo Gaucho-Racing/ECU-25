@@ -95,8 +95,8 @@ bool ACUError(ACU_Status_MsgTwo *acuMsgTwo)
 
     //     LOGOMATIC("ACU Error -- %hhX", notableBits);
 
-        return 1;
-    }
+        //return 1;
+    //}
 
     return acuMsgTwo->SDC_Voltage < SDC_MIN_SHUTDOWN;
 }
