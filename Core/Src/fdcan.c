@@ -55,7 +55,7 @@ void writeDtiMessage(uint16_t msgID, uint8_t data[], uint32_t length)
         data[length - i - 1] = temp;
     }
 
-    if (HAL_FDCAN_AddMessageToTxFifoQ(handle, &TxHeader, data) != HAL_OK)
+    if (HAL_FDCAN_GetTxFifoFreeLevel(handle) > 0 && HAL_FDCAN_AddMessageToTxFifoQ(handle, &TxHeader, data) != HAL_OK)
     {
         LOGOMATIC("Could not add msg to transmission FIFO queue\n");
         Error_Handler();
@@ -84,7 +84,7 @@ void writeMessage(BusCAN bus, uint16_t msgID, uint8_t destID, uint8_t data[], ui
             return;
     }
 
-    if(HAL_FDCAN_AddMessageToTxFifoQ(handle, &TxHeader, data) != HAL_OK)
+    if (HAL_FDCAN_GetTxFifoFreeLevel(handle) > 0 && HAL_FDCAN_AddMessageToTxFifoQ(handle, &TxHeader, data) != HAL_OK)
     {
         LOGOMATIC("Could not add msg to transmission FIFO queue\n");
         Error_Handler();
