@@ -94,19 +94,19 @@ void sendBseAppsViolationMessage(void)
 
 bool ACUError(ACU_Status_MsgTwo *acuMsgTwo)
 {
-    uint8_t notableBits = getBits(acuMsgTwo->Error_Warning_Bits, 0, 5);
+    uint8_t errorBits = getBits(acuMsgTwo->Error_Warning_Bits, 0, 5);
 
-    if (notableBits != 0x0)
+    if (errorBits != 0x0)
     {
         char dashMsg[9];
-        snprintf(dashMsg, 9, "ACUErr%hhX", notableBits);
+        snprintf(dashMsg, 9, "ACUErr%hhX", errorBits);
         writeMessage(PrimaryBusCAN, MSG_DEBUG_2_0, GR_DASH_PANEL, (uint8_t*)dashMsg, 8);  // Not sending '\0'
 
         char steeringMsg[16];
-        snprintf(steeringMsg, 16, "ACU Error -- %hhX", notableBits);
+        snprintf(steeringMsg, 16, "ACU Error -- %hhX", errorBits);
         writeMessage(DataBusCAN, MSG_DEBUG_FD, GR_STEERING_WHEEL, (uint8_t*)steeringMsg, 15);   // Not sending '\0'
 
-        LOGOMATIC("ACU Error -- %hhX", notableBits);
+        LOGOMATIC("ACU Error -- %hhX", errorBits);
 
         return acuMsgTwo->SDC_Voltage < 50;
     }
@@ -136,19 +136,19 @@ bool GRIError(Inverter_Status_Msg_Three *msgGriThree)
 
 bool ACUWarning(ACU_Status_MsgTwo *acuMsgTwo)
 {
-    uint8_t notableBits = getBits(acuMsgTwo->Error_Warning_Bits, 5, 3);
+    uint8_t errorBits = getBits(acuMsgTwo->Error_Warning_Bits, 5, 3);
 
-    if (notableBits != 0x0)
+    if (errorBits != 0x0)
     {
         char dashMsg[9];
-        snprintf(dashMsg, 9, "ACUWar%hhx", notableBits);
+        snprintf(dashMsg, 9, "ACUWar%hhx", errorBits);
         writeMessage(PrimaryBusCAN, MSG_DEBUG_2_0, GR_DASH_PANEL, (uint8_t*)dashMsg, 8);    // Not sending '\0'
 
         char steeringMsg[18];
-        snprintf(steeringMsg, 18, "ACU Warning -- %hhX", notableBits);
+        snprintf(steeringMsg, 18, "ACU Warning -- %hhX", errorBits);
         writeMessage(DataBusCAN, MSG_DEBUG_FD, GR_STEERING_WHEEL, (uint8_t*)steeringMsg, 17);   // Not sending '\0'
 
-        LOGOMATIC("ACU Warning -- %hhX", notableBits);
+        LOGOMATIC("ACU Warning -- %hhX", errorBits);
 
         return true;
     }
