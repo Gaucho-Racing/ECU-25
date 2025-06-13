@@ -1415,6 +1415,5 @@ void LL_ADC_INJ_StructInit(LL_ADC_INJ_InitTypeDef *pADC_InjInitStruct)
 /**
   * @}
   */
-#else
-typedef int make_iso_c_compilers_happy;
+
 #endif /* USE_FULL_LL_DRIVER */

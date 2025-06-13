@@ -123,6 +123,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     stateMachineTick();
+    writeMessage(PrimaryBusCAN, MSG_DEBUG_2_0, GR_DASH_PANEL, (uint8_t*)"Cooked", 7);
     pingSchedule();
   }
   /* USER CODE END 3 */
