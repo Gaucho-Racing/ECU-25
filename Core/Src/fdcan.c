@@ -58,11 +58,11 @@ void writeDtiMessage(uint16_t msgID, uint8_t data[], uint32_t length)
 
     if (HAL_FDCAN_GetTxFifoFreeLevel(handle) == 0)
     {
-        LOGOMATIC("\n\n---FDCAN Tx FIFO is full!---\n\n");
+        LOGOMATIC("\n---FDCAN Tx FIFO 0 is full!---\n");
     }
     else if (HAL_FDCAN_AddMessageToTxFifoQ(handle, &TxHeader, data) != HAL_OK)
     {
-        LOGOMATIC("Could not add msg to transmission FIFO queue\n");
+        LOGOMATIC("\n---Could not add msg to transmission FIFO queue 0---\n");
         Error_Handler();
     }
 }
@@ -95,7 +95,7 @@ void writeMessage(BusCAN bus, uint16_t msgID, uint8_t destID, uint8_t data[], ui
         HAL_GPIO_WritePin(LED_TEST_GPIO_Port, LED_TEST_Pin, GPIO_PIN_SET);
         #endif
 
-        LOGOMATIC("\n\n---FDCAN Tx FIFO is full!---\n\n");
+        LOGOMATIC("\n---FDCAN Tx FIFO %d is full!---\n", bus);
     }
     else if (HAL_FDCAN_AddMessageToTxFifoQ(handle, &TxHeader, data) != HAL_OK)
     {
@@ -103,7 +103,7 @@ void writeMessage(BusCAN bus, uint16_t msgID, uint8_t destID, uint8_t data[], ui
         HAL_GPIO_WritePin(LED_TEST_GPIO_Port, LED_TEST_Pin, GPIO_PIN_RESET);
         #endif
 
-        LOGOMATIC("Could not add msg to transmission FIFO queue\n");
+        LOGOMATIC("\n---Could not add msg to FDCAN Tx FIFO %d---\n", bus);
         Error_Handler();
     }
 }
