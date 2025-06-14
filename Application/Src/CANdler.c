@@ -335,6 +335,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                     if (!ts_on)
                     {
                         globalStatus.ECUState = GLV_ON;
+                        writeMessage(PrimaryBusCAN, MSG_ACU_PRECHARGE, GR_ACU, (uint8_t*)&ts_on, 1);
                     }
                     else if (!prevTS_ON)
                     {
@@ -348,8 +349,14 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                     {
                         invalidRTD = true;
                     }
-                    break;
 
+                    if (!ts_on)
+                    {
+                        globalStatus.ECUState = GLV_ON;
+                        writeMessage(PrimaryBusCAN, MSG_ACU_PRECHARGE, GR_ACU, (uint8_t*)&ts_on, 1);
+                    }
+
+                    break;
 
                 case PRECHARGE_COMPLETE:
                     if (rtd && !invalidRTD && pressingBrake())
@@ -361,6 +368,12 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                         invalidRTD = false;
                     }
 
+                    if (!ts_on)
+                    {
+                        globalStatus.ECUState = TS_DISCHARGE_OFF;
+                        writeMessage(PrimaryBusCAN, MSG_ACU_PRECHARGE, GR_ACU, (uint8_t*)&ts_on, 1);
+                    }
+
                     break;
 
                 case DRIVE_STANDBY:
@@ -368,9 +381,15 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                     {
                         globalStatus.ECUState = PRECHARGE_COMPLETE;
                     }
-                    else if(globalRTDstate)
+                    else if (globalRTDstate)
                     {
                         writeMessage(DataBusCAN, MSG_DEBUG_2_0, GR_DASH_PANEL, (uint8_t*) "RTD Button Error. Please press brake before RTD", 47);
+                    }
+
+                    if (!ts_on)
+                    {
+                        globalStatus.ECUState = TS_DISCHARGE_OFF;
+                        writeMessage(PrimaryBusCAN, MSG_ACU_PRECHARGE, GR_ACU, (uint8_t*)&ts_on, 1);
                     }
                     
                     break;
