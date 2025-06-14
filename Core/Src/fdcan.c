@@ -89,6 +89,13 @@ void writeMessage(BusCAN bus, uint16_t msgID, uint8_t destID, uint8_t data[], ui
             return;
     }
 
+    FDCAN_ProtocolStatusTypeDef protocolStatus = {};
+    HAL_FDCAN_GetProtocolStatus(&hfdcan1, &protocolStatus);
+    if (protocolStatus.BusOff)
+    {
+        CLEAR_BIT(hfdcan1.Instance->CCCR, FDCAN_CCCR_INIT);
+    }
+
     if (HAL_FDCAN_GetTxFifoFreeLevel(handle) == 0)
     {
         #ifdef LOGOMATIC_ENABLED
