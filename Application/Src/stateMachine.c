@@ -48,6 +48,17 @@ void stateMachineTick(void)
         dischargeStartMillis = BAD_TIME_Negative1;
     }
 
+    if (globalStatus.ECUState != ERRORSTATE)
+    {
+        HAL_GPIO_WritePin(TSSI_G_CONTROL_GPIO_Port, TSSI_G_CONTROL_Pin, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(TSSI_R_CONTROL_GPIO_Port, TSSI_R_CONTROL_Pin, GPIO_PIN_RESET);
+    }
+    else
+    {
+        HAL_GPIO_WritePin(TSSI_G_CONTROL_GPIO_Port, TSSI_G_CONTROL_Pin, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(TSSI_R_CONTROL_GPIO_Port, TSSI_R_CONTROL_Pin, GPIO_PIN_SET);  // TODO Implement 2-5 Hz 50% flash
+    }
+
     switch(globalStatus.ECUState)
     {
         case GLV_ON:
