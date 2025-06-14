@@ -26,7 +26,7 @@ volatile uint32_t lastECUStatusMsgTick = 0;
 volatile uint32_t lastTSSIFlash = 0;
 
 static const uint16_t howOftenToSpamECUStatusMsgs = 50;
-static const uint32_t howOftenToFlashTSSI = 350;
+static const uint32_t TSSIFlashCycleLength = 400;
 
 bool determineSignalForDashLEDs(AnalogSignal sig)
 {
@@ -55,15 +55,17 @@ void stateMachineTick(void)
         HAL_GPIO_WritePin(TSSI_G_CONTROL_GPIO_Port, TSSI_G_CONTROL_Pin, GPIO_PIN_SET);
         HAL_GPIO_WritePin(TSSI_R_CONTROL_GPIO_Port, TSSI_R_CONTROL_Pin, GPIO_PIN_RESET);
     }
-    else if (HAL_GetTick() - lastTSSIFlash < howOftenToFlashTSSI){
+    else if (HAL_GetTick() - lastTSSIFlash < TSSIFlashCycleLength/2){
         HAL_GPIO_WritePin(TSSI_G_CONTROL_GPIO_Port, TSSI_G_CONTROL_Pin, GPIO_PIN_RESET);
-        HAL_GPIO_WritePin(TSSI_R_CONTROL_GPIO_Port, TSSI_R_CONTROL_Pin, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(TSSI_R_CONTROL_GPIO_Port, TSSI_R_CONTROL_Pin, GPIO_PIN_SET);
     }
     else
-    {
-        lastTSSIFlash = HAL_GetTick();
+    {  // TODO Implement 2-5 Hz 50% flash
+        if(HAL_GetTick() - lastTSSIFlash > TSSIFlashCycleLength){
+            lastTSSIFlash = HAL_GetTick();
+        }
         HAL_GPIO_WritePin(TSSI_G_CONTROL_GPIO_Port, TSSI_G_CONTROL_Pin, GPIO_PIN_RESET);
-        HAL_GPIO_WritePin(TSSI_R_CONTROL_GPIO_Port, TSSI_R_CONTROL_Pin, GPIO_PIN_SET);  // TODO Implement 2-5 Hz 50% flash
+        HAL_GPIO_WritePin(TSSI_R_CONTROL_GPIO_Port, TSSI_R_CONTROL_Pin, GPIO_PIN_RESET);
     }
 
     switch(globalStatus.ECUState)
