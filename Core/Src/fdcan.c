@@ -22,6 +22,7 @@
 
 /* USER CODE BEGIN 0 */
 #include <stdint.h>
+
 #include "stm32g4xx_hal_fdcan.h"
 #include "utils.h"
 #include "CANdler.h"
@@ -90,10 +91,18 @@ void writeMessage(BusCAN bus, uint16_t msgID, uint8_t destID, uint8_t data[], ui
 
     if (HAL_FDCAN_GetTxFifoFreeLevel(handle) == 0)
     {
+        #ifdef LOGOMATIC_ENABLED
+        HAL_GPIO_WritePin(LED_TEST_GPIO_Port, LED_TEST_Pin, GPIO_PIN_SET);
+        #endif
+
         LOGOMATIC("\n\n---FDCAN Tx FIFO is full!---\n\n");
     }
     else if (HAL_FDCAN_AddMessageToTxFifoQ(handle, &TxHeader, data) != HAL_OK)
     {
+        #ifdef LOGOMATIC_ENABLED
+        HAL_GPIO_WritePin(LED_TEST_GPIO_Port, LED_TEST_Pin, GPIO_PIN_RESET);
+        #endif
+
         LOGOMATIC("Could not add msg to transmission FIFO queue\n");
         Error_Handler();
     }
