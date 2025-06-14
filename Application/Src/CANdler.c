@@ -99,7 +99,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 numberOfBadMessages += (numberOfBadMessages > 0) ? -1 : 0;
             }
 
-            LOGOMATIC("Got pinged by %hhX", srcID);
+            LOGOMATIC("Got pinged by %X", srcID);
             respondToPing(srcID, *(uint32_t*)data);
 
             break;
