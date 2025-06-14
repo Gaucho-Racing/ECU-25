@@ -22,9 +22,11 @@ volatile StatusLump globalStatus = {
 
 volatile uint8_t numberOfBadMessages = 0;
 int32_t dischargeStartMillis = BAD_TIME_Negative1;
-uint32_t lastECUStatusMsgTick = 0;
+volatile uint32_t lastECUStatusMsgTick = 0;
+volatile uint32_t lastTSSIFlash = 0;
 
 static const uint16_t howOftenToSpamECUStatusMsgs = 50;
+static const uint32_t howOftenToFlashTSSI = 350;
 
 bool determineSignalForDashLEDs(AnalogSignal sig)
 {
@@ -53,8 +55,13 @@ void stateMachineTick(void)
         HAL_GPIO_WritePin(TSSI_G_CONTROL_GPIO_Port, TSSI_G_CONTROL_Pin, GPIO_PIN_SET);
         HAL_GPIO_WritePin(TSSI_R_CONTROL_GPIO_Port, TSSI_R_CONTROL_Pin, GPIO_PIN_RESET);
     }
+    else if (HAL_GetTick() - lastTSSIFlash < howOftenToFlashTSSI){
+        HAL_GPIO_WritePin(TSSI_G_CONTROL_GPIO_Port, TSSI_G_CONTROL_Pin, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(TSSI_R_CONTROL_GPIO_Port, TSSI_R_CONTROL_Pin, GPIO_PIN_RESET);
+    }
     else
     {
+        lastTSSIFlash = HAL_GetTick();
         HAL_GPIO_WritePin(TSSI_G_CONTROL_GPIO_Port, TSSI_G_CONTROL_Pin, GPIO_PIN_RESET);
         HAL_GPIO_WritePin(TSSI_R_CONTROL_GPIO_Port, TSSI_R_CONTROL_Pin, GPIO_PIN_SET);  // TODO Implement 2-5 Hz 50% flash
     }
