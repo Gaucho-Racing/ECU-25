@@ -58,11 +58,11 @@ void writeDtiMessage(uint16_t msgID, uint8_t data[], uint32_t length)
 
     if (HAL_FDCAN_GetTxFifoFreeLevel(handle) == 0)
     {
-        LOGOMATIC("\n---FDCAN Tx FIFO 0 is full!---\n");
+        LOGOMATIC("\n---FDCAN Tx FIFO 0 is full! (DTI)---\n");
     }
     else if (HAL_FDCAN_AddMessageToTxFifoQ(handle, &TxHeader, data) != HAL_OK)
     {
-        LOGOMATIC("\n---Could not add msg to transmission FIFO queue 0---\n");
+        LOGOMATIC("\n---Could not add DTI msg to FDCAN Tx FIFO 0---\n");
         Error_Handler();
     }
 }
