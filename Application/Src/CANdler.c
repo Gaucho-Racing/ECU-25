@@ -315,6 +315,11 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             switch(globalStatus.ECUState)
             {
                 case GLV_ON:
+                    if (determineSignalForDashLEDs(BSPD_SENSE))
+                    {
+                        break;  // Tell driver to not press both pedals at the same time to charge the car
+                    }
+
                     if (!ts_on)
                     {
                         prevTS_ON = 0;
@@ -331,8 +336,11 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                     {
                         globalStatus.ECUState = GLV_ON;
                     }
-                    writeMessage(PrimaryBusCAN, MSG_ACU_PRECHARGE, GR_ACU, (uint8_t*)&ts_on, 1);
-                    
+                    else if (!prevTS_ON)
+                    {
+                        writeMessage(PrimaryBusCAN, MSG_ACU_PRECHARGE, GR_ACU, (uint8_t*)&ts_on, 1);
+                    }
+
                     break;
 
                 case PRECHARGING:
