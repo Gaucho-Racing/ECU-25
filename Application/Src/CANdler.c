@@ -175,7 +175,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                     break;
 
                 case PRECHARGING:
-                    if (getBits(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 0, 4) == 0x07)
+                    if (getBits(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 0, 3) == 0x06/*getBits(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 0, 4) == 0x0E*/)
                     {
                         globalStatus.ECUState = PRECHARGE_COMPLETE;
                     }
@@ -188,13 +188,13 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                     if (getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 1) == 0x0 || ((getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 2) == 0x00) && globalStatus.ECUState != PRECHARGING))
                     {
                         //guys why is ir- open  and ir+ open && !precharge
-                        // Switch case: it will be past precharge engaged
+                        // Switch case: it will be past precharge engaged, relays opening is bad
                          globalStatus.ECUState = TS_DISCHARGE_OFF;
                     }
             }
 
             //(If ACU software latch ever opens or )IR- ever opens while IR+ is closed, something has gone wrong
-            if (getBits(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 1, 2) == 0x10 /*|| (getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 3) == 0x00 && globalStatus.ECUState > PRECHARGE_ENGAGED && globalStatus.ECUState <= DRIVE_ACTIVE_REGEN)*/)
+            if (getBits(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 1, 2) == 0x02 /*|| (getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 3) == 0x00 && globalStatus.ECUState > PRECHARGE_ENGAGED && globalStatus.ECUState <= DRIVE_ACTIVE_REGEN)*/)
             {
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
