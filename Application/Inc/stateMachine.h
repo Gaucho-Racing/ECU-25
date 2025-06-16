@@ -1,4 +1,7 @@
 #include <stdint.h>
+#include <stdbool.h>
+
+#include "adc.h"
 
 #ifndef STATEMACHINE_H
     #define STATEMACHINE_H
@@ -57,6 +60,8 @@
 
     extern volatile StatusLump globalStatus;
     extern volatile uint8_t numberOfBadMessages;
+
+    bool determineSignalForDashLEDs(AnalogSignal sig);
 
     /**
     Scales `globalStatus` and returns a copy that is scaled.

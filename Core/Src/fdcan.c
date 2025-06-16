@@ -89,7 +89,7 @@ void writeMessage(BusCAN bus, uint16_t msgID, uint8_t destID, uint8_t data[], ui
             return;
     }
 
-    FDCAN_ProtocolStatusTypeDef protocolStatus = {};
+    FDCAN_ProtocolStatusTypeDef protocolStatus;
     HAL_FDCAN_GetProtocolStatus(handle, &protocolStatus);
     if (protocolStatus.BusOff)
     {

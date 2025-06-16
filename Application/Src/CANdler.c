@@ -63,6 +63,10 @@ void handleDtiCANMessage(uint16_t msgID, uint8_t* data, uint32_t length)
 
 void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t length)
 {
+    #ifdef ADVANCED_LOGGING
+    LOGOMATIC("Recieved a CAN message from the DTI!\nMessage ID: %d\tLength: %ld", msgID, length);
+    #endif
+
     switch(msgID)
     {
         case MSG_DEBUG_2_0:
