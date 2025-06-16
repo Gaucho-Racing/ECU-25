@@ -359,6 +359,8 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                         writeMessage(PrimaryBusCAN, MSG_ACU_PRECHARGE, GR_ACU, (uint8_t*)&ts_on, 1);
                     }
 
+                    break;
+
                 case PRECHARGING:
                     if (rtd)
                     {
