@@ -23,7 +23,7 @@ volatile bool prevTS_ON = 1;
 void handleDtiCANMessage(uint16_t msgID, uint8_t* data, uint32_t length)
 {
     #ifdef ADVANCED_LOGGING
-    LOGOMATIC("Recieved a CAN message from the DTI!\nMessage ID: %d\tLength: %ld", msgID, length);
+    LOGOMATIC("Recieved a CAN message from the DTI!\tMessage ID: %d\tLength: %ld\n", msgID, length);
     #endif
 
     if (length != 8) {
@@ -64,7 +64,7 @@ void handleDtiCANMessage(uint16_t msgID, uint8_t* data, uint32_t length)
 void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t length)
 {
     #ifdef ADVANCED_LOGGING
-    LOGOMATIC("Recieved a CAN message from the DTI!\nMessage ID: %d\tLength: %ld", msgID, length);
+    LOGOMATIC("Recieved a CAN message!\tMessage ID: %d\tLength: %ld\n", msgID, length);
     #endif
 
     switch(msgID)
@@ -137,30 +137,36 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             // errorFlagBitsCan logic
             if (ACUError(acuMsgTwo) && (errorFlagBitsCan == 0 || errorFlagBitsCan == 2))
             {
+                LOGOMATIC("ACU Msg 2 tripped ACU Error: 'ACUError(acuMsgTwo) && (errorFlagBitsCan == 0 || errorFlagBitsCan == 2)'\n");
                 errorFlagBitsCan += 1;
             }
             else if (!ACUError(acuMsgTwo) && (errorFlagBitsCan == 1 || errorFlagBitsCan == 3))
             {
+                LOGOMATIC("ACU Msg 2 tripped errorFlagBitsCan: '!ACUError(acuMsgTwo) && (errorFlagBitsCan == 1 || errorFlagBitsCan == 3)'\n");
                 errorFlagBitsCan -= 1;
             }
 
             if (ACUWarning(acuMsgTwo))
             {
+                LOGOMATIC("ACU Msg 2 --- Under Voltage!\n");
                 globalStatus.PowerLevelTorqueMap = (globalStatus.PowerLevelTorqueMap >> 5 << 4) | (globalStatus.PowerLevelTorqueMap << 4 >> 4);
-                writeMessage(PrimaryBusCAN, MSG_DEBUG_2_0, GR_ALL, (uint8_t*)"UnderVol", 8); // Until they figure out how they want to talk to us...
+                writeMessage(PrimaryBusCAN, MSG_DEBUG_2_0, GR_ALL, (uint8_t*)"UnderVol", 8);
             }
 
             //Error handling and leaving error state
             if ((errorFlagBitsCan || getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 0) == 0x1) && globalStatus.TractiveSystemVoltage >= TS_VOLTAGE_OFF_LIMIT)
             {
+                LOGOMATIC("Entering TS Discharge Off!\n");
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
             else if (errorFlagBitsCan || getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 0) == 0x1)
             {
+                LOGOMATIC("Safe to enter ERRORSTATE\n");
                 globalStatus.ECUState = ERRORSTATE;
             }
             else if (globalStatus.ECUState == ERRORSTATE || (globalStatus.ECUState == TS_DISCHARGE_OFF && globalStatus.TractiveSystemVoltage < TS_VOLTAGE_OFF_LIMIT))
             {
+                LOGOMATIC("Cleared, re-entering GLV ON\n");
                 prevTS_ON = 1;
                 globalStatus.ECUState = GLV_ON;
             }
@@ -173,6 +179,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 case PRECHARGE_ENGAGED:
                     if (getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 1) == 0x1)
                     {
+                        LOGOMATIC("Entering PRECHARGING\n");
                         globalStatus.ECUState = PRECHARGING;
                     }
 
@@ -181,6 +188,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 case PRECHARGING:
                     if (getBits(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 0, 3) == 0x06/*getBits(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 0, 4) == 0x0E*/)
                     {
+                        LOGOMATIC("Entering PRECHARGE COMPLETE\n");
                         globalStatus.ECUState = PRECHARGE_COMPLETE;
                     }
 
@@ -191,6 +199,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 default:
                     if (getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 1) == 0x0 || ((getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 2) == 0x00) && globalStatus.ECUState != PRECHARGING))
                     {
+                        LOGOMATIC("ACU Msg 2 tripped some precharge error IR state software latch bit stuff\n");
                         //guys why is ir- open  and ir+ open && !precharge
                         // Switch case: it will be past precharge engaged, relays opening is bad
                          globalStatus.ECUState = TS_DISCHARGE_OFF;
@@ -200,6 +209,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
             //(If ACU software latch ever opens or )IR- ever opens while IR+ is closed, something has gone wrong
             if (getBits(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 1, 2) == 0x02 /*|| (getBit(acuMsgTwo->Precharge_Error_IR_State_Software_Latch_Bits, 3) == 0x00 && globalStatus.ECUState > PRECHARGE_ENGAGED && globalStatus.ECUState <= DRIVE_ACTIVE_REGEN)*/)
             {
+                LOGOMATIC("ACU software latch opens or IR- opened while IR+ is closed\tEntering TS Discharge Off\n");
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
 /*
@@ -278,23 +288,28 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             if (GRIError(msgGriThree) && (errorFlagBitsCan == 0 || errorFlagBitsCan == 1))
             {
+                LOGOMATIC("Tripped GRI Error\n");
                 errorFlagBitsCan += 2;
             }
             else if (!GRIError(msgGriThree) && (errorFlagBitsCan == 2 || errorFlagBitsCan == 3))
             {
+                LOGOMATIC("Tripped error flag bits can\n");
                 errorFlagBitsCan -= 2;
             }
 
             if (errorFlagBitsCan && globalStatus.TractiveSystemVoltage >= TS_VOLTAGE_OFF_LIMIT)
             {
+                LOGOMATIC("Inverter Status 3 Msg tripped us to TS Discharge Off\n");
                 globalStatus.ECUState = TS_DISCHARGE_OFF;
             }
             else if (errorFlagBitsCan)
             {
+                LOGOMATIC("Error flag bits on CAN so going to ERRORSTATE\n");
                 globalStatus.ECUState = ERRORSTATE;
             }
             else if (globalStatus.ECUState == ERRORSTATE || (globalStatus.ECUState == TS_DISCHARGE_OFF && globalStatus.TractiveSystemVoltage < TS_VOLTAGE_OFF_LIMIT))
             {
+                LOGOMATIC("Errors cleared, jumping to GLV ON\n");
                 prevTS_ON = 1;
                 globalStatus.ECUState = GLV_ON;
             }
@@ -321,6 +336,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 case GLV_ON:
                     if (determineSignalForDashLEDs(BSPD_SENSE))
                     {
+                        LOGOMATIC("Driver should not press both pedals at the same time\n");
                         break;  // Tell driver to not press both pedals at the same time to charge the car
                     }
 
@@ -330,6 +346,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                     }
                     else if (!prevTS_ON)
                     {
+                        LOGOMATIC("TS Active engaged rising edge\n");
                         globalStatus.ECUState = PRECHARGE_ENGAGED;
                     }
 
@@ -338,11 +355,13 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 case PRECHARGE_ENGAGED:
                     if (!ts_on)
                     {
+                        LOGOMATIC("Jumping to GLV ON\n");
                         globalStatus.ECUState = GLV_ON;
                         writeMessage(PrimaryBusCAN, MSG_ACU_PRECHARGE, GR_ACU, (uint8_t*)&ts_on, 1);
                     }
                     else if (!prevTS_ON)
                     {
+                        LOGOMATIC("NOT SURE WHAT THIS STATE REPRESENTS\n");
                         writeMessage(PrimaryBusCAN, MSG_ACU_PRECHARGE, GR_ACU, (uint8_t*)&ts_on, 1);
                     }
 
@@ -351,11 +370,13 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 case PRECHARGING:
                     if (rtd)
                     {
+                        LOGOMATIC("Tell driver to not press RTD until precharge complete\n");
                         invalidRTD = true;
                     }
 
                     if (!ts_on)
                     {
+                        LOGOMATIC("Gotta keep TS Active on to continue charging\n");
                         globalStatus.ECUState = GLV_ON;
                         writeMessage(PrimaryBusCAN, MSG_ACU_PRECHARGE, GR_ACU, (uint8_t*)&ts_on, 1);
                     }
@@ -365,15 +386,18 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 case PRECHARGE_COMPLETE:
                     if (rtd && !invalidRTD && pressingBrake())
                     {
+                        LOGOMATIC("Promoted to Drive Standby\n");
                         globalStatus.ECUState = DRIVE_STANDBY;
                     }
                     else if(!rtd && invalidRTD)
                     {
+                        LOGOMATIC("Turn off and on RTD\n");
                         invalidRTD = false;
                     }
 
                     if (!ts_on)
                     {
+                        LOGOMATIC("Keep TS Active on to keep it on\n");
                         globalStatus.ECUState = TS_DISCHARGE_OFF;
                         writeMessage(PrimaryBusCAN, MSG_ACU_PRECHARGE, GR_ACU, (uint8_t*)&ts_on, 1);
                     }
@@ -383,15 +407,18 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 case DRIVE_STANDBY:
                     if (!rtd)
                     {
+                        LOGOMATIC("Keep RTD alive or we fallback\n");
                         globalStatus.ECUState = PRECHARGE_COMPLETE;
                     }
                     else if (globalRTDstate)
                     {
-                        writeMessage(DataBusCAN, MSG_DEBUG_2_0, GR_DASH_PANEL, (uint8_t*) "RTD Button Error. Please press brake before RTD", 47);
+                        LOGOMATIC("Driver must press brake before pressing RTD\n");
+                        writeMessage(DataBusCAN, MSG_DEBUG_2_0, GR_DASH_PANEL, (uint8_t*)"Brk->RTD", 8);
                     }
 
                     if (!ts_on)
                     {
+                        LOGOMATIC("TS must be kept alive\n");
                         globalStatus.ECUState = TS_DISCHARGE_OFF;
                         writeMessage(PrimaryBusCAN, MSG_ACU_PRECHARGE, GR_ACU, (uint8_t*)&ts_on, 1);
                     }
@@ -401,7 +428,14 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                 default:
                     if (!ts_on)
                     {
+                        LOGOMATIC("TS must be kept alive\n");
                         globalStatus.ECUState = TS_DISCHARGE_OFF;
+                    }
+
+                    if (!rtd)
+                    {
+                        LOGOMATIC("RTD must be kept alive\n");
+                        globalStatus.ECUState = DRIVE_STANDBY;
                     }
 /*
             if (globalStatus.ECUState == GLV_ON)

@@ -47,11 +47,13 @@ void drive_standby(void)
     //escape condition for BSE_APPS_violation according to rules
     if (BSE_APPS_violation && pedalTravel < APPS_DEADZONE)
     {
+        LOGOMATIC("Recovered from BSE APPS violation\n");
         BSE_APPS_violation = false;
     }
 
     if (!BSE_APPS_violation && pedalTravel >= APPS_DEADZONE)
     {
+        LOGOMATIC("Moving to drive active with a torque request\n");
         controlInverters(true);
         globalStatus.ECUState = DRIVE_ACTIVE_POWER;
     }
@@ -69,7 +71,8 @@ void drive_active_idle(void)
     float pedalTravel = getPedalTravel();
 
     if (checkBSEAPPSviolation(globalStatus.APPS1_SIGNAL, globalStatus.APPS2_SIGNAL, pedalTravel, regenPercent))
-    {  
+    {
+        LOGOMATIC("BSE APPS violation, pulling back to drive standby\n");
         controlInverters(false);   //false for disable
         globalStatus.ECUState = DRIVE_STANDBY;
         BSE_APPS_violation = true;
@@ -78,11 +81,13 @@ void drive_active_idle(void)
     }
     else if (pedalTravel >= APPS_DEADZONE)
     {
+        LOGOMATIC("Torque request recieved, moving to drive active power\n");
         globalStatus.ECUState = DRIVE_ACTIVE_POWER;
         return;
     }
     else if (pedalTravel < APPS_DEADZONE && vehicleSpeedMPH() > REGEN_MPH && getBits(globalSteeringStatusRegenButtonMap, 0, 4) != 0)
     {
+        LOGOMATIC("Moving to regen state\n");
         globalStatus.ECUState = DRIVE_ACTIVE_REGEN;
         return;
     }
@@ -108,6 +113,7 @@ void drive_active_power(void)
 
     if (checkBSEAPPSviolation(globalStatus.APPS1_SIGNAL, globalStatus.APPS2_SIGNAL, pedalTravel, regenPercent))
     {
+        LOGOMATIC("BSE APPS violation, pulling back to drive standby\n");
         controlInverters(false);   //0 for disable
         globalStatus.ECUState = DRIVE_STANDBY;
         BSE_APPS_violation = true;
@@ -116,6 +122,7 @@ void drive_active_power(void)
     }
     else if (pedalTravel < APPS_DEADZONE)
     {
+        LOGOMATIC("No torque request moving back to idle\n");
         globalStatus.ECUState = DRIVE_ACTIVE_IDLE;
         return;
     }
@@ -163,6 +170,7 @@ void drive_active_regen(void)
 
     if (checkBSEAPPSviolation(globalStatus.APPS1_SIGNAL, globalStatus.APPS2_SIGNAL, pedalTravel, regenPercent))
     {
+        LOGOMATIC("BSE APPS violation, pulling back to drive standby\n");
         controlInverters(false);
         globalStatus.ECUState = DRIVE_STANDBY;
         BSE_APPS_violation = true;
@@ -171,11 +179,13 @@ void drive_active_regen(void)
     }
     else if (pedalTravel >= APPS_DEADZONE)
     {
+        LOGOMATIC("Torque request recieved, moving to active power\n");
         globalStatus.ECUState = DRIVE_ACTIVE_POWER;
         return;
     }
     else if (vehicleSpeedMPH() < REGEN_MPH || getBits(globalSteeringStatusRegenButtonMap, 0, 4) == 0)
     {
+        LOGOMATIC("Nothing much going down, moving to idle\n");
         globalStatus.ECUState = DRIVE_ACTIVE_IDLE;
         return;
     }

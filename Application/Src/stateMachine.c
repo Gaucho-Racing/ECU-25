@@ -55,15 +55,18 @@ void stateMachineTick(void)
         HAL_GPIO_WritePin(TSSI_G_CONTROL_GPIO_Port, TSSI_G_CONTROL_Pin, GPIO_PIN_SET);
         HAL_GPIO_WritePin(TSSI_R_CONTROL_GPIO_Port, TSSI_R_CONTROL_Pin, GPIO_PIN_RESET);
     }
-    else if (HAL_GetTick() - lastTSSIFlash < TSSIFlashCycleLength/2){
+    else if (HAL_GetTick() - lastTSSIFlash < TSSIFlashCycleLength / 2)
+    {
         HAL_GPIO_WritePin(TSSI_G_CONTROL_GPIO_Port, TSSI_G_CONTROL_Pin, GPIO_PIN_RESET);
         HAL_GPIO_WritePin(TSSI_R_CONTROL_GPIO_Port, TSSI_R_CONTROL_Pin, GPIO_PIN_SET);
     }
     else
-    {  // TODO Implement 2-5 Hz 50% flash
-        if(HAL_GetTick() - lastTSSIFlash > TSSIFlashCycleLength){
+    {
+        if (HAL_GetTick() - lastTSSIFlash > TSSIFlashCycleLength)
+        {
             lastTSSIFlash = HAL_GetTick();
         }
+
         HAL_GPIO_WritePin(TSSI_G_CONTROL_GPIO_Port, TSSI_G_CONTROL_Pin, GPIO_PIN_RESET);
         HAL_GPIO_WritePin(TSSI_R_CONTROL_GPIO_Port, TSSI_R_CONTROL_Pin, GPIO_PIN_RESET);
     }
@@ -110,6 +113,10 @@ void stateMachineTick(void)
 
     if (HAL_GetTick() - lastECUStatusMsgTick > howOftenToSpamECUStatusMsgs)
     {
+        #ifdef ADVANCED_LOGGING
+        LOGOMATIC("Sending ECU data packets\n");
+        #endif
+
         uint8_t dashConfigMsg[7] = {0};     // Other bytes not used
         dashConfigMsg[0] = determineSignalForDashLEDs(AMS_SENSE) | (determineSignalForDashLEDs(IMD_SENSE) << 1) | (determineSignalForDashLEDs(BSPD_SENSE) << 2);
         writeMessage(PrimaryBusCAN, MSG_DASH_CONFIG, GR_DASH_PANEL, dashConfigMsg, 7);
@@ -182,6 +189,7 @@ void precharge_engaged(void)
     // For safety
     if (globalStatus.TractiveSystemVoltage >= TS_VOLTAGE_OFF_LIMIT)
     {
+        LOGOMATIC("Tripped TS Voltage in precharge engaged state, discharging\n");
         globalStatus.ECUState = TS_DISCHARGE_OFF;
     }
 
@@ -213,6 +221,7 @@ void ts_discharge_off(void)
     
     if ((millis() - dischargeStartMillis) > HOW_LONG_TSDISCHARGE_UNTIL_ERROR_MS)
     {
+        LOGOMATIC("Discharging too long, jumping to ERRORSTATE\n");
         globalStatus.ECUState = ERRORSTATE;  // ERRORSTATE will send it back if voltage >= TS_VOLTAGE_OFF_LIMIT
     }
 }
@@ -230,6 +239,7 @@ void error(void)
 
     if (globalStatus.TractiveSystemVoltage >= TS_VOLTAGE_OFF_LIMIT)
     {
+        LOGOMATIC("Error at too high a TS Voltage, jumping to ERRORSTATE\n");
         globalStatus.ECUState = TS_DISCHARGE_OFF;
     }
 

@@ -16,6 +16,10 @@ volatile DTI_Data globalInverterData = {0};
 
 void sendInverterCommand(void)
 {
+    #ifdef ADVANCED_LOGGING
+    LOGOMATIC("Sending inverter command\n");
+    #endif
+
     writeDtiMessage(MSG_DTI_CONTROL_12, (uint8_t*)&globalInverterSettings[0].driveEnable, 1);
     writeDtiMessage(MSG_DTI_CONTROL_1, (uint8_t*)&globalInverterSettings[0].acCurrent, 2);
 
@@ -27,6 +31,10 @@ void sendInverterCommand(void)
 
 void controlInverters(bool driveEnable)
 {
+    #ifdef ADVANCED_LOGGING
+    LOGOMATIC("Drive enable is %d\n", driveEnable);
+    #endif
+
     globalInverterSettings[0].driveEnable = (uint8_t)driveEnable;
 
     #ifdef ENABLE_THREE_MOTORS
