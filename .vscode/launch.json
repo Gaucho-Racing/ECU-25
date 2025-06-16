@@ -3,13 +3,13 @@
     "configurations": [{
         "cwd": "${workspaceFolder}",
         "executable": "./build/Debug/ECU-25.elf",
-        "name": "Debug with OpenOCD",
+        "name": "Debug Build and Flash",
         "request": "launch",
         "type": "cortex-debug",
         "servertype": "openocd",
         "configFiles": ["interface/stlink.cfg", "target/stm32g4x.cfg"],
         "searchDir": [],
-        "preLaunchTask": "CMake: build",
+        "preLaunchTask": "CMake: Debug",
         "showDevDebugOutput": "raw",
         "svdPath": "${workspaceFolder}/.vscode/STM32G474.svd",
         "swoConfig": {
@@ -27,6 +27,32 @@
                 }
             ]
         }
-    }],
-    "compounds": []
+    },{
+        "cwd": "${workspaceFolder}",
+        "executable": "./build/Release/ECU-25.elf",
+        "name": "Release Build and Flash",
+        "request": "launch",
+        "type": "cortex-debug",
+        "servertype": "openocd",
+        "configFiles": ["interface/stlink.cfg", "target/stm32g4x.cfg"],
+        "searchDir": [],
+        "preLaunchTask": "CMake: Release",
+        "showDevDebugOutput": "raw",
+        "svdPath": "${workspaceFolder}/.vscode/STM32G474.svd",
+        "swoConfig": {
+            "enabled": true,
+            "cpuFrequency": 160000000,
+            "swoFrequency":  115200,
+            "source": "probe",
+            "decoders": [
+                { 
+                    "type": "console",
+                    "label": "ITM",
+                    "showOnStartup": true,
+                    "port": 0,
+                    "encoding": "ascii"
+                }
+            ]
+        }
+    }]
 }
