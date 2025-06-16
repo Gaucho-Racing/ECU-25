@@ -16,8 +16,7 @@
 
 volatile uint8_t errorFlagBitsCan = 0;
 volatile uint8_t globalSteeringStatusRegenButtonMap = 0;
-volatile bool globalRTDstate = 0;
-volatile bool invalidRTD = 0;
+volatile bool prevRTD = 1;
 volatile bool prevTS_ON = 1;
 
 void handleDtiCANMessage(uint16_t msgID, uint8_t* data, uint32_t length)
@@ -326,8 +325,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
             Dash_Status_Msg *dashStatusMsg = (Dash_Status_Msg*)data;
             bool ts_on = dashStatusMsg->TSButtonData;
-            bool rtd = !globalRTDstate && dashStatusMsg->RTDButtonData;
-            globalRTDstate = dashStatusMsg->RTDButtonData;
+            bool rtd = dashStatusMsg->RTDButtonData;
 
             HAL_GPIO_WritePin(RTD_CONTROL_GPIO_Port, RTD_CONTROL_Pin, rtd);
 
@@ -348,6 +346,7 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                     {
                         LOGOMATIC("TS Active engaged rising edge\n");
                         globalStatus.ECUState = PRECHARGE_ENGAGED;
+                        prevTS_ON = 1;
                     }
 
                     break;
@@ -359,40 +358,39 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
                         globalStatus.ECUState = GLV_ON;
                         writeMessage(PrimaryBusCAN, MSG_ACU_PRECHARGE, GR_ACU, (uint8_t*)&ts_on, 1);
                     }
-                    else if (!prevTS_ON)
-                    {
-                        LOGOMATIC("NOT SURE WHAT THIS STATE REPRESENTS\n");
-                        writeMessage(PrimaryBusCAN, MSG_ACU_PRECHARGE, GR_ACU, (uint8_t*)&ts_on, 1);
-                    }
-
-                    break;
 
                 case PRECHARGING:
                     if (rtd)
                     {
                         LOGOMATIC("Tell driver to not press RTD until precharge complete\n");
-                        invalidRTD = true;
                     }
 
                     if (!ts_on)
                     {
                         LOGOMATIC("Gotta keep TS Active on to continue charging\n");
-                        globalStatus.ECUState = GLV_ON;
+                        globalStatus.ECUState = TS_DISCHARGE_OFF;
                         writeMessage(PrimaryBusCAN, MSG_ACU_PRECHARGE, GR_ACU, (uint8_t*)&ts_on, 1);
                     }
 
                     break;
 
                 case PRECHARGE_COMPLETE:
-                    if (rtd && !invalidRTD && pressingBrake())
+                    if (rtd && !prevRTD && pressingBrake())
                     {
                         LOGOMATIC("Promoted to Drive Standby\n");
                         globalStatus.ECUState = DRIVE_STANDBY;
+                        prevRTD = 1;
                     }
-                    else if(!rtd && invalidRTD)
+
+                    else if(!rtd && prevRTD && pressingBrake())
                     {
-                        LOGOMATIC("Turn off and on RTD\n");
-                        invalidRTD = false;
+                        LOGOMATIC("Ready to press RTD\n");
+                        prevRTD = 0;
+                    }
+
+                    else if(!pressingBrake()){
+                        LOGOMATIC("Brake not depressed\n");
+                        prevRTD = 1; // Rising edge must happen after and while driver presses brake.
                     }
 
                     if (!ts_on)
@@ -404,38 +402,18 @@ void handleCANMessage(uint16_t msgID, uint8_t srcID, uint8_t *data, uint32_t len
 
                     break;
 
-                case DRIVE_STANDBY:
-                    if (!rtd)
-                    {
-                        LOGOMATIC("Keep RTD alive or we fallback\n");
-                        globalStatus.ECUState = PRECHARGE_COMPLETE;
-                    }
-                    else if (globalRTDstate)
-                    {
-                        LOGOMATIC("Driver must press brake before pressing RTD\n");
-                        writeMessage(DataBusCAN, MSG_DEBUG_2_0, GR_DASH_PANEL, (uint8_t*)"Brk->RTD", 8);
-                    }
-
+                default:
                     if (!ts_on)
                     {
                         LOGOMATIC("TS must be kept alive\n");
                         globalStatus.ECUState = TS_DISCHARGE_OFF;
                         writeMessage(PrimaryBusCAN, MSG_ACU_PRECHARGE, GR_ACU, (uint8_t*)&ts_on, 1);
                     }
-                    
-                    break;
-
-                default:
-                    if (!ts_on)
-                    {
-                        LOGOMATIC("TS must be kept alive\n");
-                        globalStatus.ECUState = TS_DISCHARGE_OFF;
-                    }
 
                     if (!rtd)
                     {
                         LOGOMATIC("RTD must be kept alive\n");
-                        globalStatus.ECUState = DRIVE_STANDBY;
+                        globalStatus.ECUState = PRECHARGE_COMPLETE;
                     }
 /*
             if (globalStatus.ECUState == GLV_ON)
