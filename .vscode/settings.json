@@ -6,6 +6,7 @@
         "*.md": "markdown",
         "*.ioc": "restructuredtext",
         "*.s": "code-text-binary",
-        "*.svd": "restructuredtext"
+        "*.svd": "restructuredtext",
+        "ios": "c"
     }
 }

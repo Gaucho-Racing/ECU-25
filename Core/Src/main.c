@@ -123,13 +123,41 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  //moving average beacuse noizy as fuck plz still have this check, otherwise works
+  #define WINDOW_SIZE 100
+
+  int front_buffer[WINDOW_SIZE] = {0};
+  int rear_buffer[WINDOW_SIZE] = {0};
+  int front_sum = 0;
+  int rear_sum = 0;
+  int index = 0;
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    printf("%d,\n", analogRead(AUX_SIGNAL));
-    HAL_Delay(100);
+
+    int front_new = analogRead(BRAKE_F_SIGNAL);
+    int rear_new = analogRead(BRAKE_R_SIGNAL);
+
+    // Update moving average for front
+    front_sum -= front_buffer[index];
+    front_buffer[index] = front_new;
+    front_sum += front_new;
+    int front_avg = front_sum / WINDOW_SIZE;
+
+    // Update moving average for rear
+    rear_sum -= rear_buffer[index];
+    rear_buffer[index] = rear_new;
+    rear_sum += rear_new;
+    int rear_avg = rear_sum / WINDOW_SIZE;
+
+    // Print the smoothed values
+    printf("F_avg: %d, R_avg: %d\n", front_avg, rear_avg);
+
+    // Advance circular buffer index
+    index = (index + 1) % WINDOW_SIZE;
+    HAL_Delay(10);
       // stateMachineTick();
       // pingSchedule();
   }

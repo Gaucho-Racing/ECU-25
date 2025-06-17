@@ -126,6 +126,11 @@ void stateMachineTick(void)
         writeMessage(PrimaryBusCAN, MSG_ECU_STATUS_3, GR_ALL, (uint8_t*)correctlyScaledValues.ECUStatusMsgThree, 4);
         writeMessage(PrimaryBusCAN, MSG_DASH_WARNING_FLAGS, GR_DASH_PANEL, (uint8_t*)&BSE_APPS_violation, 1);
         writeMessage(DataBusCAN, MSG_ECU_PEDALS_DATA, GR_TCM, correctlyScaledValues.ECUPedalDataMsg, 10);
+        
+
+        // printf("%d,\n", analogRead(AUX_SIGNAL));
+
+
 
         lastECUStatusMsgTick = HAL_GetTick();
 
