@@ -128,8 +128,10 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-      stateMachineTick();
-      pingSchedule();
+    printf("%d,\n", analogRead(AUX_SIGNAL));
+    HAL_Delay(100);
+      // stateMachineTick();
+      // pingSchedule();
   }
   /* USER CODE END 3 */
 }
