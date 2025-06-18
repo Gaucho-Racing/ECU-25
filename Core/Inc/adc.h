@@ -57,6 +57,8 @@ typedef struct {
     uint16_t STEERING_ANGLE;
 } AnalogInput;
 
+extern AnalogInput globalAnalog;
+
 /* USER CODE END Private defines */
 
 void MX_ADC1_Init(void);

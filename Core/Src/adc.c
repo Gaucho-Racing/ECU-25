@@ -23,14 +23,14 @@
 /* USER CODE BEGIN 0 */
 #include "driving.h"
 
+AnalogInput globalAnalog = {0};
+
 struct {
     uint16_t adc1buf[6];
     uint16_t adc2buf[5];
 } adcBuffers;
 
 uint16_t adcSumValues[11];
-
-AnalogInput globalAnalogs = {0};
 
 uint16_t analogRead(AnalogSignal signal)
 {
