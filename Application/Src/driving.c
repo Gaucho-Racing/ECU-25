@@ -25,14 +25,12 @@ volatile uint16_t heatCapacity2 = 0;
 
 volatile float minAmkHeatCapThrottlePercent = 0.8f;
 
-static uint16_t getRegenPercent() // THIS IS NOT ACTUALLY BRAKE TRAVEL, PRESSURE SENSORS CAPTURE BRAKE TRAVEL
+static uint16_t getBrakePercent() // THIS IS NOT ACTUALLY BRAKE TRAVEL, PRESSURE SENSORS CAPTURE BRAKE TRAVEL
 {
-    globalStatus.AUX_SIGNAL = analogRead(AUX_SIGNAL);           // Brake pedal force (BSE_SIGNAL is a useless float)
     globalStatus.BRAKE_F_SIGNAL = analogRead(BRAKE_F_SIGNAL);   // Brake pressure F
     globalStatus.BRAKE_R_SIGNAL = analogRead(BRAKE_R_SIGNAL);   // Brake pressure R
-    return (float)(globalStatus.AUX_SIGNAL - AUX_MIN) / (AUX_MAX - AUX_MIN);
+    return (float)(globalStatus.BRAKE_F_SIGNAL + globalStatus.BRAKE_R_SIGNAL - BRAKE_R_MIN - BRAKE_F_MIN) / (BRAKE_F_MAX - BRAKE_F_MIN + BRAKE_R_MAX - BRAKE_R_MIN);
 }
-
 static float getPedalTravel()
 {
     globalStatus.APPS1_SIGNAL = analogRead(APPS1_SIGNAL);
@@ -67,10 +65,10 @@ void drive_active_idle(void)
     }
 
     lastDriveActiveCtrlMs = millis();
-    float regenPercent = getRegenPercent();
+    float brakePercent = getBrakePercent();
     float pedalTravel = getPedalTravel();
 
-    if (checkBSEAPPSviolation(globalStatus.APPS1_SIGNAL, globalStatus.APPS2_SIGNAL, pedalTravel, regenPercent))
+    if (checkBSEAPPSviolation(globalStatus.APPS1_SIGNAL, globalStatus.APPS2_SIGNAL, pedalTravel, brakePercent))
     {
         LOGOMATIC("BSE APPS violation, pulling back to drive standby\n");
         controlInverters(false);   //false for disable
@@ -108,10 +106,10 @@ void drive_active_power(void)
     }
 
     lastDriveActiveCtrlMs = millis();
-    float regenPercent = getRegenPercent();
+    float brakePercent = getBrakePercent();
     float pedalTravel = getPedalTravel();
 
-    if (checkBSEAPPSviolation(globalStatus.APPS1_SIGNAL, globalStatus.APPS2_SIGNAL, pedalTravel, regenPercent))
+    if (checkBSEAPPSviolation(globalStatus.APPS1_SIGNAL, globalStatus.APPS2_SIGNAL, pedalTravel, brakePercent))
     {
         LOGOMATIC("BSE APPS violation, pulling back to drive standby\n");
         controlInverters(false);   //0 for disable
