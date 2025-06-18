@@ -42,6 +42,12 @@ uint16_t analogRead(AnalogSignal signal)
         case BRAKE_R_SIGNAL:
             return brake_pressure_rear;
 
+        case BRAKE_F_SIGNAL_DONOTUSE:
+            return ((uint16_t*)&adcBuffers)[BRAKE_F_SIGNAL];
+          
+        case BRAKE_R_SIGNAL_DONOTUSE:
+            return ((uint16_t*)&adcBuffers)[BRAKE_R_SIGNAL];
+
         default:
             if (signal >= 11)
             {

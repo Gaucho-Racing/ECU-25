@@ -53,14 +53,17 @@ typedef enum {
     BSPD_SIGNAL,
     APPS1_SIGNAL,
     APPS2_SIGNAL,
-    BRAKE_R_SIGNAL, // Pressure
-    BRAKE_F_SIGNAL, // Pressure
+    BRAKE_R_SIGNAL, // Psuedo-pressure
+    BRAKE_F_SIGNAL, // Psuedo-pressure
 // ADC2
     IMD_SENSE,
     AMS_SENSE,
     BSE_SIGNAL, // Who knows
     BSPD_SENSE,
     STEERING_ANGLE,
+// Masked
+    BRAKE_F_SIGNAL_DONOTUSE,  // Pressure
+    BRAKE_R_SIGNAL_DONOTUSE,  // Pressure
 } AnalogSignal;
 
 // returns a number from 0 to ADC_MAX (inclusive)

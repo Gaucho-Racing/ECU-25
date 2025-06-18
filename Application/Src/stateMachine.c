@@ -41,8 +41,8 @@ bool determineSignalForDashLEDs(AnalogSignal sig)
 void stateMachineTick(void)
 {
     // Control brake light off of brake pressure sensor
-    int brake_pressure_front_new = analogRead(BRAKE_F_SIGNAL);
-    int brake_pressure_rear_new = analogRead(BRAKE_R_SIGNAL);
+    int brake_pressure_front_new = analogRead(BRAKE_F_SIGNAL_DONOTUSE);
+    int brake_pressure_rear_new = analogRead(BRAKE_R_SIGNAL_DONOTUSE);
     brake_pressure_front_sum -= brake_pressure_front_buffer[brake_pressure_magic_index];
     brake_pressure_rear_sum -= brake_pressure_rear_buffer[brake_pressure_magic_index];
     brake_pressure_front_sum += brake_pressure_front_new;
