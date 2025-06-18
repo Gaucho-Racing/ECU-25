@@ -35,11 +35,11 @@
     // NOT USED
 
     // FIXME
-    #define BRAKE_F_MIN 772
+    #define BRAKE_F_MIN 810
     #define BRAKE_F_MAX 925
 
     // FIXME
-    #define BRAKE_R_MIN 538
+    #define BRAKE_R_MIN 580
     #define BRAKE_R_MAX 650
    
     #define MAX_CURRENT_REAR 240.0f // A
