@@ -136,8 +136,12 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    stateMachineTick();
-    pingSchedule();
+    printf("%d,\n", analogRead(BRAKE_F_SIGNAL));
+    printf("%d,\n", analogRead(BRAKE_R_SIGNAL));
+    HAL_Delay(100);
+    
+    // stateMachineTick();
+    // pingSchedule();
   }
   /* USER CODE END 3 */
 }
