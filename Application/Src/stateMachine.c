@@ -47,9 +47,11 @@ void stateMachineTick(void)
     brake_pressure_rear_sum -= brake_pressure_rear_buffer[brake_pressure_magic_index];
     brake_pressure_front_sum += brake_pressure_front_new;
     brake_pressure_rear_sum += brake_pressure_rear_new;
-    brake_pressure_front = brake_pressure_front_sum / BRAKE_WINDOW_SIZE;
-    brake_pressure_rear = brake_pressure_rear_sum / BRAKE_WINDOW_SIZE;
+    brake_pressure_front = brake_pressure_front_sum / (float)BRAKE_WINDOW_SIZE;
+    brake_pressure_rear = brake_pressure_rear_sum / (float)BRAKE_WINDOW_SIZE;
     brake_pressure_magic_index = (brake_pressure_magic_index + 1) % BRAKE_WINDOW_SIZE;
+
+    return;
 
     if (numberOfBadMessages > BAD_MESSAGE_LIMIT)
     {
