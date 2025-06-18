@@ -48,7 +48,7 @@ void setSoftwareLatch(bool close)
 bool checkBSEAPPSviolation(uint16_t throttle1, uint16_t throttle2, float pedalTravel, float brake)
 {
     //Checks 2 * APPS_1 is within 10% of APPS_2 and break + throttle at the same time
-    return fabs(throttle2 - throttle1 * 1.9932988878f - 250.251982816f) > throttle2 * 0.1f || (brake >= BSE_DEADZONE && pedalTravel >= 0.25f);
+    return fabs(throttle2 - throttle1 * 1.9932988878f - 250.251982816f) > throttle2 * 0.1f || ((brake >= BSE_DEADZONE || pressingBrake()) && pedalTravel >= 0.25f);
 }
 
 #ifdef ENABLE_THREE_MOTORS
@@ -80,7 +80,10 @@ void validateRegenRequest(uint16_t* fwdTqr1, uint16_t* fwdTqr2, uint16_t* rTqr)
 
 bool pressingBrake(void)
 {
-    return (analogRead(BRAKE_F_SIGNAL) - BRAKE_F_MIN > BSE_DEADZONE * (BRAKE_F_MAX - BRAKE_F_MIN)) && (analogRead(BRAKE_R_SIGNAL) - BRAKE_R_MIN > BSE_DEADZONE * (BRAKE_R_MAX - BRAKE_R_MIN));
+    globalStatus.BRAKE_F_SIGNAL = analogRead(BRAKE_F_SIGNAL);
+    globalStatus.BRAKE_R_SIGNAL = analogRead(BRAKE_R_SIGNAL);
+    return (globalStatus.BRAKE_F_SIGNAL - BRAKE_F_MIN > BSE_DEADZONE * (BRAKE_F_MAX - BRAKE_F_MIN)) && (globalStatus.BRAKE_R_SIGNAL - BRAKE_R_MIN > BSE_DEADZONE * (BRAKE_R_MAX - BRAKE_R_MIN));
+    //Ideally TCM receives values of 0 after this is no longer called xD.
 }
 
 float vehicleSpeedMPH(void)

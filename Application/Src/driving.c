@@ -31,6 +31,7 @@ static uint16_t getBrakePercent() // THIS IS NOT ACTUALLY BRAKE TRAVEL, PRESSURE
     globalStatus.BRAKE_R_SIGNAL = analogRead(BRAKE_R_SIGNAL);   // Brake pressure R
     return (float)(globalStatus.BRAKE_F_SIGNAL + globalStatus.BRAKE_R_SIGNAL - BRAKE_R_MIN - BRAKE_F_MIN) / (BRAKE_F_MAX - BRAKE_F_MIN + BRAKE_R_MAX - BRAKE_R_MIN);
 }
+
 static float getPedalTravel()
 {
     globalStatus.APPS1_SIGNAL = analogRead(APPS1_SIGNAL);
