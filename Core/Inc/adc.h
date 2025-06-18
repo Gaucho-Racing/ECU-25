@@ -81,18 +81,7 @@ typedef enum {
 
 extern AnalogInput globalAnalog;
 
-// Call in main loop
-void updateAnalogInputs(void)
-{
-    for (int i = AUX_SIGNAL; i <= STEERING_ANGLE; i++)
-    {
-        // IMPLEMENTATION
-    }
-}
-
-// returns a number from 0 to ADC_MAX (inclusive)
-uint16_t analogRead(AnalogSignal signal); 
-
+void updateAnalogInputs(void);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus
