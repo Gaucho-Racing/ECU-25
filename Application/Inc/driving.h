@@ -27,14 +27,6 @@
 
     #define BRAKE_R_MIN 575
     #define BRAKE_R_MAX 800
-
-    /*
-    #define THROTTLE_MIN_1 0.315445f
-    #define THROTTLE_MAX_1 0.443382562278f
-
-    #define THROTTLE_MIN_2 0.7548975f
-    #define THROTTLE_MAX_2 1.00845551601f
-    */
    
     #define MAX_CURRENT_REAR 240.0f // A
     #define MAX_CURRENT_FORWARD 105.0f // A
