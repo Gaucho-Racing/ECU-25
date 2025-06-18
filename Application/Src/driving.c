@@ -25,6 +25,14 @@ volatile uint16_t heatCapacity2 = 0;
 
 volatile float minAmkHeatCapThrottlePercent = 0.8f;
 
+uint16_t brake_pressure_front_buffer[BRAKE_WINDOW_SIZE] = {0};
+uint16_t brake_pressure_rear_buffer[BRAKE_WINDOW_SIZE] = {0};
+uint16_t brake_pressure_front_sum = 0;
+uint16_t brake_pressure_rear_sum = 0;
+uint16_t brake_pressure_magic_index = 0;
+uint16_t brake_pressure_front = 0;
+uint16_t brake_pressure_rear = 0;
+
 static uint16_t getBrakePercent() // THIS IS NOT ACTUALLY BRAKE TRAVEL, PRESSURE SENSORS CAPTURE BRAKE TRAVEL
 {
     globalStatus.BRAKE_F_SIGNAL = analogRead(BRAKE_F_SIGNAL);   // Brake pressure F
