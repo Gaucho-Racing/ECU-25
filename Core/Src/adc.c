@@ -49,7 +49,7 @@ uint16_t analogRead(AnalogSignal signal)
             return ((uint16_t*)&adcBuffers)[BRAKE_R_SIGNAL];
 
         default:
-            if (signal >= 11)
+            if (signal > STEERING_ANGLE)
             {
                 Error_Handler();
                 return -1;
