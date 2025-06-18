@@ -88,7 +88,7 @@ void drive_active_idle(void)
     else if (pedalTravel < APPS_DEADZONE && vehicleSpeedMPH() > REGEN_MPH && getBits(globalSteeringStatusRegenButtonMap, 0, 4) != 0)
     {
         LOGOMATIC("Moving to regen state\n");
-        globalStatus.ECUState = DRIVE_ACTIVE_REGEN;
+        globalStatus.ECUState = DRIVE_ACTIVE_IDLE;
         return;
     }
 
