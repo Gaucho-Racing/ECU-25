@@ -28,11 +28,21 @@ struct {
     uint16_t adc2buf[5];
 } adcBuffers;
 
+uint16_t adcSumValues[11];
+
 AnalogInput globalAnalogs = {0};
 
 void updateAnalogInputs(void)
 {
-    // TODO
+    uint16_t newValue;
+
+    for (int sig = AUX_SIGNAL; sig <= STEERING_ANGLE; sig++)
+    {
+        newValue = analogRead(sig);
+        adcSumValues[sig] -= ((uint16_t*)&globalAnalog)[sig];
+        adcSumValues[sig] += newValue;
+        ((uint16_t*)&globalAnalog)[sig] = adcSumValues[sig] / 10;
+    }
 }
 
 // returns int from 0 to ADC_MAX, inclusive
