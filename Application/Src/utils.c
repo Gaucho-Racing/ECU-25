@@ -80,8 +80,8 @@ void validateRegenRequest(uint16_t* fwdTqr1, uint16_t* fwdTqr2, uint16_t* rTqr)
 
 bool pressingBrake(void)
 {
-    globalStatus.BRAKE_F_SIGNAL = globalAnalog.BRAKE_F_SIGNAL;
-    globalStatus.BRAKE_R_SIGNAL = globalAnalog.BRAKE_R_SIGNAL;
+    globalStatus.BRAKE_F_SIGNAL = (float)globalAnalog.BRAKE_F_SIGNAL;
+    globalStatus.BRAKE_R_SIGNAL = (float)globalAnalog.BRAKE_R_SIGNAL;
     return (globalStatus.BRAKE_F_SIGNAL - BRAKE_F_MIN > BSE_DEADZONE * (BRAKE_F_MAX - BRAKE_F_MIN)) && (globalStatus.BRAKE_R_SIGNAL - BRAKE_R_MIN > BSE_DEADZONE * (BRAKE_R_MAX - BRAKE_R_MIN));
     //Ideally TCM receives values of 0 after this is no longer called xD.
 }

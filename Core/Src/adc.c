@@ -52,14 +52,14 @@ uint16_t analogRead(AnalogSignal signal)
 
 void updateAnalogInputs(void)
 {
-    uint16_t newValue;
+    float newValue;
 
     for (uint8_t sig = AUX_SIGNAL; sig <= STEERING_ANGLE; sig++)
     {
-        newValue = analogRead(sig);
-        adcSumValues[sig] -= ((uint16_t*)&globalAnalog)[sig];
+        newValue = (float)analogRead(sig);
+        adcSumValues[sig] -= ((float*)&globalAnalog)[sig];
         adcSumValues[sig] += newValue;
-        ((uint16_t*)&globalAnalog)[sig] = adcSumValues[sig] / 10;
+        ((float*)&globalAnalog)[sig] = adcSumValues[sig] / 10.0;
     }
 }
 /* USER CODE END 0 */

@@ -43,18 +43,18 @@ extern ADC_HandleTypeDef hadc2;
 
 typedef struct {
     // ADC1
-    uint16_t AUX_SIGNAL;
-    uint16_t BSPD_SIGNAL;
-    uint16_t APPS1_SIGNAL;
-    uint16_t APPS2_SIGNAL;
-    uint16_t BRAKE_R_SIGNAL;
-    uint16_t BRAKE_F_SIGNAL;
+    float AUX_SIGNAL;
+    float BSPD_SIGNAL;
+    float APPS1_SIGNAL;
+    float APPS2_SIGNAL;
+    float BRAKE_R_SIGNAL;
+    float BRAKE_F_SIGNAL;
     // ADC2
-    uint16_t IMD_SENSE;
-    uint16_t AMS_SENSE;
-    uint16_t BSE_SIGNAL;
-    uint16_t BSPD_SENSE;
-    uint16_t STEERING_ANGLE;
+    float IMD_SENSE;
+    float AMS_SENSE;
+    float BSE_SIGNAL;
+    float BSPD_SENSE;
+    float STEERING_ANGLE;
 } AnalogInput;
 
 extern AnalogInput globalAnalog;
@@ -80,8 +80,6 @@ typedef enum {
     BSPD_SENSE,
     STEERING_ANGLE,
 } AnalogSignal;
-
-extern AnalogInput globalAnalog;
 
 void updateAnalogInputs(void);
 /* USER CODE END Prototypes */
