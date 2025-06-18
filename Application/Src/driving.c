@@ -25,13 +25,21 @@ volatile uint16_t heatCapacity2 = 0;
 
 volatile float minAmkHeatCapThrottlePercent = 0.8f;
 
-uint16_t brake_pressure_front_buffer[BRAKE_WINDOW_SIZE] = {0};
-uint16_t brake_pressure_rear_buffer[BRAKE_WINDOW_SIZE] = {0};
-uint16_t brake_pressure_front_sum = 0;
-uint16_t brake_pressure_rear_sum = 0;
-uint16_t brake_pressure_magic_index = 0;
-uint16_t brake_pressure_front = 0;
-uint16_t brake_pressure_rear = 0;
+GPIO_PinState brakeLightState = GPIO_PIN_RESET;
+
+GPIO_PinState determineBrakeLight(void)
+{
+    if (globalAnalog.BRAKE_F_SIGNAL > BRAKE_F_MIN * BRAKELIGHT_RISING_TRIP_PERCENT || globalAnalog.BRAKE_R_SIGNAL > BRAKE_R_MIN * BRAKELIGHT_RISING_TRIP_PERCENT)
+    {
+        brakeLightState = GPIO_PIN_SET;
+    }
+    else if (globalAnalog.BRAKE_F_SIGNAL < BRAKE_F_MIN * BRAKELIGHT_FALLING_TRIP_PERCENT || globalAnalog.BRAKE_R_SIGNAL < BRAKE_R_MIN * BRAKELIGHT_FALLING_TRIP_PERCENT)
+    {
+        brakeLightState = GPIO_PIN_RESET;
+    }
+
+    return brakeLightState;
+}
 
 static uint16_t getBrakePercent() // THIS IS NOT ACTUALLY BRAKE TRAVEL, PRESSURE SENSORS CAPTURE BRAKE TRAVEL
 {

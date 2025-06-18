@@ -6,39 +6,33 @@
 #ifndef DRIVING_H
     #define DRIVING_H
 
-    #define BRAKE_WINDOW_SIZE 100
-    extern uint16_t brake_pressure_front_buffer[BRAKE_WINDOW_SIZE];
-    extern uint16_t brake_pressure_rear_buffer[BRAKE_WINDOW_SIZE];
-    extern uint16_t brake_pressure_front_sum;
-    extern uint16_t brake_pressure_rear_sum;
-    extern uint16_t brake_pressure_magic_index;
-    extern uint16_t brake_pressure_front;
-    extern uint16_t brake_pressure_rear;
-
     #define DRIVE_ACTIVE_POWER_REGEN_INTERVAL_MS 10
 
     #define APPS_DEADZONE 0.05f
     #define BSE_DEADZONE 0.05f
     #define REGEN_MPH 5
 
-    // FIXME
+    #define BRAKELIGHT_FALLING_TRIP_PERCENT 1.05f
+    #define BRAKELIGHT_RISING_TRIP_PERCENT 1.15f
+
+    // TODO Confirm
     #define THROTTLE_MIN_1 680
     #define THROTTLE_MAX_1 820
 
-    // FIXME
+    // TODO Confirm
     #define THROTTLE_MIN_2 1560
     #define THROTTLE_MAX_2 1940
 
-    // NOT USED
+    // TODO Confirm
     #define AUX_MIN 0
     #define AUX_MAX 4095
     // NOT USED
 
-    // FIXME
+    // TODO Confirm
     #define BRAKE_F_MIN 810
     #define BRAKE_F_MAX 925
 
-    // FIXME
+    // TODO Confirm
     #define BRAKE_R_MIN 580
     #define BRAKE_R_MAX 650
    
@@ -46,7 +40,6 @@
     #define MAX_CURRENT_FORWARD 105.0f // A
     #define NOMINAL_CURRENT_FORWARD 41.0f // A
     #define MAX_REVERSE_CURRENT 40.0f // A
-
 
     #define MAX_AMK_HEAT_CAP 11587
     #define MIN_BAT_TEMP_REGEN_THROTTLE 50 // C
@@ -62,6 +55,8 @@
     extern volatile bool BSE_APPS_violation;
     extern volatile float minAmkHeatCapThrottlePercent;
     
+    GPIO_PinState determineBrakeLight(void);
+
     /**
     Vehicle Speed in MPH
 
