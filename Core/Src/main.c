@@ -136,30 +136,8 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
-    int front_new = analogRead(BRAKE_F_SIGNAL);
-    int rear_new = analogRead(BRAKE_R_SIGNAL);
-
-    // Update moving average for front
-    front_sum -= front_buffer[index];
-    front_buffer[index] = front_new;
-    front_sum += front_new;
-    int front_avg = front_sum / WINDOW_SIZE;
-
-    // Update moving average for rear
-    rear_sum -= rear_buffer[index];
-    rear_buffer[index] = rear_new;
-    rear_sum += rear_new;
-    int rear_avg = rear_sum / WINDOW_SIZE;
-
-    // Print the smoothed values
-    printf("F_avg: %d, R_avg: %d\n", front_avg, rear_avg);
-
-    // Advance circular buffer index
-    index = (index + 1) % WINDOW_SIZE;
-    HAL_Delay(10);
-      // stateMachineTick();
-      // pingSchedule();
+    stateMachineTick();
+    pingSchedule();
   }
   /* USER CODE END 3 */
 }
