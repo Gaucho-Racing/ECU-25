@@ -28,10 +28,17 @@ struct {
 
 // returns int from 0 to ADC_MAX, inclusive
 uint16_t analogRead(AnalogSignal signal) {
-    if(signal >= 11) {
+    if(signal >= 11)
+    {
         Error_Handler();
         return -1;
     }
+
+    if (signal == AUX_SIGNAL)
+    {
+        return 0;   // Disable regen braking
+    }
+
     return ((uint16_t *)&adcBuffers)[signal];
 }
 /* USER CODE END 0 */
