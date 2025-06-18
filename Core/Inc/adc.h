@@ -41,6 +41,22 @@ extern ADC_HandleTypeDef hadc2;
 #define ADC_MAX 0x0FFF
 #define ADC_CONV 0.0005f
 
+typedef struct {
+    // ADC1
+    uint16_t AUX_SIGNAL;
+    uint16_t BSPD_SIGNAL;
+    uint16_t APPS1_SIGNAL;
+    uint16_t APPS2_SIGNAL;
+    uint16_t BRAKE_R_SIGNAL;
+    uint16_t BRAKE_F_SIGNAL;
+    // ADC2
+    uint16_t IMD_SENSE;
+    uint16_t AMS_SENSE;
+    uint16_t BSE_SIGNAL;
+    uint16_t BSPD_SENSE;
+    uint16_t STEERING_ANGLE;
+} AnalogInput;
+
 /* USER CODE END Private defines */
 
 void MX_ADC1_Init(void);
@@ -48,23 +64,31 @@ void MX_ADC2_Init(void);
 
 /* USER CODE BEGIN Prototypes */
 typedef enum {
-// ADC1
-    AUX_SIGNAL = 0, // Force
+    // ADC1
+    AUX_SIGNAL = 0,
     BSPD_SIGNAL,
     APPS1_SIGNAL,
     APPS2_SIGNAL,
-    BRAKE_R_SIGNAL, // Psuedo-pressure
-    BRAKE_F_SIGNAL, // Psuedo-pressure
-// ADC2
+    BRAKE_R_SIGNAL,
+    BRAKE_F_SIGNAL,
+    // ADC2
     IMD_SENSE,
     AMS_SENSE,
     BSE_SIGNAL, // Who knows
     BSPD_SENSE,
     STEERING_ANGLE,
-// Masked
-    BRAKE_F_SIGNAL_DONOTUSE,  // Pressure
-    BRAKE_R_SIGNAL_DONOTUSE,  // Pressure
 } AnalogSignal;
+
+extern AnalogInput globalAnalog;
+
+// Call in main loop
+void updateAnalogInputs(void)
+{
+    for (int i = AUX_SIGNAL; i <= STEERING_ANGLE; i++)
+    {
+        // IMPLEMENTATION
+    }
+}
 
 // returns a number from 0 to ADC_MAX (inclusive)
 uint16_t analogRead(AnalogSignal signal); 

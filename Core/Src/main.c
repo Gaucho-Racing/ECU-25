@@ -130,9 +130,10 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     stateMachineTick();
-//    pingSchedule();
+    updateAnalogInputs();
+    pingSchedule();
 
-    LOGOMATIC("%d,\n", analogRead(brake_pressure_front));
+    LOGOMATIC("%d,\n", globalAnalog.brake_pressure_front);
     HAL_Delay(100);
   }
   /* USER CODE END 3 */

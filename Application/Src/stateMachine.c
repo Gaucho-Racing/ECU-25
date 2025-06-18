@@ -30,7 +30,7 @@ static const uint32_t TSSIFlashCycleLength = 400;
 
 bool determineSignalForDashLEDs(AnalogSignal sig)
 {
-    return analogRead(sig) >= (((2 << 16) * 0.4f) / 3.3f);
+    return ((uint16_t*)(&globalAnalog))[sig] >= (((2 << 16) * 0.4f) / 3.3f);
     //                           ^          ^       ^
     //                           |          |       Reference voltage
     //                           |          Analog input voltage threshold

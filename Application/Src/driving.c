@@ -35,15 +35,15 @@ uint16_t brake_pressure_rear = 0;
 
 static uint16_t getBrakePercent() // THIS IS NOT ACTUALLY BRAKE TRAVEL, PRESSURE SENSORS CAPTURE BRAKE TRAVEL
 {
-    globalStatus.BRAKE_F_SIGNAL = analogRead(BRAKE_F_SIGNAL);   // Brake pressure F
-    globalStatus.BRAKE_R_SIGNAL = analogRead(BRAKE_R_SIGNAL);   // Brake pressure R
+    globalStatus.BRAKE_F_SIGNAL = globalAnalog.BRAKE_F_SIGNAL;   // Brake pressure F
+    globalStatus.BRAKE_R_SIGNAL = globalAnalog.BRAKE_R_SIGNAL;   // Brake pressure R
     return (float)(globalStatus.BRAKE_F_SIGNAL + globalStatus.BRAKE_R_SIGNAL - BRAKE_R_MIN - BRAKE_F_MIN) / (BRAKE_F_MAX - BRAKE_F_MIN + BRAKE_R_MAX - BRAKE_R_MIN);
 }
 
 static float getPedalTravel()
 {
-    globalStatus.APPS1_SIGNAL = analogRead(APPS1_SIGNAL);
-    globalStatus.APPS2_SIGNAL = analogRead(APPS2_SIGNAL);
+    globalStatus.APPS1_SIGNAL = globalAnalog.APPS1_SIGNAL;
+    globalStatus.APPS2_SIGNAL = globalAnalog.APPS2_SIGNAL;
     return (float)(globalStatus.APPS1_SIGNAL + globalStatus.APPS2_SIGNAL - THROTTLE_MIN_2 - THROTTLE_MIN_1) / (THROTTLE_MAX_1 + THROTTLE_MAX_2 - THROTTLE_MIN_1 - THROTTLE_MIN_2);
 }
 

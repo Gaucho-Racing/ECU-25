@@ -28,6 +28,13 @@ struct {
     uint16_t adc2buf[5];
 } adcBuffers;
 
+AnalogInput globalAnalogs = {0};
+
+void updateAnalogInputs(void)
+{
+    // TODO
+}
+
 // returns int from 0 to ADC_MAX, inclusive
 uint16_t analogRead(AnalogSignal signal)
 {
