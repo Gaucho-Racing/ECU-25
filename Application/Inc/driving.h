@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <stdint.h>
 
 #include "stateMachine.h"
 
@@ -6,13 +7,13 @@
     #define DRIVING_H
 
     #define BRAKE_WINDOW_SIZE 100
-    extern int brake_pressure_front_buffer[BRAKE_WINDOW_SIZE];
-    extern int brake_pressure_rear_buffer[BRAKE_WINDOW_SIZE];
-    extern int brake_pressure_front_sum;
-    extern int brake_pressure_rear_sum;
-    extern int brake_pressure_magic_index;
-    extern int brake_pressure_front;
-    extern int brake_pressure_rear;
+    extern uint16_t brake_pressure_front_buffer[BRAKE_WINDOW_SIZE];
+    extern uint16_t brake_pressure_rear_buffer[BRAKE_WINDOW_SIZE];
+    extern uint16_t brake_pressure_front_sum;
+    extern uint16_t brake_pressure_rear_sum;
+    extern uint16_t brake_pressure_magic_index;
+    extern uint16_t brake_pressure_front;
+    extern uint16_t brake_pressure_rear;
 
     #define DRIVE_ACTIVE_POWER_REGEN_INTERVAL_MS 10
 
@@ -33,11 +34,11 @@
 
     // REGET!!!
     #define BRAKE_F_MIN 0
-    #define BRAKE_F_MAX 0
+    #define BRAKE_F_MAX 1
 
     // REGET!!!
     #define BRAKE_R_MIN 0
-    #define BRAKE_R_MAX 0
+    #define BRAKE_R_MAX 1
    
     #define MAX_CURRENT_REAR 240.0f // A
     #define MAX_CURRENT_FORWARD 105.0f // A
