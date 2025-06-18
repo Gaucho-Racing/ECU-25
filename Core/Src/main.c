@@ -30,6 +30,7 @@
 #include "pinging.h"
 #include "msgIDs.h"
 #include "utils.h"
+#include "driving.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -129,6 +130,7 @@ int main(void)
     /* USER CODE BEGIN 3 */
     stateMachineTick();
     pingSchedule();
+    globalStatus.ECUState = DRIVE_ACTIVE_IDLE;
   }
   /* USER CODE END 3 */
 }
