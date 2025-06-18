@@ -31,11 +31,13 @@
     #define AUX_MAX 4095
     // NOT USED
 
-    #define BRAKE_F_MIN 845
-    #define BRAKE_F_MAX 1300
+    // REGET!!!
+    #define BRAKE_F_MIN 0
+    #define BRAKE_F_MAX 0
 
-    #define BRAKE_R_MIN 575
-    #define BRAKE_R_MAX 800
+    // REGET!!!
+    #define BRAKE_R_MIN 0
+    #define BRAKE_R_MAX 0
    
     #define MAX_CURRENT_REAR 240.0f // A
     #define MAX_CURRENT_FORWARD 105.0f // A
