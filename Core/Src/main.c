@@ -137,7 +137,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     printf("%d,\n", analogRead(BRAKE_F_SIGNAL));
-    printf("%d,\n", analogRead(BRAKE_R_SIGNAL));
+//    printf("%d,\n", analogRead(BRAKE_R_SIGNAL));
     HAL_Delay(100);
     
     // stateMachineTick();
