@@ -40,6 +40,8 @@ bool determineSignalForDashLEDs(AnalogSignal sig)
 
 void stateMachineTick(void)
 {
+    HAL_GPIO_WritePin(BRAKE_LIGHT_GPIO_Port, BRAKE_LIGHT_Pin, (GPIO_PinState)(globalAnalog.BRAKE_F_SIGNAL > BRAKE_F_MIN * 1.05 || globalAnalog.BRAKE_R_SIGNAL > BRAKE_R_MIN * 1.05));
+
     if (numberOfBadMessages > BAD_MESSAGE_LIMIT)
     {
         Error_Handler();
