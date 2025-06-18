@@ -5,6 +5,15 @@
 #ifndef DRIVING_H
     #define DRIVING_H
 
+    #define BRAKE_WINDOW_SIZE 100
+    extern int brake_pressure_front_buffer[BRAKE_WINDOW_SIZE];
+    extern int brake_pressure_rear_buffer[BRAKE_WINDOW_SIZE];
+    extern int brake_pressure_front_sum;
+    extern int brake_pressure_rear_sum;
+    extern int brake_pressure_magic_index;
+    extern int brake_pressure_front;
+    extern int brake_pressure_rear;
+
     #define DRIVE_ACTIVE_POWER_REGEN_INTERVAL_MS 10
 
     #define APPS_DEADZONE 0.05f
