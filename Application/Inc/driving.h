@@ -17,16 +17,16 @@
     #define THROTTLE_MIN_2 1510
     #define THROTTLE_MAX_2 2017
 
-    //FIXME: CHANGE THE FOLLOWING MIN AND MAX VALUES WHEN THEY ARE KNOWN
-
+    // NOT USED
     #define AUX_MIN 0
     #define AUX_MAX 4095
+    // NOT USED
 
-    #define BRAKE_F_MIN 0
-    #define BRAKE_F_MAX 4095
+    #define BRAKE_F_MIN 845
+    #define BRAKE_F_MAX 1300
 
-    #define BRAKE_R_MIN 0
-    #define BRAKE_R_MAX 4095
+    #define BRAKE_R_MIN 575
+    #define BRAKE_R_MAX 800
 
     /*
     #define THROTTLE_MIN_1 0.315445f

@@ -123,21 +123,12 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  //moving average beacuse noizy as fuck plz still have this check, otherwise works
-  #define WINDOW_SIZE 100
-
-  int front_buffer[WINDOW_SIZE] = {0};
-  int rear_buffer[WINDOW_SIZE] = {0};
-  int front_sum = 0;
-  int rear_sum = 0;
-  int index = 0;
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    printf("%d,\n", analogRead(BRAKE_F_SIGNAL));
-//    printf("%d,\n", analogRead(BRAKE_R_SIGNAL));
+    printf("%d,\n", analogRead(BRAKE_R_SIGNAL));
     HAL_Delay(100);
     
     // stateMachineTick();
