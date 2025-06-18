@@ -54,7 +54,7 @@ void updateAnalogInputs(void)
 {
     uint16_t newValue;
 
-    for (int sig = AUX_SIGNAL; sig <= STEERING_ANGLE; sig++)
+    for (uint8_t sig = AUX_SIGNAL; sig <= STEERING_ANGLE; sig++)
     {
         newValue = analogRead(sig);
         adcSumValues[sig] -= ((uint16_t*)&globalAnalog)[sig];

@@ -22,12 +22,12 @@
     #define REGEN_MPH 5
 
     // FIXME
-    #define THROTTLE_MIN_1 0
-    #define THROTTLE_MAX_1 1
+    #define THROTTLE_MIN_1 680
+    #define THROTTLE_MAX_1 820
 
     // FIXME
-    #define THROTTLE_MIN_2 0
-    #define THROTTLE_MAX_2 1
+    #define THROTTLE_MIN_2 1560
+    #define THROTTLE_MAX_2 1940
 
     // NOT USED
     #define AUX_MIN 0
@@ -35,12 +35,12 @@
     // NOT USED
 
     // FIXME
-    #define BRAKE_F_MIN 0
-    #define BRAKE_F_MAX 1
+    #define BRAKE_F_MIN 822
+    #define BRAKE_F_MAX 925
 
     // FIXME
-    #define BRAKE_R_MIN 0
-    #define BRAKE_R_MAX 1
+    #define BRAKE_R_MIN 588
+    #define BRAKE_R_MAX 650
    
     #define MAX_CURRENT_REAR 240.0f // A
     #define MAX_CURRENT_FORWARD 105.0f // A

@@ -129,12 +129,9 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    // stateMachineTick();
+    stateMachineTick();
     updateAnalogInputs();
-    // pingSchedule();
-
-    LOGOMATIC("%d,\n", globalAnalog.APPS1_SIGNAL);
-    HAL_Delay(100);
+    pingSchedule();
   }
   /* USER CODE END 3 */
 }
