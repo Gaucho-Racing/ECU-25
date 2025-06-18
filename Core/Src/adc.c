@@ -21,25 +21,36 @@
 #include "adc.h"
 
 /* USER CODE BEGIN 0 */
+#include "driving.h"
+
 struct {
     uint16_t adc1buf[6];
     uint16_t adc2buf[5];
 } adcBuffers;
 
 // returns int from 0 to ADC_MAX, inclusive
-uint16_t analogRead(AnalogSignal signal) {
-    if(signal >= 11)
+uint16_t analogRead(AnalogSignal signal)
+{
+    switch(signal)
     {
-        Error_Handler();
-        return -1;
-    }
+        case AUX_SIGNAL:
+            return 0;
 
-    if (signal == AUX_SIGNAL)
-    {
-        return 0;   // Disable regen braking
-    }
+        case BRAKE_F_SIGNAL:
+            return brake_pressure_front;
 
-    return ((uint16_t *)&adcBuffers)[signal];
+        case BRAKE_R_SIGNAL:
+            return brake_pressure_rear;
+
+        default:
+            if (signal >= 11)
+            {
+                Error_Handler();
+                return -1;
+            }
+
+            return ((uint16_t*)&adcBuffers)[signal];
+    }
 }
 /* USER CODE END 0 */
 
