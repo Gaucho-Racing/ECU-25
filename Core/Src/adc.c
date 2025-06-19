@@ -59,7 +59,7 @@ void updateAnalogInputs(void)
         newValue = (float)analogRead(sig);
         adcSumValues[sig] -= ((float*)&globalAnalog)[sig];
         adcSumValues[sig] += newValue;
-        ((float*)&globalAnalog)[sig] = adcSumValues[sig] / 10.0;
+        ((float*)&globalAnalog)[sig] = adcSumValues[sig] / 10.0f;
     }
 }
 /* USER CODE END 0 */
