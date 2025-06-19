@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.25)
 
 #
 # This file is generated only once,
@@ -16,12 +16,12 @@ set(CMAKE_C_EXTENSIONS ON)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fdiagnostics-color")
 set(CMAKE_C_LINK_FLAGS "${CMAKE_C_LINK_FLAGS} -fdiagnostics-color")
 
-
 # Define the build type
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
+# Enable logging
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_compile_definitions(LOGOMATIC_ENABLED)
 #   add_compile_definitions(ADVANCED_LOGGING)

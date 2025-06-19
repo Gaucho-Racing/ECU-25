@@ -12,9 +12,6 @@
 #include "msgIDs.h"
 #include "utils.h"
 
-// TODO Confirm DTI read message callback works correctly (check endianness of bytes, bits are fine)
-// TODO Mark all constants as floats so they do not become doubles
-
 volatile bool BSE_APPS_violation = false;
 
 volatile int32_t lastDriveActiveCtrlMs = BAD_TIME_Negative1;
