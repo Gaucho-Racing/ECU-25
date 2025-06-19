@@ -35,11 +35,12 @@
     // TODO Confirm
     #define BRAKE_R_MIN 590
     #define BRAKE_R_MAX 790
-   
-    #define MAX_CURRENT_REAR 240.0f // A
-    #define MAX_CURRENT_FORWARD 105.0f // A
-    #define NOMINAL_CURRENT_FORWARD 41.0f // A
-    #define MAX_REVERSE_CURRENT 40.0f // A
+
+    // Amperes
+    #define MAX_CURRENT_REAR 240.0f
+    #define MAX_CURRENT_FORWARD 105.0f
+    #define NOMINAL_CURRENT_FORWARD 41.0f
+    #define MAX_REVERSE_CURRENT 40.0f
 
     #define MAX_AMK_HEAT_CAP 11587
     #define MIN_BAT_TEMP_REGEN_THROTTLE 50 // C
