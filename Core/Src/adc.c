@@ -23,6 +23,8 @@
 /* USER CODE BEGIN 0 */
 #include "driving.h"
 
+#define WINDOW_SIZE 100
+
 AnalogInput globalAnalog = {0};
 
 struct {
@@ -30,7 +32,9 @@ struct {
     uint16_t adc2buf[5];
 } adcBuffers;
 
-uint16_t adcSumValues[11];
+float adcSumValues[11];
+uint16_t adcDataValues[11][WINDOW_SIZE] = {0};
+uint8_t readIndex = 0;
 
 uint16_t analogRead(AnalogSignal signal)
 {
@@ -57,10 +61,13 @@ void updateAnalogInputs(void)
     for (uint8_t sig = AUX_SIGNAL; sig <= STEERING_ANGLE; sig++)
     {
         newValue = (float)analogRead(sig);
-        adcSumValues[sig] -= ((float*)&globalAnalog)[sig];
+        adcSumValues[sig] -= adcDataValues[sig][readIndex];
+        adcDataValues[sig][readIndex] = newValue;
         adcSumValues[sig] += newValue;
-        ((float*)&globalAnalog)[sig] = adcSumValues[sig] / 10.0;
+        ((float*)&globalAnalog)[sig] = adcSumValues[sig] / WINDOW_SIZE;
     }
+
+    readIndex = (readIndex + 1) % WINDOW_SIZE;
 }
 /* USER CODE END 0 */
 
