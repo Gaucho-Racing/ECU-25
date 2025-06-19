@@ -12,8 +12,8 @@
     #define BSE_DEADZONE 0.05f
     #define REGEN_MPH 5
 
-    #define BRAKELIGHT_FALLING_TRIP_PERCENT 1.0 + BSE_DEADZONE
-    #define BRAKELIGHT_RISING_TRIP_PERCENT 1.0 + 3 * BSE_DEADZONE
+    #define BRAKELIGHT_FALLING_TRIP_PERCENT 1.06
+    #define BRAKELIGHT_RISING_TRIP_PERCENT 1.08
 
     // TODO Confirm
     #define THROTTLE_MIN_1 680
@@ -29,12 +29,12 @@
     // NOT USED
 
     // TODO Confirm
-    #define BRAKE_F_MIN 810
-    #define BRAKE_F_MAX 925
+    #define BRAKE_F_MIN 833
+    #define BRAKE_F_MAX 1160
 
     // TODO Confirm
-    #define BRAKE_R_MIN 580
-    #define BRAKE_R_MAX 650
+    #define BRAKE_R_MIN 590
+    #define BRAKE_R_MAX 790
    
     #define MAX_CURRENT_REAR 240.0f // A
     #define MAX_CURRENT_FORWARD 105.0f // A
