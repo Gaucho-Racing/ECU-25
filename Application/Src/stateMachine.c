@@ -241,7 +241,7 @@ void error(void)
 
     if (globalStatus.TractiveSystemVoltage >= TS_VOLTAGE_OFF_LIMIT)
     {
-        LOGOMATIC("Error at too high a TS Voltage, jumping to ERRORSTATE\n");
+        LOGOMATIC("Error at too high a TS Voltage, jumping to TS_DISCHARGE_OFF\n");
         globalStatus.ECUState = TS_DISCHARGE_OFF;
     }
 
