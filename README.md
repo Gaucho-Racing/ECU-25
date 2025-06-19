@@ -1,15 +1,5 @@
 # GR25 ECU
 
-## Todo
-### Urgent
-:construction: AMK testing
-### Delayed
-:point_right: Integration testing
-
-:warning: Copy over DTI and throttle code from [`dtiMotorTest`](../../tree/dtiMotorTest)
-### Stretch
-:x: Torque vectoring
-
 ## Git Submodule
 To get the submodule added correctly, run:
 ```
