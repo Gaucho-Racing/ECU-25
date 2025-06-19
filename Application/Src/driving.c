@@ -29,11 +29,11 @@ GPIO_PinState brakeLightState = GPIO_PIN_RESET;
 
 GPIO_PinState determineBrakeLight(void)
 {
-    if (globalAnalog.BRAKE_F_SIGNAL > BRAKE_F_MIN * BRAKELIGHT_RISING_TRIP_PERCENT)
+    if (globalAnalog.BRAKE_F_SIGNAL - BRAKE_F_MIN > (BRAKE_F_MAX - BRAKE_F_MIN) * BRAKELIGHT_RISING_TRIP_PERCENT)
     {
         brakeLightState = GPIO_PIN_SET;
     }
-    else if (globalAnalog.BRAKE_F_SIGNAL < BRAKE_F_MIN * BRAKELIGHT_FALLING_TRIP_PERCENT)
+    else if (globalAnalog.BRAKE_F_SIGNAL - BRAKE_F_MIN < (BRAKE_F_MAX - BRAKE_F_MIN) * BRAKELIGHT_FALLING_TRIP_PERCENT)
     {
         brakeLightState = GPIO_PIN_RESET;
     }
